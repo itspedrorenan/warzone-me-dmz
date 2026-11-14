@@ -324,7 +324,7 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .swatch:not(.done) { background: transparent; opacity: 1; border: 2px solid var(--line); }
 .swatch-sm { background: transparent !important; border: 2px solid var(--text); }
 
-/* Miniaturas das armas (estilo dos ícones de build do jogo) */
+/* Miniaturas das armas (imagem oficial recortada) */
 .thumb { display: block; flex: none; object-fit: contain; object-position: center; }
 .thumb-sm { width: 96px; height: 44px; }
 .thumb-lg { width: 100%; height: 110px; }

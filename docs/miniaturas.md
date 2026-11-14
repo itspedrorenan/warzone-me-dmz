@@ -2,8 +2,8 @@
 
 ## Como está hoje (opção 2)
 
-- As 33 armas de lançamento têm miniatura no estilo dos ícones de build do jogo (arma clara, detalhes
-  em cinza, fundo transparente), gerada a partir das imagens
+- As 33 armas de lançamento usam a arma das imagens oficiais, com as cores originais, só recortada
+  do fundo (fundo transparente). Imagens
   oficiais do [post de lançamento do MW4](https://www.callofduty.com/blog/2026/10/call-of-duty-modern-warfare-4-launch-multiplayer-operators-weapons-equipment-create-a-class)
   (cards `MW4-RFL-OPS-WEAPONS-009.webp` a `-041.webp`, na ordem dos títulos do post).
 - Arquivos: `public/weapons/<id-da-arma>.webp`. A lista de quais armas têm imagem fica em
@@ -12,12 +12,15 @@
 - **Sem imagem ainda** (mostram um espaço reservado com a classe): Cronen Osprey, CSG-35, JAK 12 e
   ZLR Talonhawk. Os posts oficiais da Season 1 não trazem imagem individual delas.
 - **Podem melhorar com print do jogo:** Mosin-Nagant (a coronha escura de madeira se confunde com o
-  fundo e sai incompleta).
+  fundo e pode sair incompleta).
+- **Já testado e descartado:** traço automático, estilo "ícone de build" (arma clara com detalhes em
+  cinza) e desenho técnico automático. Ficaram com cara de filtro. Um blueprint no nível de uma
+  ilustração (linhas limpas desenhadas à mão) precisa ser desenhado manualmente, arma por arma.
 
 ## Para fazer depois (opção 3): prints do próprio jogo
 
-Ideia: trocar ou completar as miniaturas usando prints tirados no jogo, convertidos para o mesmo
-estilo. Serve para as armas sem imagem e para qualquer uma cuja miniatura atual
+Ideia: trocar ou completar as miniaturas usando prints tirados no jogo, recortados do fundo do
+mesmo jeito. Serve para as armas sem imagem e para qualquer uma cuja miniatura atual
 não ficou boa. As imagens continuam sendo da Activision, como na opção 2.
 
 ### Como tirar os prints
@@ -36,7 +39,8 @@ pip install opencv-python-headless pillow numpy
 python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/weapons/cronen-osprey.webp --crop 0.2,0.8,0.1,0.9
 ```
 
-- O estilo padrão é `--style flat` (o do app). `--style line` gera só o traço.
+- O estilo padrão é `--style original` (o do app). Os outros (`blueprint`, `flat`, `line`) ficaram
+  só como teste.
 - `--crop y0,y1,x0,x1` recorta a região da arma em frações da imagem (0 a 1). Ajuste até a arma
   ficar inteira e sem pedaços do menu. O padrão do script serve só para os cards oficiais.
 - Depois de gerar, acrescente o id em `src/data/weaponImages.ts`.

@@ -1,7 +1,7 @@
 import { CLASSES, type Weapon } from '../data'
 import { weaponImage } from '../data/weaponImages'
 
-/** Miniatura da arma no estilo dos ícones de build do jogo (arma clara, detalhes em cinza). */
+/** Miniatura da arma: imagem oficial recortada do fundo, com as cores originais. */
 export function WeaponThumb({ weapon, size = 'sm' }: { weapon: Weapon; size?: 'sm' | 'lg' }) {
   const src = weaponImage(weapon.id)
   if (!src) {

@@ -1,12 +1,11 @@
-"""Converte a imagem de uma arma em traço preto e branco (estilo blueprint).
+"""Gera a miniatura de uma arma a partir de uma imagem (oficial ou print do jogo).
 
-Saída: WebP (ou PNG) com linhas brancas e preenchimento leve sobre fundo transparente.
-O app usa a imagem como máscara, então a cor final vem do token --text.
+Saída: WebP (ou PNG) com fundo transparente. O estilo padrão (original) mantém a arma como na imagem.
 
 Requer: pip install opencv-python-headless pillow numpy
 
 Uso:
-  python scripts/weapon-thumbnails/blueprint.py ENTRADA SAIDA.webp [--style blueprint|flat|line] [--crop y0,y1,x0,x1]
+  python scripts/weapon-thumbnails/blueprint.py ENTRADA SAIDA.webp [--style original|blueprint|flat|line] [--crop y0,y1,x0,x1]
 
 --crop recorta a área da arma em frações da imagem (0 a 1). O padrão
 (0.085,0.645,0.02,0.98) serve para os cards oficiais 1920x1080 do post de lançamento.
@@ -71,6 +70,27 @@ def flat(src, out, width=480, crop=DEFAULT_CROP):
     x0, x1 = max(xs.min() - pad, 0), min(xs.max() + pad, alpha.shape[1])
     y0, y1 = max(ys.min() - pad, 0), min(ys.max() + pad, alpha.shape[0])
     rgba = np.dstack([rgb, rgb, rgb, alpha])[y0:y1, x0:x1]
+    im = Image.fromarray(rgba, 'RGBA')
+    im = im.resize((width, max(1, round(im.height * width / im.width))), Image.LANCZOS)
+    if out.lower().endswith('.png'):
+        im.save(out, optimize=True)
+    else:
+        im.save(out, 'WEBP', quality=85, method=6)
+    return im.size
+
+def original(src, out, width=480, crop=DEFAULT_CROP):
+    """A arma como na imagem original (cores reais), recortada do fundo, com fundo transparente."""
+    img = cv2.imread(src, cv2.IMREAD_COLOR)
+    h, w = img.shape[:2]
+    c = img[int(h * crop[0]):int(h * crop[1]), int(w * crop[2]):int(w * crop[3])]
+    sil = silhouette(c)
+    alpha = cv2.GaussianBlur(sil, (5, 5), 0)
+    ys, xs = np.nonzero(alpha > 0)
+    pad = 10
+    x0, x1 = max(xs.min() - pad, 0), min(xs.max() + pad, alpha.shape[1])
+    y0, y1 = max(ys.min() - pad, 0), min(ys.max() + pad, alpha.shape[0])
+    rgb = cv2.cvtColor(c, cv2.COLOR_BGR2RGB)
+    rgba = np.dstack([rgb, alpha])[y0:y1, x0:x1]
     im = Image.fromarray(rgba, 'RGBA')
     im = im.resize((width, max(1, round(im.height * width / im.width))), Image.LANCZOS)
     if out.lower().endswith('.png'):
@@ -186,8 +206,8 @@ if __name__ == '__main__':
     ap.add_argument('saida')
     ap.add_argument('--crop', default=','.join(map(str, DEFAULT_CROP)))
     ap.add_argument('--width', type=int, default=480)
-    ap.add_argument('--style', choices=['blueprint', 'flat', 'line'], default='blueprint',
-                    help='blueprint: desenho técnico em linhas (padrão); flat: arma clara com detalhes em cinza; line: traço bruto')
+    ap.add_argument('--style', choices=['original', 'blueprint', 'flat', 'line'], default='original',
+                    help='original: arma com as cores reais, sem fundo (padrão, usado no app); blueprint: desenho técnico; flat: arma clara com detalhes em cinza; line: traço bruto')
     a = ap.parse_args()
-    fn = {'blueprint': blueprint, 'flat': flat, 'line': convert}[a.style]
+    fn = {'original': original, 'blueprint': blueprint, 'flat': flat, 'line': convert}[a.style]
     print(fn(a.entrada, a.saida, a.width, tuple(float(x) for x in a.crop.split(','))))
