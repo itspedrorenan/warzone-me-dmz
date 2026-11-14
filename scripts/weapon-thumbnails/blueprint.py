@@ -6,7 +6,7 @@ O app usa a imagem como máscara, então a cor final vem do token --text.
 Requer: pip install opencv-python-headless pillow numpy
 
 Uso:
-  python scripts/weapon-thumbnails/blueprint.py ENTRADA SAIDA.webp [--style flat|line] [--crop y0,y1,x0,x1]
+  python scripts/weapon-thumbnails/blueprint.py ENTRADA SAIDA.webp [--style blueprint|flat|line] [--crop y0,y1,x0,x1]
 
 --crop recorta a área da arma em frações da imagem (0 a 1). O padrão
 (0.085,0.645,0.02,0.98) serve para os cards oficiais 1920x1080 do post de lançamento.
@@ -79,6 +79,50 @@ def flat(src, out, width=480, crop=DEFAULT_CROP):
         im.save(out, 'WEBP', quality=85, method=6)
     return im.size
 
+def blueprint(src, out, width=480, crop=DEFAULT_CROP):
+    """Desenho técnico: contorno externo limpo + linhas internas longas, brancas, sem preenchimento."""
+    img = cv2.imread(src, cv2.IMREAD_COLOR)
+    h, w = img.shape[:2]
+    c = img[int(h * crop[0]):int(h * crop[1]), int(w * crop[2]):int(w * crop[3])]
+    sil = silhouette(c)
+    ys, xs = np.nonzero(sil)
+    pad = 24
+    x0, x1 = max(xs.min() - pad, 0), min(xs.max() + pad, sil.shape[1])
+    y0, y1 = max(ys.min() - pad, 0), min(ys.max() + pad, sil.shape[0])
+    c, sil = c[y0:y1, x0:x1], sil[y0:y1, x0:x1]
+    # Resolução de trabalho: 2x a saída, para as linhas saírem suaves ao reduzir.
+    work = width * 2
+    k = work / c.shape[1]
+    c = cv2.resize(c, (work, round(c.shape[0] * k)), interpolation=cv2.INTER_AREA)
+    sil = (cv2.resize(sil, (c.shape[1], c.shape[0]), interpolation=cv2.INTER_LINEAR) > 127).astype(np.uint8) * 255
+    canvas = np.zeros(sil.shape, np.uint8)
+    # Contorno externo.
+    cnts, _ = cv2.findContours(sil, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    cnts = [cv2.approxPolyDP(cv2.GaussianBlur(cn.astype(np.float32), (1, 1), 0).astype(np.int32), 1.2, True) for cn in cnts]
+    cv2.drawContours(canvas, cnts, -1, 255, 3, cv2.LINE_AA)
+    # Linhas internas: bordas fortes, só as longas (ignora textura e granulado).
+    gray = cv2.cvtColor(c, cv2.COLOR_BGR2GRAY)
+    gray = cv2.bilateralFilter(gray, 9, 50, 9)
+    gray = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8)).apply(gray)
+    edges = cv2.Canny(gray, 60, 160)
+    # Longe da borda (evita linha dupla junto ao contorno).
+    edges = cv2.bitwise_and(edges, cv2.erode(sil, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))))
+    # Áreas com textura (cabo, madeira) têm muita borda junta: descarta.
+    density = cv2.boxFilter((edges > 0).astype(np.float32), -1, (31, 31))
+    edges[density > 0.16] = 0
+    inner, _ = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+    min_len = work * 0.035
+    inner = [cv2.approxPolyDP(cn, 1.0, False) for cn in inner if cv2.arcLength(cn, False) > min_len]
+    cv2.polylines(canvas, inner, False, 255, 2, cv2.LINE_AA)
+    a = canvas
+    rgba = np.dstack([np.full_like(a, 255)] * 3 + [a])
+    im = Image.fromarray(rgba, 'RGBA').resize((width, max(1, round(a.shape[0] * width / a.shape[1]))), Image.LANCZOS)
+    if out.lower().endswith('.png'):
+        im.save(out, optimize=True)
+    else:
+        im.save(out, 'WEBP', quality=90, method=6)
+    return im.size
+
 def convert(src, out, width=480, crop=DEFAULT_CROP):
     img = cv2.imread(src, cv2.IMREAD_COLOR)
     h, w = img.shape[:2]
@@ -142,8 +186,8 @@ if __name__ == '__main__':
     ap.add_argument('saida')
     ap.add_argument('--crop', default=','.join(map(str, DEFAULT_CROP)))
     ap.add_argument('--width', type=int, default=480)
-    ap.add_argument('--style', choices=['flat', 'line'], default='flat',
-                    help='flat: arma clara com detalhes em cinza (padrão, estilo do jogo); line: só o traço')
+    ap.add_argument('--style', choices=['blueprint', 'flat', 'line'], default='blueprint',
+                    help='blueprint: desenho técnico em linhas (padrão); flat: arma clara com detalhes em cinza; line: traço bruto')
     a = ap.parse_args()
-    fn = flat if a.style == 'flat' else convert
+    fn = {'blueprint': blueprint, 'flat': flat, 'line': convert}[a.style]
     print(fn(a.entrada, a.saida, a.width, tuple(float(x) for x in a.crop.split(','))))
