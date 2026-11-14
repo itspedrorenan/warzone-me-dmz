@@ -36,6 +36,12 @@ export interface State {
   mode: Mode
   /** Respeita os pré-requisitos do jogo (Platinum exige Gold na classe etc.). */
   enforceGates: boolean
+  /** Contador do desafio atual de cada arma (zera ao trocar de camuflagem). */
+  challengeCount: Record<string, number>
+  /** Mantém a tela do celular ligada enquanto o app está aberto. */
+  keepAwake: boolean
+  /** Vibra ao tocar nos contadores. */
+  haptics: boolean
 }
 
 export const initialState = (): State => ({
@@ -48,6 +54,9 @@ export const initialState = (): State => ({
   mastery: {},
   mode: 'mp',
   enforceGates: true,
+  challengeCount: {},
+  keepAwake: true,
+  haptics: true,
 })
 
 function load(): State {
@@ -111,6 +120,11 @@ export function sanitize(input: unknown): State {
     mastery: typeof s.mastery === 'object' && s.mastery ? { ...(s.mastery as Record<string, MasteryState>) } : {},
     mode: s.mode === 'dmz' || s.mode === 'wz' ? s.mode : 'mp',
     enforceGates: s.enforceGates !== false,
+    challengeCount: Object.fromEntries(
+      Object.entries((s.challengeCount as object) ?? {}).map(([k, v]) => [k, Math.max(0, Math.round(Number(v) || 0))])
+    ),
+    keepAwake: s.keepAwake !== false,
+    haptics: s.haptics !== false,
   }
 }
 
@@ -192,6 +206,9 @@ export type Action =
   | { type: 'setMasteryTarget'; id: string; target: number }
   | { type: 'toggleMasteryDone'; id: string }
   | { type: 'setEnforceGates'; value: boolean }
+  | { type: 'setChallengeCount'; id: string; count: number }
+  | { type: 'setKeepAwake'; value: boolean }
+  | { type: 'setHaptics'; value: boolean }
   | { type: 'addWeapon'; name: string; cls: WeaponClass }
   | { type: 'updateCustomWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls'>> }
   | { type: 'removeCustomWeapon'; id: string }
@@ -210,8 +227,17 @@ export function reducer(s: State, a: Action): State {
       if (!weapon) return s
       const level = Math.max(0, Math.min(MAX_LEVEL, a.level))
       if (level > levelOf(s, a.id) && gateReason(s, weapon, level)) return s
-      return { ...s, progress: { ...s.progress, [a.id]: level } }
+      if (level === levelOf(s, a.id)) return s
+      const challengeCount = { ...s.challengeCount }
+      delete challengeCount[a.id]
+      return { ...s, progress: { ...s.progress, [a.id]: level }, challengeCount }
     }
+    case 'setChallengeCount':
+      return { ...s, challengeCount: { ...s.challengeCount, [a.id]: Math.max(0, Math.round(a.count) || 0) } }
+    case 'setKeepAwake':
+      return { ...s, keepAwake: a.value }
+    case 'setHaptics':
+      return { ...s, haptics: a.value }
     case 'setNote':
       return { ...s, notes: { ...s.notes, [a.id]: a.note } }
     case 'togglePin':
@@ -256,12 +282,15 @@ export function reducer(s: State, a: Action): State {
       const notes = { ...s.notes }
       delete progress[a.id]
       delete notes[a.id]
+      const challengeCount = { ...s.challengeCount }
+      delete challengeCount[a.id]
       return {
         ...s,
         customWeapons: s.customWeapons.filter((w) => w.id !== a.id),
         pinned: s.pinned.filter((x) => x !== a.id),
         progress,
         notes,
+        challengeCount,
       }
     }
     case 'toggleHidden':

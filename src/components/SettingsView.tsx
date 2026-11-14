@@ -2,7 +2,15 @@ import { useRef, useState, type Dispatch } from 'react'
 import { CLASSES, DATA_SOURCE, DEFAULT_WEAPONS, seasonLabel, type WeaponClass } from '../data'
 import { sanitize, type Action, type State } from '../store'
 
-export function SettingsView({ state, dispatch }: { state: State; dispatch: Dispatch<Action> }) {
+export function SettingsView({
+  state,
+  dispatch,
+  wakeSupported,
+}: {
+  state: State
+  dispatch: Dispatch<Action>
+  wakeSupported: boolean
+}) {
   const [name, setName] = useState('')
   const [cls, setCls] = useState<WeaponClass>('ar')
   const [msg, setMsg] = useState<string | null>(null)
@@ -30,6 +38,32 @@ export function SettingsView({ state, dispatch }: { state: State; dispatch: Disp
 
   return (
     <div className="settings-view">
+      <section className="panel">
+        <h2>Durante o jogo</h2>
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={state.keepAwake}
+            disabled={!wakeSupported}
+            onChange={(e) => dispatch({ type: 'setKeepAwake', value: e.target.checked })}
+          />
+          Manter a tela ligada com o app aberto
+          {!wakeSupported && <span className="muted"> (este navegador não suporta)</span>}
+        </label>
+        <label className="check">
+          <input
+            type="checkbox"
+            checked={state.haptics}
+            onChange={(e) => dispatch({ type: 'setHaptics', value: e.target.checked })}
+          />
+          Vibrar ao tocar nos contadores
+        </label>
+        <p className="muted">
+          Instale na tela inicial para abrir em tela cheia e usar sem internet: no Android, menu do Chrome → “Instalar
+          app”; no iPhone, Safari → Compartilhar → “Adicionar à Tela de Início”.
+        </p>
+      </section>
+
       <section className="panel">
         <h2>Regras</h2>
         <label className="check">

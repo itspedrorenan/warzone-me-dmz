@@ -1,121 +1,96 @@
-import { useState } from 'react'
-import { MODES, MASTERIES, GOLD_LEVEL, PLAT_LEVEL, HB_LEVEL, LAUNCH_WEAPONS, DATA_SOURCE, isReleased } from './data'
-import {
-  useTracker,
-  levelOf,
-  allWeapons,
-  countAtLeast,
-  divergenceUnlocked,
-  flashpointUnlocked,
-  masteryState,
-} from './store'
+import { useEffect, useState } from 'react'
+import { useTracker } from './store'
+import { useWakeLock } from './hooks'
+import { ModeSwitch } from './components/ModeSwitch'
+import { GrindView } from './components/GrindView'
 import { WeaponsView } from './components/WeaponsView'
-import { MasteryView } from './components/MasteryView'
+import { ProgressView } from './components/ProgressView'
 import { SettingsView } from './components/SettingsView'
+import { WeaponSheet } from './components/WeaponSheet'
 
-type Tab = 'weapons' | 'mastery' | 'settings'
+export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'weapons', label: 'Armas' },
-  { id: 'mastery', label: 'Maestrias' },
-  { id: 'settings', label: 'Ajustes' },
+const TABS: { id: Tab; label: string; icon: string }[] = [
+  { id: 'grind', label: 'Grind', icon: 'M12 2l2.4 6.9H22l-6 4.6 2.3 7.1L12 16.3 5.7 20.6 8 13.5 2 8.9h7.6z' },
+  { id: 'weapons', label: 'Armas', icon: 'M3 10h13l2-2h3v4h-3l-1 1H9l-1 5H5l1-5H3z' },
+  { id: 'progress', label: 'Progresso', icon: 'M4 20V10h3v10zm6.5 0V4h3v16zM17 20v-7h3v7z' },
+  { id: 'settings', label: 'Ajustes', icon: 'M12 8a4 4 0 100 8 4 4 0 000-8zm8.4 5.5l1.9 1.5-2 3.4-2.3-.9a8 8 0 01-2 1.2L15.7 21h-4l-.4-2.4a8 8 0 01-2-1.2l-2.3.9-2-3.4L7 13.5a8 8 0 010-2.9L5 9l2-3.4 2.3.9a8 8 0 012-1.2L11.7 3h4l.3 2.4a8 8 0 012 1.2l2.3-.9 2 3.4-1.9 1.5a8 8 0 010 2.9z' },
 ]
+
+const TAB_KEY = 'camo-tracker:tab'
+
+function initialTab(): Tab {
+  try {
+    const t = localStorage.getItem(TAB_KEY)
+    if (t === 'grind' || t === 'weapons' || t === 'progress' || t === 'settings') return t
+  } catch {
+    /* ignore */
+  }
+  return 'grind'
+}
 
 export default function App() {
   const [state, dispatch] = useTracker()
-  const [tab, setTab] = useState<Tab>('weapons')
+  const [tab, setTab] = useState<Tab>(initialTab)
+  const [openId, setOpenId] = useState<string | null>(null)
+  const wake = useWakeLock(state.keepAwake)
 
-  const total = LAUNCH_WEAPONS
-  const count = (lvl: number) => countAtLeast(state, lvl)
-  const masteriesDone = MASTERIES.filter((m) => masteryState(state, m.id).done).length
-  // Como no jogo, qualquer arma lançada substitui outra: contam as 33 mais avançadas.
-  const best = allWeapons(state)
-    .filter(isReleased)
-    .map((w) => levelOf(state, w.id))
-    .sort((a, b) => b - a)
-    .slice(0, total)
-  const ladderSum = best.reduce((a, b) => a + b, 0)
-  const ladderPct = ladderSum >= total * HB_LEVEL ? 100 : Math.min(99, Math.round((ladderSum / (total * HB_LEVEL)) * 100))
+  useEffect(() => {
+    try {
+      localStorage.setItem(TAB_KEY, tab)
+    } catch {
+      /* ignore */
+    }
+    window.scrollTo(0, 0)
+  }, [tab])
 
   return (
     <div className="app">
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true" />
-          <div>
-            <h1>Camo Tracker</h1>
-            <p className="sub">Modern Warfare 4 · DMZ · Warzone</p>
-          </div>
+          <h1>Camo Tracker</h1>
         </div>
-        <div className="mode-switch" role="tablist" aria-label="Modo de jogo">
-          {MODES.map((m) => (
-            <button
-              key={m.id}
-              role="tab"
-              aria-selected={state.mode === m.id}
-              className={`mode-btn mode-${m.id} ${state.mode === m.id ? 'active' : ''}`}
-              onClick={() => dispatch({ type: 'setMode', mode: m.id })}
-              title={m.label}
-            >
-              {m.short}
-            </button>
-          ))}
-        </div>
+        {wake.supported && (
+          <button
+            className={`awake ${wake.active ? 'on' : ''}`}
+            onClick={() => dispatch({ type: 'setKeepAwake', value: !state.keepAwake })}
+            aria-pressed={state.keepAwake}
+            title={state.keepAwake ? 'Tela sempre ligada: ativado' : 'Tela sempre ligada: desativado'}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 7a5 5 0 100 10 5 5 0 000-10zM11 1h2v3h-2zm0 19h2v3h-2zM1 11h3v2H1zm19 0h3v2h-3zM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4zm12.1 12.1l1.4-1.4 2.1 2.1-1.4 1.4zM4.2 18.4l2.1-2.1 1.4 1.4-2.1 2.1zM16.3 6.3l2.1-2.1 1.4 1.4-2.1 2.1z" />
+            </svg>
+            <span className="sr-only">Tela sempre ligada</span>
+          </button>
+        )}
+        <ModeSwitch mode={state.mode} dispatch={dispatch} />
       </header>
 
-      <section className="summary" aria-label="Resumo">
-        <Stat label="Escada" value={`${ladderPct}%`} pct={ladderPct} tone="neutral" />
-        <Stat label="Gold" value={`${count(GOLD_LEVEL)}/${total}`} pct={pct(count(GOLD_LEVEL), total)} tone="gold" />
-        <Stat label="Platinum" value={`${count(PLAT_LEVEL)}/${total}`} pct={pct(count(PLAT_LEVEL), total)} tone="platinum" />
-        <Stat label="Harmonic Break" value={`${count(HB_LEVEL)}/${total}`} pct={pct(count(HB_LEVEL), total)} tone="harmonic" />
-        <Stat label="Divergence" value={divergenceUnlocked(state) ? 'Liberada' : 'Bloqueada'} pct={divergenceUnlocked(state) ? 100 : 0} tone="divergence" />
-        <Stat label="Maestrias" value={`${masteriesDone}/9`} pct={pct(masteriesDone, 9)} tone="mastery" />
-        <Stat label="Flashpoint" value={flashpointUnlocked(state) ? 'Liberada' : 'Bloqueada'} pct={flashpointUnlocked(state) ? 100 : 0} tone="flashpoint" />
-      </section>
+      <main className="content">
+        {tab === 'grind' && <GrindView state={state} dispatch={dispatch} onOpen={setOpenId} goTo={setTab} />}
+        {tab === 'weapons' && <WeaponsView state={state} dispatch={dispatch} onOpen={setOpenId} />}
+        {tab === 'progress' && <ProgressView state={state} dispatch={dispatch} />}
+        {tab === 'settings' && <SettingsView state={state} dispatch={dispatch} wakeSupported={wake.supported} />}
+      </main>
 
-      <nav className="tabs" role="tablist" aria-label="Seções">
+      <nav className="bottom-nav" aria-label="Seções">
         {TABS.map((t) => (
           <button
             key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            className={`tab ${tab === t.id ? 'active' : ''}`}
+            className={`nav-btn ${tab === t.id ? 'active' : ''}`}
             onClick={() => setTab(t.id)}
+            aria-current={tab === t.id ? 'page' : undefined}
           >
-            {t.label}
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={t.icon} />
+            </svg>
+            <span>{t.label}</span>
           </button>
         ))}
       </nav>
 
-      <main>
-        {tab === 'weapons' && <WeaponsView state={state} dispatch={dispatch} />}
-        {tab === 'mastery' && <MasteryView state={state} dispatch={dispatch} />}
-        {tab === 'settings' && <SettingsView state={state} dispatch={dispatch} />}
-      </main>
-
-      <footer className="footer">
-        Projeto de fã, sem afiliação com a Activision. Dados de camuflagens:{' '}
-        <a href={DATA_SOURCE.repo} target="_blank" rel="noreferrer">
-          {DATA_SOURCE.name}
-        </a>{' '}
-        (licença {DATA_SOURCE.license}, importado em {new Date(DATA_SOURCE.importedAt + 'T00:00:00').toLocaleDateString('pt-BR')}
-        ). Itens com <span className="verify-dot" aria-hidden="true" /> ainda não foram confirmados — veja no jogo.
-        Progresso salvo neste navegador.
-      </footer>
-    </div>
-  )
-}
-
-const pct = (n: number, d: number) => (d ? Math.min(100, Math.round((n / d) * 100)) : 0)
-
-function Stat({ label, value, pct, tone }: { label: string; value: string; pct: number; tone: string }) {
-  return (
-    <div className={`stat tone-${tone}`}>
-      <span className="stat-label">{label}</span>
-      <span className="stat-value">{value}</span>
-      <span className="stat-bar" aria-hidden="true">
-        <span style={{ width: `${pct}%` }} />
-      </span>
+      {openId && <WeaponSheet id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />}
     </div>
   )
 }

@@ -141,6 +141,8 @@ export function challengeText(c: Challenge | undefined): string {
   switch (c.type) {
     case 'kills_in_match':
       return `${fmt(c.amount)} abates${who} em uma partida${times}`
+    case 'eliminations_in_match':
+      return `${fmt(c.amount)} eliminações${who} em uma única partida${times}`
     case 'rapid_kills': {
       const secs = c.description?.match(/(\d+)\s*seconds?/i)?.[1] ?? '5'
       return `${fmt(c.amount)} abates${who} em ${secs} segundos${times}`
@@ -214,6 +216,8 @@ export interface StepInfo {
   /** Desafio no modo selecionado. */
   challenge?: string
   pending?: boolean
+  /** Meta numérica do desafio (para o contador da tela Grind). */
+  target?: number
 }
 
 export function stepInfo(weapon: Weapon, step: LadderStep, mode: Mode): StepInfo {
@@ -227,11 +231,16 @@ export function stepInfo(weapon: Weapon, step: LadderStep, mode: Mode): StepInfo
       const s = weapon.specials[step.index - 8]
       if (!s) return { challenge: 'Requisito ainda não confirmado.', pending: true }
       const c = s.challenges[mode]
-      return { unlock: unlockText(s.unlock), challenge: challengeText(c), pending: isPending(c) || !s.unlock }
+      return {
+        unlock: unlockText(s.unlock),
+        challenge: challengeText(c),
+        pending: isPending(c) || !s.unlock,
+        target: challengeTarget(c),
+      }
     }
     case 'gold': {
       const c = data.gold[mode]
-      return { unlock: 'Todas as militares e especiais', challenge: challengeText(c), pending: isPending(c) }
+      return { unlock: 'Todas as militares e especiais', challenge: challengeText(c), pending: isPending(c), target: challengeTarget(c) }
     }
     case 'platinum': {
       const c = data.classes[weapon.cls]?.platinum[mode]
@@ -239,11 +248,17 @@ export function stepInfo(weapon: Weapon, step: LadderStep, mode: Mode): StepInfo
         unlock: `Gold em ${goldRequired(weapon.cls)} armas da classe`,
         challenge: challengeText(c),
         pending: isPending(c),
+        target: c ? challengeTarget(c) : 0,
       }
     }
     case 'harmonic': {
       const c = data.classes[weapon.cls]?.harmonic[mode]
-      return { unlock: `Platinum em ${LAUNCH_WEAPONS} armas`, challenge: challengeText(c), pending: isPending(c) }
+      return {
+        unlock: `Platinum em ${LAUNCH_WEAPONS} armas`,
+        challenge: challengeText(c),
+        pending: isPending(c),
+        target: c ? challengeTarget(c) : 0,
+      }
     }
   }
 }

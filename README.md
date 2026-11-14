@@ -1,6 +1,13 @@
 # Camo Tracker — Modern Warfare 4 · DMZ · Warzone
 
-Web app para acompanhar o grind de camuflagens do **Call of Duty: Modern Warfare 4**, com foco em Multiplayer, **DMZ** e **Warzone**.
+App para **celular**, feito para ficar aberto ao lado enquanto você joga **Call of Duty: Modern Warfare 4**, **DMZ** e **Warzone** e acompanhar o grind de camuflagens.
+
+## Durante o jogo
+
+- **Grind**: as armas que você está upando, cada uma com a camuflagem atual, o desafio exato no modo escolhido e um **contador grande** (+1 / −1 / +5 / +10). Quando bate a meta, o card acende e vibra; um toque em **Concluir** passa para a próxima camuflagem e zera o contador.
+- A **maestria ativa** do modo também aparece ali, com contador.
+- **Tela sempre ligada** (botão ☀ no topo), **vibração** nos toques e botões grandes para usar com uma mão.
+- **Instale na tela inicial** (Android: Chrome → “Instalar app”; iPhone: Safari → Compartilhar → “Adicionar à Tela de Início”). Abre em tela cheia e funciona **offline** depois da primeira visita.
 
 ## Funcionalidades
 
@@ -12,8 +19,8 @@ Web app para acompanhar o grind de camuflagens do **Call of Duty: Modern Warfare
   - Multiplayer: Mercurial Drift → Polyatomic Reforged → Orion Reforged
   - DMZ: Chiral → Ripple Tide → Helio
   - Warzone: Parallax → Damascus Reforged → Empyros
-- **Seletor de modo** (MW4 / DMZ / WZ): troca as dicas dos desafios e destaca a coluna de maestria do modo.
-- **Grind atual**: fixe armas com ★ para vê-las no topo.
+- **Seletor de modo** (MW4 / DMZ / WZ) sempre no topo: troca os desafios mostrados e a maestria ativa.
+- Navegação inferior: **Grind**, **Armas** (toque numa arma para ver todos os desafios; ★ põe no grind), **Progresso** e **Ajustes**.
 - Filtros por classe, status e busca; anotações por arma.
 - **Armas novas** que ainda não estejam nos dados podem ser adicionadas à mão; as do jogo podem ser ocultadas.
 - Progresso salvo no navegador (localStorage) + **exportar/importar JSON**.
