@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap');
 
 /* App só para celular: uma coluna estreita. Em telas maiores fica centralizada como um celular. */
 
@@ -30,11 +30,14 @@
   --divergence: #fff;
   --flashpoint: #fff;
 
+  /* Fonte única do app (mono). */
+  --font: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
   --radius: 14px;
   --nav-h: 64px;
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font);
   font-size: 16px;
   color: var(--text);
   background: var(--bg);
@@ -50,7 +53,7 @@ body {
   min-height: 100dvh;
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font);
   font-size: 16px;
   overscroll-behavior-y: none;
 }
@@ -63,7 +66,7 @@ input, select, textarea { font-size: 16px; } /* evita zoom automático no iOS */
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 a { color: var(--accent); }
 code { font-size: 0.85em; background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
-h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin: 0; }
+h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .muted { color: var(--muted); font-size: 0.85rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -99,7 +102,7 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .awake.on svg { fill: var(--warn); }
 
 .mode-switch { display: flex; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 3px; flex: none; }
-.mode-btn { border: 0; background: transparent; min-width: 48px; height: 34px; padding: 0 10px; border-radius: 999px; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.05em; color: var(--muted); }
+.mode-btn { border: 0; background: transparent; min-width: 48px; height: 34px; padding: 0 10px; border-radius: 999px; font-family: var(--font); font-weight: 700; font-size: 0.9rem; letter-spacing: 0; color: var(--muted); }
 .mode-btn.active { color: var(--accent-ink); }
 .mode-btn.mode-mp.active { background: var(--mp); }
 .mode-btn.mode-dmz.active { background: var(--dmz); }
@@ -128,7 +131,7 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .btn.primary:disabled { opacity: 0.4; }
 .btn.danger { color: var(--danger); border-color: var(--text); }
 .btn.ghost { background: transparent; }
-.btn.big { width: 100%; min-height: 54px; font-size: 1.05rem; font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.btn.big { width: 100%; min-height: 54px; font-size: 0.98rem; font-family: var(--font); font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
 .icon-btn { flex: none; background: var(--panel-2); border: 1px solid var(--line); border-radius: 50%; width: 40px; height: 40px; font-size: 1.4rem; line-height: 1; display: grid; place-items: center; }
 
 /* Grind ------------------------------------------------------------------- */
@@ -136,14 +139,14 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .mode-hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
 .empty-card { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius); padding: 22px 18px; display: flex; flex-direction: column; gap: 10px; text-align: center; }
 .empty-card p { margin: 0; }
-.empty-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.3rem; }
+.empty-title { font-family: var(--font); font-weight: 700; font-size: 1.3rem; }
 
 .grind-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s, box-shadow 0.2s; }
 .grind-card.ready { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
 .grind-card.finished { border-color: var(--text); }
 .gc-head { display: flex; align-items: flex-start; gap: 10px; }
 .gc-title { flex: 1; min-width: 0; background: none; border: 0; padding: 0; text-align: left; display: flex; flex-direction: column; }
-.gc-name { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.5rem; line-height: 1.1; }
+.gc-name { font-family: var(--font); font-weight: 700; font-size: 1.5rem; line-height: 1.1; }
 .gc-meta { font-size: 0.78rem; color: var(--muted); }
 .gc-now { display: flex; align-items: center; gap: 10px; }
 .gc-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; }
@@ -154,11 +157,11 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .gc-finished { margin: 0; font-weight: 600; color: var(--text); }
 
 .counter-big { display: grid; grid-template-columns: 72px 1fr 112px; align-items: center; gap: 10px; }
-.counter-big button { height: 72px; border-radius: 16px; border: 1px solid var(--line); background: var(--panel-2); font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.5rem; }
+.counter-big button { height: 72px; border-radius: 16px; border: 1px solid var(--line); background: var(--panel-2); font-family: var(--font); font-weight: 700; font-size: 1.5rem; }
 .counter-big .cb-plus { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-size: 1.9rem; }
 .counter-big button:active { transform: scale(0.96); }
 .counter-big button:disabled { opacity: 0.35; }
-.cb-value { text-align: center; font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+.cb-value { text-align: center; font-family: var(--font); font-weight: 700; }
 .cb-count { font-size: 2.6rem; line-height: 1; }
 .cb-target { display: block; font-size: 1rem; color: var(--muted); }
 .cb-bar { height: 6px; border-radius: 6px; background: var(--panel-2); overflow: hidden; }
@@ -168,9 +171,9 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 
 .mastery-mini { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
 .mastery-mini.locked { opacity: 0.75; }
-.mastery-mini strong { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; }
+.mastery-mini strong { font-family: var(--font); font-size: 1.2rem; }
 .mm-row { display: flex; align-items: center; gap: 8px; }
-.mm-count { margin-right: auto; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.2rem; }
+.mm-count { margin-right: auto; font-family: var(--font); font-weight: 700; font-size: 1.2rem; }
 .mm-row button { min-width: 56px; height: 48px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); font-weight: 700; font-size: 1.05rem; }
 .mm-row button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .mm-row button:disabled { opacity: 0.35; }
@@ -262,7 +265,7 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
 .stat-label { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; }
-.stat-value { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.5rem; }
+.stat-value { font-family: var(--font); font-weight: 700; font-size: 1.5rem; }
 .stat-bar { height: 4px; background: var(--panel-2); border-radius: 4px; overflow: hidden; }
 .stat-bar span { display: block; height: 100%; background: var(--accent); }
 .tone-gold .stat-bar span { background: var(--gold); }
