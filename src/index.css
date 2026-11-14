@@ -336,3 +336,16 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .wr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .gc-thumb { background: none; border: 0; padding: 4px 0; width: 100%; }
 .sheet-thumb { margin: 10px 0 2px; }
+
+/* Texturas das camuflagens (imagens oficiais): só aparecem em camuflagem concluída
+   e no quadrado "Agora". A imagem vem pela variável --tex definida no elemento. */
+.seg.done[style*="--tex"],
+.swatch.done[style*="--tex"],
+.swatch-sm[style*="--tex"],
+.mastery-swatch[style*="--tex"],
+.milestone-swatch[style*="--tex"] {
+  background: var(--tex) center / cover no-repeat !important;
+  border-color: transparent;
+}
+.swatch.done.has-tex { color: transparent; text-shadow: none; }
+.seg.done[style*="--tex"] { height: 10px; }

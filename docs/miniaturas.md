@@ -45,3 +45,15 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
   ficar inteira e sem pedaços do menu. O padrão do script serve só para os cards oficiais.
 - Depois de gerar, acrescente o id em `src/data/weaponImages.ts`.
 - Ou mande os prints para o Claude numa sessão e peça para converter e incluir.
+
+## Texturas das camuflagens
+
+- Recortes de 128×128 das imagens oficiais do [post de progressão do MW4](https://www.callofduty.com/blog/2026/10/call-of-duty-modern-warfare-4-ready-for-launch-progression-prestige)
+  (`MW4-RFL-PROGRESSION-019` a `-039`). Imagens © Activision.
+- Arquivos: `public/camos/<id>.webp`; lista em `src/data/camoImages.ts`; gerador em
+  `scripts/camo-textures/swatches.py`.
+- Têm textura: militares 1–8, Gold, Platinum, Harmonic Break, Divergence, as 9 maestrias e 14
+  especiais que aparecem no post (HAN 86, Sang 9mm, Wz.55 Striga, Oden, Mosin-Nagant, Hyeon Burst,
+  FSS Carbon Edge, Signal 50, Krait P68, Kastov 762). As demais especiais e o Flashpoint ficam brancos.
+- Onde aparecem: camuflagem concluída (escada da arma, barrinha de progresso, maestrias, Divergence)
+  e o quadrado "Agora" no Grind. Pendente continua só com contorno.

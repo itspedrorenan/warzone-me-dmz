@@ -15,6 +15,7 @@ import {
 import { allWeapons, countAtLeast, levelOf, classGoldDone, type Action, type State } from '../store'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
+import { stepTexture, texStyle } from '../data/camoImages'
 
 type StatusFilter = 'all' | 'todo' | 'gold' | 'platinum' | 'done'
 
@@ -153,7 +154,11 @@ function WeaponRow({
         </span>
         <span className="mini-ladder" aria-hidden="true">
           {LADDER.map((s) => (
-            <span key={s.index} className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`} />
+            <span
+              key={s.index}
+              className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`}
+              style={level > s.index ? texStyle(stepTexture(weapon, s)) : undefined}
+            />
           ))}
         </span>
         </span>

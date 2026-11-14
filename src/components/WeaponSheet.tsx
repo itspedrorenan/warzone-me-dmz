@@ -4,6 +4,7 @@ import { allWeapons, gateReason, levelOf, type Action, type State } from '../sto
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
+import { stepTexture, texStyle } from '../data/camoImages'
 
 export function WeaponSheet({
   id,
@@ -97,7 +98,11 @@ export function WeaponSheet({
                   disabled={!!blocked}
                   aria-pressed={done}
                 >
-                  <span className={`swatch tier-${step.tier} ${done ? 'done' : ''}`} aria-hidden="true">
+                  <span
+                    className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${done && stepTexture(weapon, step) ? 'has-tex' : ''}`}
+                    style={done ? texStyle(stepTexture(weapon, step)) : undefined}
+                    aria-hidden="true"
+                  >
                     {done ? '✓' : ''}
                   </span>
                   <span className="ladder-text">
