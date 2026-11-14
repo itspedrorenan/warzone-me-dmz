@@ -40,6 +40,8 @@ npm run import:divergence -- /tmp/Divergence
 
 O script confere se a licença continua MIT e registra o commit importado (aparece em *Ajustes → Fonte dos dados*).
 
+Miniaturas das armas: traço gerado a partir das imagens oficiais (© Activision). Como estão feitas e o plano de usar prints do próprio jogo: [docs/miniaturas.md](docs/miniaturas.md).
+
 Projeto de fã, sem afiliação com a Activision.
 
 ## Rodando localmente
