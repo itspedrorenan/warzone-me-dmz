@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { MODES, MASTERIES, GOLD_LEVEL, PLAT_LEVEL, HB_LEVEL } from './data'
+import { MODES, MASTERIES, GOLD_LEVEL, PLAT_LEVEL, HB_LEVEL, LAUNCH_WEAPONS, DATA_SOURCE, isReleased } from './data'
 import {
   useTracker,
   levelOf,
-  masteryWeapons,
+  allWeapons,
+  countAtLeast,
   divergenceUnlocked,
   flashpointUnlocked,
   masteryState,
@@ -24,13 +25,17 @@ export default function App() {
   const [state, dispatch] = useTracker()
   const [tab, setTab] = useState<Tab>('weapons')
 
-  const ws = masteryWeapons(state)
-  const total = ws.length
-  const count = (lvl: number) => ws.filter((w) => levelOf(state, w.id) >= lvl).length
+  const total = LAUNCH_WEAPONS
+  const count = (lvl: number) => countAtLeast(state, lvl)
   const masteriesDone = MASTERIES.filter((m) => masteryState(state, m.id).done).length
-  const ladderPct = total
-    ? Math.round((ws.reduce((acc, w) => acc + levelOf(state, w.id), 0) / (total * HB_LEVEL)) * 100)
-    : 0
+  // Como no jogo, qualquer arma lançada substitui outra: contam as 33 mais avançadas.
+  const best = allWeapons(state)
+    .filter(isReleased)
+    .map((w) => levelOf(state, w.id))
+    .sort((a, b) => b - a)
+    .slice(0, total)
+  const ladderSum = best.reduce((a, b) => a + b, 0)
+  const ladderPct = ladderSum >= total * HB_LEVEL ? 100 : Math.min(99, Math.round((ladderSum / (total * HB_LEVEL)) * 100))
 
   return (
     <div className="app">
@@ -89,15 +94,19 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        Projeto de fã, sem afiliação com a Activision. Dados reunidos de guias públicos — requisitos marcados com
-        <span className="verify-dot" aria-hidden="true" /> divergem entre fontes; confirme no jogo. Progresso salvo
-        neste navegador.
+        Projeto de fã, sem afiliação com a Activision. Dados de camuflagens:{' '}
+        <a href={DATA_SOURCE.repo} target="_blank" rel="noreferrer">
+          {DATA_SOURCE.name}
+        </a>{' '}
+        (licença {DATA_SOURCE.license}, importado em {new Date(DATA_SOURCE.importedAt + 'T00:00:00').toLocaleDateString('pt-BR')}
+        ). Itens com <span className="verify-dot" aria-hidden="true" /> ainda não foram confirmados — veja no jogo.
+        Progresso salvo neste navegador.
       </footer>
     </div>
   )
 }
 
-const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0)
+const pct = (n: number, d: number) => (d ? Math.min(100, Math.round((n / d) * 100)) : 0)
 
 function Stat({ label, value, pct, tone }: { label: string; value: string; pct: number; tone: string }) {
   return (

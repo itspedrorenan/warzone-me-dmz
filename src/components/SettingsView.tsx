@@ -1,5 +1,5 @@
 import { useRef, useState, type Dispatch } from 'react'
-import { CLASSES, DEFAULT_WEAPONS, type WeaponClass } from '../data'
+import { CLASSES, DATA_SOURCE, DEFAULT_WEAPONS, seasonLabel, type WeaponClass } from '../data'
 import { sanitize, type Action, type State } from '../store'
 
 export function SettingsView({ state, dispatch }: { state: State; dispatch: Dispatch<Action> }) {
@@ -7,8 +7,6 @@ export function SettingsView({ state, dispatch }: { state: State; dispatch: Disp
   const [cls, setCls] = useState<WeaponClass>('ar')
   const [msg, setMsg] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
-
-  const missingDefaults = DEFAULT_WEAPONS.filter((d) => !state.weapons.some((w) => w.id === d.id)).length
 
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })
@@ -40,16 +38,41 @@ export function SettingsView({ state, dispatch }: { state: State; dispatch: Disp
             checked={state.enforceGates}
             onChange={(e) => dispatch({ type: 'setEnforceGates', value: e.target.checked })}
           />
-          Respeitar pré-requisitos do jogo (Platinum exige Gold na classe, Harmonic Break exige Platinum em todas, maestrias
-          em sequência)
+          Respeitar pré-requisitos do jogo (Platinum exige Gold na classe, Harmonic Break exige Platinum em 33 armas,
+          maestrias em sequência, armas não lançadas bloqueadas)
         </label>
       </section>
 
       <section className="panel">
-        <h2>Armas ({state.weapons.length})</h2>
+        <h2>Armas do jogo ({DEFAULT_WEAPONS.length})</h2>
         <p className="muted">
-          Novas armas de temporada? Adicione aqui. Desmarque “Conta” para tirar uma arma da contagem de Harmonic Break /
-          Divergence.
+          Vêm dos dados importados. Oculte as que não quer ver. Qualquer arma lançada conta para os requisitos de 33
+          armas, inclusive as de temporada.
+        </p>
+        <div className="weapon-table" role="table" aria-label="Armas do jogo">
+          {DEFAULT_WEAPONS.map((w) => {
+            const hidden = state.hiddenWeapons.includes(w.id)
+            return (
+              <div className={`weapon-table-row defaults ${hidden ? 'is-hidden' : ''}`} role="row" key={w.id}>
+                <span className="wt-name">
+                  {w.name}
+                  {seasonLabel(w) && <span className="season-tag">{seasonLabel(w)}</span>}
+                </span>
+                <span className="muted">{CLASSES.find((c) => c.id === w.cls)?.short}</span>
+                <button className="btn ghost" onClick={() => dispatch({ type: 'toggleHidden', id: w.id })}>
+                  {hidden ? 'Mostrar' : 'Ocultar'}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      <section className="panel">
+        <h2>Armas personalizadas ({state.customWeapons.length})</h2>
+        <p className="muted">
+          Saiu uma arma que ainda não está nos dados? Adicione aqui. Os desafios dela ficam em branco; use as
+          anotações.
         </p>
         <form
           className="add-weapon"
@@ -72,49 +95,41 @@ export function SettingsView({ state, dispatch }: { state: State; dispatch: Disp
           </button>
         </form>
 
-        <div className="weapon-table" role="table" aria-label="Lista de armas">
-          {state.weapons.map((w) => (
-            <div className="weapon-table-row" role="row" key={w.id}>
-              <input
-                value={w.name}
-                onChange={(e) => dispatch({ type: 'updateWeapon', id: w.id, patch: { name: e.target.value } })}
-                aria-label="Nome"
-              />
-              <select
-                value={w.cls}
-                onChange={(e) => dispatch({ type: 'updateWeapon', id: w.id, patch: { cls: e.target.value as WeaponClass } })}
-                aria-label="Classe"
-              >
-                {CLASSES.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.short}
-                  </option>
-                ))}
-              </select>
-              <label className="check small" title="Conta para Harmonic Break / Divergence">
+        {state.customWeapons.length > 0 && (
+          <div className="weapon-table" role="table" aria-label="Armas personalizadas">
+            {state.customWeapons.map((w) => (
+              <div className="weapon-table-row" role="row" key={w.id}>
                 <input
-                  type="checkbox"
-                  checked={w.countsForMastery}
-                  onChange={(e) => dispatch({ type: 'updateWeapon', id: w.id, patch: { countsForMastery: e.target.checked } })}
+                  value={w.name}
+                  onChange={(e) => dispatch({ type: 'updateCustomWeapon', id: w.id, patch: { name: e.target.value } })}
+                  aria-label="Nome"
                 />
-                Conta
-              </label>
-              <button
-                className="btn ghost danger"
-                onClick={() => {
-                  if (confirm(`Remover ${w.name}? O progresso dela será apagado.`)) dispatch({ type: 'removeWeapon', id: w.id })
-                }}
-                aria-label={`Remover ${w.name}`}
-              >
-                Remover
-              </button>
-            </div>
-          ))}
-        </div>
-        {missingDefaults > 0 && (
-          <button className="btn" onClick={() => dispatch({ type: 'restoreDefaultWeapons' })}>
-            Restaurar {missingDefaults} arma(s) padrão removida(s)
-          </button>
+                <select
+                  value={w.cls}
+                  onChange={(e) =>
+                    dispatch({ type: 'updateCustomWeapon', id: w.id, patch: { cls: e.target.value as WeaponClass } })
+                  }
+                  aria-label="Classe"
+                >
+                  {CLASSES.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.short}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="btn ghost danger"
+                  onClick={() => {
+                    if (confirm(`Remover ${w.name}? O progresso dela será apagado.`))
+                      dispatch({ type: 'removeCustomWeapon', id: w.id })
+                  }}
+                  aria-label={`Remover ${w.name}`}
+                >
+                  Remover
+                </button>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 
@@ -152,6 +167,18 @@ export function SettingsView({ state, dispatch }: { state: State; dispatch: Disp
           </button>
         </div>
         {msg && <p className="toast" role="status">{msg}</p>}
+      </section>
+
+      <section className="panel">
+        <h2>Fonte dos dados</h2>
+        <p className="muted">
+          Armas e desafios importados de{' '}
+          <a href={DATA_SOURCE.repo} target="_blank" rel="noreferrer">
+            {DATA_SOURCE.name}
+          </a>{' '}
+          (licença {DATA_SOURCE.license}), commit <code>{DATA_SOURCE.commit.slice(0, 7)}</code>, em{' '}
+          {new Date(DATA_SOURCE.importedAt + 'T00:00:00').toLocaleDateString('pt-BR')}. Para atualizar, veja o README.
+        </p>
       </section>
     </div>
   )

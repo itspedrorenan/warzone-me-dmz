@@ -3,9 +3,12 @@ import {
   DEFAULT_WEAPONS,
   GOLD_LEVEL,
   HB_LEVEL,
+  LAUNCH_WEAPONS,
   MASTERIES,
   MAX_LEVEL,
   PLAT_LEVEL,
+  goldRequired,
+  isReleased,
   type Mode,
   type Weapon,
   type WeaponClass,
@@ -21,8 +24,11 @@ export interface MasteryState {
 }
 
 export interface State {
-  version: 1
-  weapons: Weapon[]
+  version: 2
+  /** Armas criadas pelo usuário (as padrão vêm dos dados importados). */
+  customWeapons: Weapon[]
+  /** IDs de armas padrão ocultadas. */
+  hiddenWeapons: string[]
   progress: Record<string, number>
   notes: Record<string, string>
   pinned: string[]
@@ -33,8 +39,9 @@ export interface State {
 }
 
 export const initialState = (): State => ({
-  version: 1,
-  weapons: DEFAULT_WEAPONS.map((w) => ({ ...w })),
+  version: 2,
+  customWeapons: [],
+  hiddenWeapons: [],
   progress: {},
   notes: {},
   pinned: [],
@@ -53,24 +60,55 @@ function load(): State {
   }
 }
 
-/** Aceita dados salvos/importados e preenche o que faltar. */
+const CLASS_IDS: WeaponClass[] = ['ar', 'smg', 'shotgun', 'lmg', 'marksman', 'sniper', 'pistol', 'launcher', 'melee']
+
+function customWeapon(id: string, name: string, cls: unknown): Weapon {
+  return {
+    id,
+    name,
+    cls: CLASS_IDS.includes(cls as WeaponClass) ? (cls as WeaponClass) : 'ar',
+    season: 0,
+    releaseDate: null,
+    military: null,
+    specials: [],
+    custom: true,
+  }
+}
+
+/** Aceita dados salvos/importados (inclusive o formato v1) e preenche o que faltar. */
 export function sanitize(input: unknown): State {
   const base = initialState()
   if (!input || typeof input !== 'object') return base
-  const s = input as Partial<State>
-  const weapons = Array.isArray(s.weapons) && s.weapons.length
-    ? s.weapons.filter((w) => w && typeof w.id === 'string' && typeof w.name === 'string')
-    : base.weapons
+  const s = input as Record<string, unknown>
+  const defaultIds = new Set(DEFAULT_WEAPONS.map((w) => w.id))
+
+  let customWeapons: Weapon[] = []
+  let hiddenWeapons: string[] = []
+  if (Array.isArray(s.customWeapons)) {
+    customWeapons = s.customWeapons
+      .filter((w) => w && typeof w.id === 'string' && typeof w.name === 'string' && !defaultIds.has(w.id))
+      .map((w) => customWeapon(w.id, w.name, w.cls))
+    hiddenWeapons = Array.isArray(s.hiddenWeapons) ? s.hiddenWeapons.filter((x) => defaultIds.has(x)) : []
+  } else if (Array.isArray(s.weapons)) {
+    // v1: a lista completa ficava no estado. Armas que não estão nos dados viram personalizadas;
+    // armas padrão que o usuário tinha removido ficam ocultas.
+    const v1 = s.weapons.filter((w) => w && typeof w.id === 'string' && typeof w.name === 'string')
+    customWeapons = v1.filter((w) => !defaultIds.has(w.id)).map((w) => customWeapon(w.id, w.name, w.cls))
+    const kept = new Set(v1.map((w) => w.id))
+    hiddenWeapons = DEFAULT_WEAPONS.filter((w) => w.season === 0 && !kept.has(w.id)).map((w) => w.id)
+  }
+
   const clampLevel = (n: unknown) => Math.max(0, Math.min(MAX_LEVEL, Math.round(Number(n) || 0)))
   const progress: Record<string, number> = {}
-  for (const [k, v] of Object.entries(s.progress ?? {})) progress[k] = clampLevel(v)
+  for (const [k, v] of Object.entries((s.progress as object) ?? {})) progress[k] = clampLevel(v)
   return {
-    version: 1,
-    weapons: weapons.map((w) => ({ ...w, countsForMastery: w.countsForMastery !== false })),
+    version: 2,
+    customWeapons,
+    hiddenWeapons,
     progress,
-    notes: typeof s.notes === 'object' && s.notes ? { ...s.notes } : {},
+    notes: typeof s.notes === 'object' && s.notes ? { ...(s.notes as Record<string, string>) } : {},
     pinned: Array.isArray(s.pinned) ? s.pinned.filter((x) => typeof x === 'string') : [],
-    mastery: typeof s.mastery === 'object' && s.mastery ? { ...s.mastery } : {},
+    mastery: typeof s.mastery === 'object' && s.mastery ? { ...(s.mastery as Record<string, MasteryState>) } : {},
     mode: s.mode === 'dmz' || s.mode === 'wz' ? s.mode : 'mp',
     enforceGates: s.enforceGates !== false,
   }
@@ -80,31 +118,32 @@ export function sanitize(input: unknown): State {
 // Seletores
 // ---------------------------------------------------------------------------
 
+export const allWeapons = (s: State): Weapon[] => [
+  ...DEFAULT_WEAPONS.filter((w) => !s.hiddenWeapons.includes(w.id)),
+  ...s.customWeapons,
+]
+
 export const levelOf = (s: State, id: string) => s.progress[id] ?? 0
 
-export const masteryWeapons = (s: State) => s.weapons.filter((w) => w.countsForMastery)
+/** Quantas armas (lançadas) já chegaram a um nível da escada. */
+export const countAtLeast = (s: State, level: number, cls?: WeaponClass) =>
+  allWeapons(s).filter((w) => (!cls || w.cls === cls) && isReleased(w) && levelOf(s, w.id) >= level).length
 
-export function classGoldDone(s: State, cls: WeaponClass) {
-  return s.weapons.filter((w) => w.cls === cls).every((w) => levelOf(s, w.id) >= GOLD_LEVEL)
-}
-
-export function allPlatinumDone(s: State) {
-  return masteryWeapons(s).every((w) => levelOf(s, w.id) >= PLAT_LEVEL)
-}
-
-export function divergenceUnlocked(s: State) {
-  const ws = masteryWeapons(s)
-  return ws.length > 0 && ws.every((w) => levelOf(s, w.id) >= HB_LEVEL)
-}
+export const classGoldDone = (s: State, cls: WeaponClass) => countAtLeast(s, GOLD_LEVEL, cls) >= goldRequired(cls)
+export const platinumGateDone = (s: State) => countAtLeast(s, PLAT_LEVEL) >= LAUNCH_WEAPONS
+export const hbGateDone = (s: State) => countAtLeast(s, HB_LEVEL) >= LAUNCH_WEAPONS
+/** Divergence é concedida ao completar Harmonic Break em 33 armas. */
+export const divergenceUnlocked = hbGateDone
 
 /** Motivo pelo qual um nível ainda não pode ser marcado (ou null). */
 export function gateReason(s: State, weapon: Weapon, level: number): string | null {
   if (!s.enforceGates) return null
+  if (!isReleased(weapon)) return 'Arma ainda não lançada.'
   if (level >= PLAT_LEVEL && !classGoldDone(s, weapon.cls)) {
-    return 'Platinum exige Gold em todas as armas da classe.'
+    return `Platinum exige Gold em ${goldRequired(weapon.cls)} armas da classe.`
   }
-  if (level >= HB_LEVEL && weapon.countsForMastery && !allPlatinumDone(s)) {
-    return 'Harmonic Break exige Platinum em todas as armas.'
+  if (level >= HB_LEVEL && !platinumGateDone(s)) {
+    return `Harmonic Break exige Platinum em ${LAUNCH_WEAPONS} armas.`
   }
   return null
 }
@@ -118,15 +157,24 @@ export function masteryTarget(s: State, id: string) {
   return masteryState(s, id).target ?? def?.target ?? 0
 }
 
-/** A maestria anterior da cadeia (ou Divergence, para a primeira) foi concluída? */
+/** O pré-requisito da maestria (anterior na cadeia, Divergence ou Harmonic Break) foi cumprido? */
 export function masteryUnlocked(s: State, id: string) {
   if (!s.enforceGates) return true
   const def = MASTERIES.find((m) => m.id === id)
   if (!def) return false
   const chain = MASTERIES.filter((m) => m.mode === def.mode)
   const idx = chain.findIndex((m) => m.id === id)
-  if (idx === 0) return divergenceUnlocked(s)
+  if (idx === 0) return def.requires === 'harmonic-break' ? hbGateDone(s) : divergenceUnlocked(s)
   return masteryState(s, chain[idx - 1].id).done
+}
+
+export function masteryPrereqLabel(id: string) {
+  const def = MASTERIES.find((m) => m.id === id)
+  if (!def) return ''
+  const chain = MASTERIES.filter((m) => m.mode === def.mode)
+  const idx = chain.findIndex((m) => m.id === id)
+  if (idx > 0) return chain[idx - 1].name
+  return def.requires === 'harmonic-break' ? `Harmonic Break em ${LAUNCH_WEAPONS} armas` : 'Divergence'
 }
 
 export const flashpointUnlocked = (s: State) => MASTERIES.every((m) => masteryState(s, m.id).done)
@@ -145,9 +193,9 @@ export type Action =
   | { type: 'toggleMasteryDone'; id: string }
   | { type: 'setEnforceGates'; value: boolean }
   | { type: 'addWeapon'; name: string; cls: WeaponClass }
-  | { type: 'updateWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls' | 'countsForMastery'>> }
-  | { type: 'removeWeapon'; id: string }
-  | { type: 'restoreDefaultWeapons' }
+  | { type: 'updateCustomWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls'>> }
+  | { type: 'removeCustomWeapon'; id: string }
+  | { type: 'toggleHidden'; id: string }
   | { type: 'replace'; state: State }
   | { type: 'reset' }
 
@@ -158,7 +206,7 @@ function slug(name: string) {
 export function reducer(s: State, a: Action): State {
   switch (a.type) {
     case 'setLevel': {
-      const weapon = s.weapons.find((w) => w.id === a.id)
+      const weapon = allWeapons(s).find((w) => w.id === a.id)
       if (!weapon) return s
       const level = Math.max(0, Math.min(MAX_LEVEL, a.level))
       if (level > levelOf(s, a.id) && gateReason(s, weapon, level)) return s
@@ -196,29 +244,33 @@ export function reducer(s: State, a: Action): State {
     case 'addWeapon': {
       const name = a.name.trim()
       if (!name) return s
+      const taken = new Set(allWeapons(s).map((w) => w.id).concat(DEFAULT_WEAPONS.map((w) => w.id)))
       let id = slug(name)
-      while (s.weapons.some((w) => w.id === id)) id += '-x'
-      return { ...s, weapons: [...s.weapons, { id, name, cls: a.cls, custom: true, countsForMastery: true }] }
+      while (taken.has(id)) id += '-x'
+      return { ...s, customWeapons: [...s.customWeapons, customWeapon(id, name, a.cls)] }
     }
-    case 'updateWeapon':
-      return { ...s, weapons: s.weapons.map((w) => (w.id === a.id ? { ...w, ...a.patch } : w)) }
-    case 'removeWeapon': {
+    case 'updateCustomWeapon':
+      return { ...s, customWeapons: s.customWeapons.map((w) => (w.id === a.id ? { ...w, ...a.patch } : w)) }
+    case 'removeCustomWeapon': {
       const progress = { ...s.progress }
       const notes = { ...s.notes }
       delete progress[a.id]
       delete notes[a.id]
       return {
         ...s,
-        weapons: s.weapons.filter((w) => w.id !== a.id),
+        customWeapons: s.customWeapons.filter((w) => w.id !== a.id),
         pinned: s.pinned.filter((x) => x !== a.id),
         progress,
         notes,
       }
     }
-    case 'restoreDefaultWeapons': {
-      const missing = DEFAULT_WEAPONS.filter((d) => !s.weapons.some((w) => w.id === d.id))
-      return { ...s, weapons: [...s.weapons, ...missing.map((w) => ({ ...w }))] }
-    }
+    case 'toggleHidden':
+      return {
+        ...s,
+        hiddenWeapons: s.hiddenWeapons.includes(a.id)
+          ? s.hiddenWeapons.filter((x) => x !== a.id)
+          : [...s.hiddenWeapons, a.id],
+      }
     case 'replace':
       return a.state
     case 'reset':

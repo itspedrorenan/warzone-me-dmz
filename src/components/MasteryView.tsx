@@ -1,20 +1,19 @@
 import type { Dispatch } from 'react'
-import { DIVERGENCE, FLASHPOINT, MASTERIES, MODES, HB_LEVEL, type Mode } from '../data'
+import { DIVERGENCE, FLASHPOINT, MASTERIES, MODES, HB_LEVEL, LAUNCH_WEAPONS, type Mode } from '../data'
 import {
+  countAtLeast,
   divergenceUnlocked,
   flashpointUnlocked,
-  levelOf,
+  masteryPrereqLabel,
   masteryState,
   masteryTarget,
   masteryUnlocked,
-  masteryWeapons,
   type Action,
   type State,
 } from '../store'
 
 export function MasteryView({ state, dispatch }: { state: State; dispatch: Dispatch<Action> }) {
-  const ws = masteryWeapons(state)
-  const hb = ws.filter((w) => levelOf(state, w.id) >= HB_LEVEL).length
+  const hb = countAtLeast(state, HB_LEVEL)
   const div = divergenceUnlocked(state)
   // Modo selecionado primeiro.
   const modes = [...MODES].sort((a, b) => (a.id === state.mode ? -1 : b.id === state.mode ? 1 : 0))
@@ -28,10 +27,10 @@ export function MasteryView({ state, dispatch }: { state: State; dispatch: Dispa
             <h3>{DIVERGENCE.name}</h3>
             <p>{DIVERGENCE.requirement}</p>
             <div className="bar">
-              <span style={{ width: `${ws.length ? (hb / ws.length) * 100 : 0}%` }} />
+              <span style={{ width: `${Math.min(100, (hb / LAUNCH_WEAPONS) * 100)}%` }} />
             </div>
             <p className="muted">
-              {hb}/{ws.length} armas com Harmonic Break {div && '· liberada ✓'}
+              {hb}/{LAUNCH_WEAPONS} armas com Harmonic Break {div && '· liberada ✓'}
             </p>
           </div>
         </div>
@@ -90,11 +89,11 @@ function ModeColumn({
             <div className="mastery-body">
               <h3>
                 {def.name}
-                {def.verify && <span className="verify-dot" title="Fontes divergem — confirme no jogo" />}
+                {def.verify && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
               </h3>
               <p className="req">{def.requirement}</p>
               {!unlocked && (
-                <p className="blocked-text">🔒 Conclua {i === 0 ? 'Divergence' : chain[i - 1].name} primeiro</p>
+                <p className="blocked-text">🔒 Requer {masteryPrereqLabel(def.id)}</p>
               )}
               {target > 0 && (
                 <>

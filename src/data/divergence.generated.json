@@ -1,0 +1,4381 @@
+{
+  "source": {
+    "name": "Divergence (ItchyBeard)",
+    "repo": "https://github.com/ItchyBeard/Divergence",
+    "commit": "039bee673a6da1a98a8d5cd06168494ade3268b5",
+    "license": "MIT",
+    "importedAt": "2026-11-14"
+  },
+  "launch": {
+    "weapons": 33,
+    "categories": {
+      "ar": 8,
+      "smg": 5,
+      "shotgun": 2,
+      "lmg": 3,
+      "marksman": 3,
+      "sniper": 3,
+      "pistol": 4,
+      "launcher": 4,
+      "melee": 1
+    }
+  },
+  "gold": {
+    "mp": {
+      "status": "available",
+      "type": "eliminations_in_match",
+      "amount": 15,
+      "target": "players"
+    },
+    "dmz": {
+      "status": "available",
+      "type": "eliminations_in_match",
+      "amount": 100,
+      "target": "enemies"
+    },
+    "wz": {
+      "status": "available",
+      "type": "kills_in_match",
+      "amount": 8,
+      "target": "players",
+      "description": "Get 8 player kills in a single match"
+    }
+  },
+  "classes": {
+    "ar": {
+      "goldRequired": 8,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "headshots",
+          "amount": 50,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "headshots",
+          "amount": 100,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "headshots",
+          "amount": 25,
+          "target": "players"
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "double_kills",
+          "amount": 25,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "double_kills",
+          "amount": 50,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "rapid_kills",
+          "amount": 2,
+          "target": "players",
+          "times": 15,
+          "description": "Get 2 player kills within 10 seconds 15 times"
+        }
+      }
+    },
+    "smg": {
+      "goldRequired": 5,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 25,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 75,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 15,
+          "target": "players"
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 50,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 100,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 25,
+          "target": "players"
+        }
+      }
+    },
+    "shotgun": {
+      "goldRequired": 2,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 50,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 125,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "unavailable",
+          "reason": "Requirement pending."
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "kills_without_reloading",
+          "amount": 2,
+          "target": "players",
+          "times": 25
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_without_reloading",
+          "amount": 2,
+          "target": "enemies",
+          "times": 50
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_reloading",
+          "amount": 2,
+          "target": "players",
+          "times": 15
+        }
+      }
+    },
+    "lmg": {
+      "goldRequired": 3,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "kills_without_dying",
+          "amount": 3,
+          "target": "players",
+          "times": 15
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_without_damage",
+          "amount": 3,
+          "target": "enemies",
+          "times": 50
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_dying",
+          "amount": 3,
+          "target": "players",
+          "times": 10
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "kills_without_releasing_trigger",
+          "amount": 2,
+          "target": "players",
+          "times": 25
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_without_releasing_trigger",
+          "amount": 2,
+          "target": "enemies",
+          "times": 75
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_releasing_trigger",
+          "amount": 2,
+          "target": "players",
+          "times": 15
+        }
+      }
+    },
+    "marksman": {
+      "goldRequired": 3,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 75,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 150,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 35,
+          "target": "players"
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "one_shot_kills",
+          "amount": 75,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "one_shot_kills",
+          "amount": 150,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_damage_from_target",
+          "amount": 45,
+          "target": "players",
+          "description": "Get 45 player kills without taking damage from the target"
+        }
+      }
+    },
+    "sniper": {
+      "goldRequired": 3,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 75,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 150,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "prone_kills",
+          "amount": 35,
+          "target": "players"
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "one_shot_kills",
+          "amount": 75,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "one_shot_kills",
+          "amount": 150,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "one_shot_kills",
+          "amount": 35,
+          "target": "players"
+        }
+      }
+    },
+    "pistol": {
+      "goldRequired": 4,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 20,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 75,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 10,
+          "target": "players"
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 40,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 100,
+          "target": "enemies"
+        },
+        "wz": {
+          "status": "available",
+          "type": "hipfire_kills",
+          "amount": 10,
+          "target": "players"
+        }
+      }
+    },
+    "launcher": {
+      "goldRequired": 4,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "kills_without_damage",
+          "amount": 2,
+          "target": "players",
+          "times": 15
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_without_damage",
+          "amount": 2,
+          "target": "enemies",
+          "times": 50
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_damage",
+          "amount": 2,
+          "target": "players",
+          "times": 8
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "kills_in_match",
+          "amount": 10,
+          "target": "players",
+          "times": 7
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_in_match",
+          "amount": 10,
+          "target": "enemies",
+          "times": 15
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_in_match",
+          "amount": 10,
+          "target": "players",
+          "times": 5,
+          "description": "Get 10 player kills in a single match 5 times"
+        }
+      }
+    },
+    "melee": {
+      "goldRequired": 1,
+      "platinum": {
+        "mp": {
+          "status": "available",
+          "type": "kills_without_dying",
+          "amount": 3,
+          "target": "players",
+          "times": 15
+        },
+        "dmz": {
+          "status": "available",
+          "type": "kills_without_damage",
+          "amount": 3,
+          "target": "enemies",
+          "times": 50
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_without_dying",
+          "amount": 3,
+          "target": "players",
+          "times": 10
+        }
+      },
+      "harmonic": {
+        "mp": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 25,
+          "target": "players"
+        },
+        "dmz": {
+          "status": "unavailable",
+          "reason": "Requirement pending: DMZ target needs confirmation."
+        },
+        "wz": {
+          "status": "available",
+          "type": "kills_from_behind",
+          "amount": 15,
+          "target": "players"
+        }
+      }
+    }
+  },
+  "masteries": {
+    "mp": {
+      "availableFromSeason": 0,
+      "chain": [
+        {
+          "id": "mercurial-drift",
+          "name": "Mercurial Drift",
+          "requires": "divergence",
+          "challenge": {
+            "status": "available",
+            "type": "kills_in_match",
+            "amount": 10,
+            "target": "players",
+            "times": 250
+          }
+        },
+        {
+          "id": "polyatomic-reforged",
+          "name": "Polyatomic Reforged",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "kills_without_damage",
+            "amount": 3,
+            "target": "players",
+            "times": 300
+          }
+        },
+        {
+          "id": "orion-reforged",
+          "name": "Orion Reforged",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "kills_without_dying",
+            "amount": 5,
+            "target": "players",
+            "times": 500
+          }
+        }
+      ]
+    },
+    "dmz": {
+      "availableFromSeason": 0,
+      "chain": [
+        {
+          "id": "chiral",
+          "name": "Chiral",
+          "requires": "divergence",
+          "challenge": {
+            "status": "available",
+            "type": "tier_3_plus_kills",
+            "amount": 2500,
+            "target": "enemies"
+          }
+        },
+        {
+          "id": "ripple-tide",
+          "name": "Ripple Tide",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "lt_dog_tags_exfil_in_deployment",
+            "amount": 2,
+            "target": "dog-tags",
+            "times": 50
+          }
+        },
+        {
+          "id": "helio",
+          "name": "Helio",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "legendary_weapon_kills_max_level_operator",
+            "amount": 25000,
+            "target": "enemies"
+          }
+        }
+      ]
+    },
+    "wz": {
+      "availableFromSeason": 1,
+      "chain": [
+        {
+          "id": "parallax",
+          "name": "Parallax",
+          "requires": "harmonic-break",
+          "challenge": {
+            "status": "available",
+            "type": "kills_in_match",
+            "amount": 5,
+            "target": "players",
+            "times": 300,
+            "description": "Get 5 kills in a match, 300 times."
+          }
+        },
+        {
+          "id": "damascus-reforged",
+          "name": "Damascus Reforged",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "kills_without_plating",
+            "amount": 2,
+            "target": "players",
+            "times": 200,
+            "description": "Get 2 kills without plating, 200 times."
+          }
+        },
+        {
+          "id": "empyros",
+          "name": "Empyros",
+          "requires": null,
+          "challenge": {
+            "status": "available",
+            "type": "top_5_with_kills",
+            "amount": 6,
+            "target": "players",
+            "times": 75,
+            "description": "Finish in the Top 5 with at least 6 kills, 75 times."
+          }
+        }
+      ]
+    }
+  },
+  "weapons": [
+    {
+      "id": "han-86",
+      "name": "HAN 86",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          17,
+          24,
+          33,
+          41,
+          49,
+          56,
+          64
+        ]
+      },
+      "specials": [
+        {
+          "name": "Smoke",
+          "unlock": {
+            "type": "unlocks",
+            "value": 24
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Stormwave",
+          "unlock": {
+            "type": "unlocks",
+            "value": 45
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Red",
+          "unlock": {
+            "type": "unlocks",
+            "value": 71
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 15
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 3,
+              "target": "enemies",
+              "times": 50
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "name": "M4",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          17,
+          25,
+          34,
+          38,
+          43,
+          50,
+          58
+        ]
+      },
+      "specials": [
+        {
+          "name": "Myriad",
+          "unlock": {
+            "type": "unlocks",
+            "value": 25
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Green",
+          "unlock": {
+            "type": "unlocks",
+            "value": 42
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "behind_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "behind_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_from_behind",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Night Ops",
+          "unlock": {
+            "type": "unlocks",
+            "value": 50
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "hyeon-burst",
+      "name": "HYEON BURST",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          16,
+          25,
+          31,
+          39,
+          48,
+          54,
+          61
+        ]
+      },
+      "specials": [
+        {
+          "name": "Ponderosa",
+          "unlock": {
+            "type": "unlocks",
+            "value": 22
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 30
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Red Rain",
+          "unlock": {
+            "type": "unlocks",
+            "value": 45
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Kitty Kaos",
+          "unlock": {
+            "type": "unlocks",
+            "value": 39
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 100,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 250,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 45,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kastov-762",
+      "name": "KASTOV 762",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          18,
+          26,
+          36,
+          44,
+          53,
+          60,
+          66
+        ]
+      },
+      "specials": [
+        {
+          "name": "Samnim",
+          "unlock": {
+            "type": "unlocks",
+            "value": 22
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 5,
+              "target": "enemies",
+              "times": 25
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": null,
+              "times": 5,
+              "description": "Get 3 kills without dying 5 times"
+            }
+          }
+        },
+        {
+          "name": "Raster Aux",
+          "unlock": {
+            "type": "unlocks",
+            "value": 47
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Yellow",
+          "unlock": {
+            "type": "unlocks",
+            "value": 25
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "patriot-xmr",
+      "name": "PATRIOT XMR",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          10,
+          19,
+          27,
+          35,
+          42,
+          51,
+          58,
+          65
+        ]
+      },
+      "specials": [
+        {
+          "name": "Dune Sea",
+          "unlock": {
+            "type": "unlocks",
+            "value": 23
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Scorch",
+          "unlock": {
+            "type": "unlocks",
+            "value": 48
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Disperse",
+          "unlock": {
+            "type": "unlocks",
+            "value": 44
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "oden",
+      "name": "ODEN",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          11,
+          20,
+          24,
+          32,
+          38,
+          45,
+          52,
+          58
+        ]
+      },
+      "specials": [
+        {
+          "name": "Dark Moss",
+          "unlock": {
+            "type": "unlocks",
+            "value": 24
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 25,
+              "target": "players",
+              "description": "Get 25 Player Kills with the Miri 40MM Grenade Launcher"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 75,
+              "target": "enemies",
+              "description": "Get 75 Enemy Kills with the Miri 40MM Grenade Launcher"
+            },
+            "wz": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 15,
+              "target": "players",
+              "description": "Get 15 player kills with the Miri 40mm Grenade Launcher"
+            }
+          }
+        },
+        {
+          "name": "Shale",
+          "unlock": {
+            "type": "unlocks",
+            "value": 43
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 30
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Hot Rod",
+          "unlock": {
+            "type": "unlocks",
+            "value": 64
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 100,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 250,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 45,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "axion",
+      "name": "AXION",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          18,
+          25,
+          33,
+          40,
+          47,
+          54,
+          61
+        ]
+      },
+      "specials": [
+        {
+          "name": "Splinter Rock",
+          "unlock": {
+            "type": "unlocks",
+            "value": 22
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Sunset Tropic",
+          "unlock": {
+            "type": "unlocks",
+            "value": 44
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 25,
+              "target": "players",
+              "description": "Get 25 Player Kills with the Miri 40mm Grenade Launcher"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 75,
+              "target": "enemies",
+              "description": "Get 75 Enemy Kills with the Miri 40mm Grenade Launcher"
+            },
+            "wz": {
+              "status": "available",
+              "type": "grenade_launcher_kills",
+              "amount": 10,
+              "target": "players",
+              "description": "Get 10 player kills with the Miri 40mm Grenade Launcher"
+            }
+          }
+        },
+        {
+          "name": "Cyan",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 25
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 50
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 15
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cronen-squall",
+      "name": "CRONEN SQUALL",
+      "cls": "ar",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          16,
+          23,
+          30,
+          38,
+          44,
+          53,
+          59
+        ]
+      },
+      "specials": [
+        {
+          "name": "Oni",
+          "unlock": {
+            "type": "unlocks",
+            "value": 23
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Urban Smoke",
+          "unlock": {
+            "type": "unlocks",
+            "value": 44
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Optical Reverb",
+          "unlock": {
+            "type": "unlocks",
+            "value": 66
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 15
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "cronen-osprey",
+      "name": "CRONEN OSPREY",
+      "cls": "ar",
+      "season": 1,
+      "releaseDate": "2026-11-06",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          6,
+          10,
+          12,
+          16,
+          19,
+          22,
+          24,
+          27
+        ]
+      },
+      "specials": [
+        {
+          "name": "In The Weeds",
+          "unlock": {
+            "type": "unlocks",
+            "value": 12
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Dark Ichor",
+          "unlock": {
+            "type": "unlocks",
+            "value": 23
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 30,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Chained",
+          "unlock": {
+            "type": "unlocks",
+            "value": 29
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 25
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 20
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "iso-nightshade",
+      "name": "ISO NIGHTSHADE",
+      "cls": "smg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          11,
+          18,
+          24,
+          30,
+          37,
+          43,
+          49,
+          56
+        ]
+      },
+      "specials": [
+        {
+          "name": "Asphalt",
+          "unlock": {
+            "type": "unlocks",
+            "value": 21
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Black Topo",
+          "unlock": {
+            "type": "unlocks",
+            "value": 43
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 30,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": null,
+              "times": 5,
+              "description": "Get 2 kills within 10 seconds 5 times"
+            }
+          }
+        },
+        {
+          "name": "Brown",
+          "unlock": {
+            "type": "unlocks",
+            "value": 26
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 15
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 3,
+              "target": "enemies",
+              "times": 50
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "vel-46",
+      "name": "VEL 46",
+      "cls": "smg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          14,
+          21,
+          27,
+          32,
+          39,
+          46,
+          53
+        ]
+      },
+      "specials": [
+        {
+          "name": "Jungle Shadow",
+          "unlock": {
+            "type": "unlocks",
+            "value": 18
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Ghast",
+          "unlock": {
+            "type": "unlocks",
+            "value": 38
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Gunmetal",
+          "unlock": {
+            "type": "unlocks",
+            "value": 59
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "wz-55-striga",
+      "name": "WZ.55 STRIGA",
+      "cls": "smg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          11,
+          17,
+          22,
+          28,
+          35,
+          40,
+          46,
+          53
+        ]
+      },
+      "specials": [
+        {
+          "name": "Stellation",
+          "unlock": {
+            "type": "unlocks",
+            "value": 19
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Rattlesnake",
+          "unlock": {
+            "type": "unlocks",
+            "value": 40
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Dark Tan",
+          "unlock": {
+            "type": "unlocks",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ppsh-41",
+      "name": "PPSH-41",
+      "cls": "smg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          10,
+          16,
+          22,
+          30,
+          37,
+          43,
+          50,
+          56
+        ]
+      },
+      "specials": [
+        {
+          "name": "Blackwell",
+          "unlock": {
+            "type": "unlocks",
+            "value": 19
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 30,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": null,
+              "times": 5,
+              "description": "Get 2 kills within 10 seconds 5 times"
+            }
+          }
+        },
+        {
+          "name": "Iron",
+          "unlock": {
+            "type": "unlocks",
+            "value": 40
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Currents",
+          "unlock": {
+            "type": "unlocks",
+            "value": 30
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 100,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 250,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 45,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "x-58-nyx",
+      "name": "X-58 NYX",
+      "cls": "smg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          14,
+          19,
+          24,
+          28,
+          34,
+          41,
+          46
+        ]
+      },
+      "specials": [
+        {
+          "name": "Sniper Veil",
+          "unlock": {
+            "type": "unlocks",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_while_moving",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Carbonated",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Lime",
+          "unlock": {
+            "type": "unlocks",
+            "value": 23
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "csg-35",
+      "name": "CSG-35",
+      "cls": "smg",
+      "season": 1,
+      "releaseDate": "2026-11-06",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          10,
+          14,
+          16,
+          18,
+          22,
+          25,
+          28
+        ]
+      },
+      "specials": [
+        {
+          "name": "Polyhedron",
+          "unlock": {
+            "type": "unlocks",
+            "value": 11
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 20
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Rind",
+          "unlock": {
+            "type": "unlocks",
+            "value": 20
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 30,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Black Grip",
+          "unlock": {
+            "type": "unlocks",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_while_moving",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_while_moving",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rezi-12",
+      "name": "REZI 12",
+      "cls": "shotgun",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          10,
+          17,
+          25,
+          29,
+          37,
+          41,
+          46,
+          53
+        ]
+      },
+      "specials": [
+        {
+          "name": "Struck Oil",
+          "unlock": {
+            "type": "unlocks",
+            "value": 21
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Brushstroke",
+          "unlock": {
+            "type": "unlocks",
+            "value": 41
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "White Pine",
+          "unlock": {
+            "type": "unlocks",
+            "value": 22
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "warlord",
+      "name": "WARLORD",
+      "cls": "shotgun",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          12,
+          18,
+          24,
+          29,
+          36,
+          42,
+          48,
+          54
+        ]
+      },
+      "specials": [
+        {
+          "name": "Redshift",
+          "unlock": {
+            "type": "unlocks",
+            "value": 20
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_while_moving",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Corrupted Clay",
+          "unlock": {
+            "type": "unlocks",
+            "value": 40
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 30,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending."
+            }
+          }
+        },
+        {
+          "name": "Magma Ire",
+          "unlock": {
+            "type": "unlocks",
+            "value": 59
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "jak-12",
+      "name": "JAK 12",
+      "cls": "shotgun",
+      "season": 1,
+      "releaseDate": null,
+      "military": null,
+      "specials": [
+        {
+          "name": "Special Camo 1 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        },
+        {
+          "name": "Special Camo 2 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        },
+        {
+          "name": "Special Camo 3 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "finn-lmg",
+      "name": "FINN LMG",
+      "cls": "lmg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          11,
+          17,
+          23,
+          30,
+          36,
+          41,
+          47,
+          52
+        ]
+      },
+      "specials": [
+        {
+          "name": "Desert Tactics",
+          "unlock": {
+            "type": "unlocks",
+            "value": 17
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 10,
+              "target": "players",
+              "description": "Get 10 point blank kills against Players"
+            }
+          }
+        },
+        {
+          "name": "Green Tiger",
+          "unlock": {
+            "type": "unlocks",
+            "value": 37
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 30
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5,
+              "description": "Get 2 Kills without Reloading 5 times against Players"
+            }
+          }
+        },
+        {
+          "name": "Thunderhead",
+          "unlock": {
+            "type": "unlocks",
+            "value": 36
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "type-73",
+      "name": "TYPE 73",
+      "cls": "lmg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          11,
+          18,
+          25,
+          33,
+          40,
+          47,
+          54,
+          60
+        ]
+      },
+      "specials": [
+        {
+          "name": "Ash Pine",
+          "unlock": {
+            "type": "unlocks",
+            "value": 22
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Outcrop",
+          "unlock": {
+            "type": "unlocks",
+            "value": 23
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 30,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": null,
+              "times": 5,
+              "description": "Get 2 kills within 10 seconds 5 times"
+            }
+          }
+        },
+        {
+          "name": "Foxtrail",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 20,
+              "target": "players",
+              "description": "Get 20 headshot kills against players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "apoc-338",
+      "name": "APOC 338",
+      "cls": "lmg",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          14,
+          21,
+          25,
+          32,
+          39,
+          43,
+          50
+        ]
+      },
+      "specials": [
+        {
+          "name": "Phantom Flux",
+          "unlock": {
+            "type": "unlocks",
+            "value": 14
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Mineral",
+          "unlock": {
+            "type": "unlocks",
+            "value": 35
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Tiger Swipe",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 100,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 250,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 45,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mar-9",
+      "name": "MAR-9",
+      "cls": "marksman",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          18,
+          28,
+          37,
+          44,
+          51,
+          57,
+          68
+        ]
+      },
+      "specials": [
+        {
+          "name": "Mangrove",
+          "unlock": {
+            "type": "unlocks",
+            "value": 25
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Fungal Grid",
+          "unlock": {
+            "type": "unlocks",
+            "value": 48
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "crouched_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "crouched_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "crouched_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "White",
+          "unlock": {
+            "type": "unlocks",
+            "value": 43
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "oris-8-6",
+      "name": "ORIS 8.6",
+      "cls": "marksman",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          10,
+          17,
+          26,
+          32,
+          41,
+          48,
+          54,
+          60
+        ]
+      },
+      "specials": [
+        {
+          "name": "Hibiscus",
+          "unlock": {
+            "type": "unlocks",
+            "value": 26
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Fire Topo",
+          "unlock": {
+            "type": "unlocks",
+            "value": 48
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 10,
+              "description": "Get 2 player kills within 10 seconds 10 times"
+            }
+          }
+        },
+        {
+          "name": "Deep Space",
+          "unlock": {
+            "type": "unlocks",
+            "value": 37
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 15
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 3,
+              "target": "enemies",
+              "times": 50
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mosin-nagant",
+      "name": "MOSIN NAGANT",
+      "cls": "marksman",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          16,
+          24,
+          30,
+          37,
+          46,
+          54,
+          60
+        ]
+      },
+      "specials": [
+        {
+          "name": "Ice Sheer",
+          "unlock": {
+            "type": "unlocks",
+            "value": 24
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Fractal Snow",
+          "unlock": {
+            "type": "unlocks",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 30
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Sticker Shock",
+          "unlock": {
+            "type": "unlocks",
+            "value": 37
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "focused_kills",
+              "amount": 100,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "focused_kills",
+              "amount": 250,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "focused_kills",
+              "amount": 45,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "kg-7-vulcan",
+      "name": "KG-7 VULCAN",
+      "cls": "sniper",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          12,
+          21,
+          30,
+          37,
+          46,
+          53,
+          60,
+          68
+        ]
+      },
+      "specials": [
+        {
+          "name": "Treeline",
+          "unlock": {
+            "type": "unlocks",
+            "value": 21
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending: challenge threshold needs confirmation."
+            },
+            "wz": {
+              "status": "available",
+              "type": "hipfire_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Spidersilk",
+          "unlock": {
+            "type": "unlocks",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "focused_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Tension",
+          "unlock": {
+            "type": "unlocks",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 2,
+              "target": "players",
+              "times": 20
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 2,
+              "target": "enemies",
+              "times": 30
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "astaroth-57",
+      "name": "ASTAROTH .57",
+      "cls": "sniper",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          14,
+          19,
+          25,
+          31,
+          36,
+          41,
+          47
+        ]
+      },
+      "specials": [
+        {
+          "name": "Dry Brush",
+          "unlock": {
+            "type": "unlocks",
+            "value": 19
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 3,
+              "target": "enemies",
+              "times": 25
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Backcountry",
+          "unlock": {
+            "type": "unlocks",
+            "value": 36
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "mounted_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Dread Plague",
+          "unlock": {
+            "type": "unlocks",
+            "value": 42
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 20,
+              "description": "Get 2 Player Kills within 5 Seconds 20 times"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "enemies",
+              "times": 50,
+              "description": "Get 2 Enemy Kills within 5 Seconds 50 times"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 10,
+              "description": "Get 2 player kills within 5 seconds 10 times"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "signal-50",
+      "name": "SIGNAL 50",
+      "cls": "sniper",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          17,
+          27,
+          34,
+          42,
+          51,
+          56,
+          66
+        ]
+      },
+      "specials": [
+        {
+          "name": "Anaconda",
+          "unlock": {
+            "type": "unlocks",
+            "value": 27
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 10,
+              "description": "Get 2 Player Kills within 5 Seconds 10 times"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "enemies",
+              "times": 25,
+              "description": "Get 2 Kills within 5 Seconds 25 times"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 5,
+              "description": "Get 2 player kills within 5 seconds 5 times"
+            }
+          }
+        },
+        {
+          "name": "Ripplewave",
+          "unlock": {
+            "type": "unlocks",
+            "value": 51
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 30,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "quickscope_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Sunburn",
+          "unlock": {
+            "type": "unlocks",
+            "value": 43
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "one_shot_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sang-9mm",
+      "name": "SANG 9MM",
+      "cls": "pistol",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          12,
+          16,
+          20,
+          24,
+          27,
+          30,
+          34
+        ]
+      },
+      "specials": [
+        {
+          "name": "Autumn",
+          "unlock": {
+            "type": "unlocks",
+            "value": 12
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "ads_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Snakeskin",
+          "unlock": {
+            "type": "unlocks",
+            "value": 24
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 5
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_damage",
+              "amount": 3,
+              "target": "enemies",
+              "times": 15
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_dying",
+              "amount": 3,
+              "target": "players",
+              "times": 3
+            }
+          }
+        },
+        {
+          "name": "Space Time",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "akimbo_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "akimbo_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "akimbo_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "krait-p68",
+      "name": "KRAIT P68",
+      "cls": "pistol",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          9,
+          13,
+          17,
+          21,
+          24,
+          27,
+          31,
+          34
+        ]
+      },
+      "specials": [
+        {
+          "name": "Off Grid",
+          "unlock": {
+            "type": "unlocks",
+            "value": 12
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "ledge_hanging_kills",
+              "amount": 15,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "ledge_hanging_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "sliding_kills",
+              "amount": 10,
+              "target": null,
+              "description": "Get 10 sliding kills"
+            }
+          }
+        },
+        {
+          "name": "Urban Flamingo",
+          "unlock": {
+            "type": "unlocks",
+            "value": 24
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 15,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Smokescreen",
+          "unlock": {
+            "type": "unlocks",
+            "value": 34
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 50,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 125,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "silenced_kills",
+              "amount": 25,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "50-gs",
+      "name": ".50 GS",
+      "cls": "pistol",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          6,
+          9,
+          11,
+          14,
+          17,
+          21,
+          25,
+          28
+        ]
+      },
+      "specials": [
+        {
+          "name": "Frosted",
+          "unlock": {
+            "type": "unlocks",
+            "value": 10
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "headshots",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Splatter Ops",
+          "unlock": {
+            "type": "unlocks",
+            "value": 21
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 7,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 20,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending."
+            }
+          }
+        },
+        {
+          "name": "Red Tiger",
+          "unlock": {
+            "type": "unlocks",
+            "value": 32
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "mojave-357",
+      "name": "MOJAVE .357",
+      "cls": "pistol",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "unlocks",
+        "values": [
+          8,
+          12,
+          17,
+          21,
+          25,
+          29,
+          34,
+          39
+        ]
+      },
+      "specials": [
+        {
+          "name": "Miami",
+          "unlock": {
+            "type": "unlocks",
+            "value": 15
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "headshot_kills",
+              "amount": 20,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "one_shot_kills",
+              "amount": 50,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_damage_from_target",
+              "amount": 10,
+              "target": "players",
+              "description": "Get 10 player kills without taking damage from the target"
+            }
+          }
+        },
+        {
+          "name": "Wallpaper",
+          "unlock": {
+            "type": "unlocks",
+            "value": 29
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 10
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 20
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5
+            }
+          }
+        },
+        {
+          "name": "Garland",
+          "unlock": {
+            "type": "unlocks",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 30,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "point_blank_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pila",
+      "name": "PILA",
+      "cls": "launcher",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "level",
+        "values": [
+          6,
+          11,
+          16,
+          21,
+          26,
+          31,
+          36,
+          41
+        ]
+      },
+      "specials": [
+        {
+          "name": "Frontier",
+          "unlock": {
+            "type": "level",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Sandwash",
+          "unlock": {
+            "type": "level",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 5,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": null,
+              "times": 3,
+              "description": "Get 2 kills within 10 seconds 3 times"
+            }
+          }
+        },
+        {
+          "name": "Digital Fall",
+          "unlock": {
+            "type": "level",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 30,
+              "target": "equipment"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 50,
+              "target": "equipment"
+            },
+            "wz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 15,
+              "target": "equipment",
+              "description": "Destroy 15 killstreaks or enemy vehicles"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "rpg-8",
+      "name": "RPG 8",
+      "cls": "launcher",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "level",
+        "values": [
+          6,
+          11,
+          16,
+          21,
+          26,
+          31,
+          36,
+          41
+        ]
+      },
+      "specials": [
+        {
+          "name": "Digi Bark",
+          "unlock": {
+            "type": "level",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "prone_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Stone Bits",
+          "unlock": {
+            "type": "level",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Bubblegum Ops",
+          "unlock": {
+            "type": "level",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 30,
+              "target": "equipment"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 50,
+              "target": "equipment"
+            },
+            "wz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 15,
+              "target": "equipment",
+              "description": "Destroy 15 killstreaks or enemy vehicles"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "jokr",
+      "name": "JOKR",
+      "cls": "launcher",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "level",
+        "values": [
+          6,
+          11,
+          16,
+          21,
+          26,
+          31,
+          36,
+          41
+        ]
+      },
+      "specials": [
+        {
+          "name": "Thicket",
+          "unlock": {
+            "type": "level",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 5,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "double_kills",
+              "amount": 15,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending."
+            }
+          }
+        },
+        {
+          "name": "Tectonic",
+          "unlock": {
+            "type": "level",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 10,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "longshot_kills",
+              "amount": 5,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Blue Tiger",
+          "unlock": {
+            "type": "level",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 30,
+              "target": "equipment"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 50,
+              "target": "equipment"
+            },
+            "wz": {
+              "status": "available",
+              "type": "killstreaks_or_vehicles_destroyed",
+              "amount": 15,
+              "target": "equipment",
+              "description": "Destroy 15 killstreaks or vehicles"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "pm-40-anvil",
+      "name": "PM-40 ANVIL",
+      "cls": "launcher",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "level",
+        "values": [
+          6,
+          11,
+          16,
+          21,
+          26,
+          31,
+          36,
+          41
+        ]
+      },
+      "specials": [
+        {
+          "name": "Night Snow",
+          "unlock": {
+            "type": "level",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "direct_shot_kills",
+              "amount": 10,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Recursive",
+          "unlock": {
+            "type": "level",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 5
+            },
+            "dmz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "enemies",
+              "times": 20
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_without_reloading",
+              "amount": 2,
+              "target": "players",
+              "times": 3
+            }
+          }
+        },
+        {
+          "name": "Urban Standard",
+          "unlock": {
+            "type": "level",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 40,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "moving_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "kills_while_moving",
+              "amount": 20,
+              "target": "players"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "fss-carbon-edge-1095",
+      "name": "FSS CARBON EDGE 1095",
+      "cls": "melee",
+      "season": 0,
+      "releaseDate": "2026-10-23",
+      "military": {
+        "unit": "level",
+        "values": [
+          6,
+          11,
+          16,
+          21,
+          26,
+          31,
+          36,
+          41
+        ]
+      },
+      "specials": [
+        {
+          "name": "Raster Lite",
+          "unlock": {
+            "type": "level",
+            "value": 16
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 25,
+              "target": "players"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 100,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "jumping_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Stockpile",
+          "unlock": {
+            "type": "level",
+            "value": 31
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "heavy_melee_finisher_kills",
+              "amount": 25,
+              "target": "enemies"
+            },
+            "dmz": {
+              "status": "available",
+              "type": "heavy_melee_finisher_kills",
+              "amount": 75,
+              "target": "enemies"
+            },
+            "wz": {
+              "status": "available",
+              "type": "heavy_melee_finisher_kills",
+              "amount": 15,
+              "target": "players"
+            }
+          }
+        },
+        {
+          "name": "Deathbed",
+          "unlock": {
+            "type": "level",
+            "value": 46
+          },
+          "challenges": {
+            "mp": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "enemies",
+              "times": 25
+            },
+            "dmz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "enemies",
+              "times": 50,
+              "description": "Get 2 Kills in 5 seconds against Enemies 50 times"
+            },
+            "wz": {
+              "status": "available",
+              "type": "rapid_kills",
+              "amount": 2,
+              "target": "players",
+              "times": 15,
+              "description": "Get 2 kills in 5 seconds against players 15 times"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "zlr-talonhawk",
+      "name": "ZLR TALONHAWK",
+      "cls": "melee",
+      "season": 1,
+      "releaseDate": null,
+      "military": null,
+      "specials": [
+        {
+          "name": "Special Camo 1 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        },
+        {
+          "name": "Special Camo 2 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        },
+        {
+          "name": "Special Camo 3 (pending)",
+          "unlock": null,
+          "challenges": {
+            "mp": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "dmz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            },
+            "wz": {
+              "status": "unavailable",
+              "reason": "Requirement pending. Camo progression details not published."
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

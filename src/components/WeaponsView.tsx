@@ -1,6 +1,29 @@
 import { useMemo, useState, type Dispatch } from 'react'
-import { CLASSES, LADDER, MAX_LEVEL, GOLD_LEVEL, PLAT_LEVEL, HB_LEVEL, type Weapon, type WeaponClass } from '../data'
-import { levelOf, gateReason, classGoldDone, allPlatinumDone, type Action, type State } from '../store'
+import {
+  CLASSES,
+  LADDER,
+  MAX_LEVEL,
+  GOLD_LEVEL,
+  PLAT_LEVEL,
+  HB_LEVEL,
+  goldRequired,
+  isReleased,
+  seasonLabel,
+  stepInfo,
+  stepName,
+  type Weapon,
+  type WeaponClass,
+} from '../data'
+import {
+  allWeapons,
+  countAtLeast,
+  levelOf,
+  gateReason,
+  classGoldDone,
+  platinumGateDone,
+  type Action,
+  type State,
+} from '../store'
 import { WeaponDetail } from './WeaponDetail'
 
 type StatusFilter = 'all' | 'todo' | 'gold' | 'platinum' | 'done'
@@ -13,8 +36,8 @@ const STATUS: { id: StatusFilter; label: string }[] = [
   { id: 'done', label: 'Concluídas' },
 ]
 
-function currentCamo(level: number) {
-  return level === 0 ? 'Nenhuma' : LADDER[level - 1].name
+function currentCamo(weapon: Weapon, level: number) {
+  return level === 0 ? 'Nenhuma' : stepName(weapon, LADDER[level - 1])
 }
 
 export function WeaponsView({ state, dispatch }: { state: State; dispatch: Dispatch<Action> }) {
@@ -23,9 +46,11 @@ export function WeaponsView({ state, dispatch }: { state: State; dispatch: Dispa
   const [status, setStatus] = useState<StatusFilter>('all')
   const [openId, setOpenId] = useState<string | null>(null)
 
+  const weapons = useMemo(() => allWeapons(state), [state])
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return state.weapons.filter((w) => {
+    return weapons.filter((w) => {
       if (cls !== 'all' && w.cls !== cls) return false
       if (q && !w.name.toLowerCase().includes(q)) return false
       const l = levelOf(state, w.id)
@@ -42,11 +67,11 @@ export function WeaponsView({ state, dispatch }: { state: State; dispatch: Dispa
           return true
       }
     })
-  }, [state, query, cls, status])
+  }, [weapons, state, query, cls, status])
 
   const pinned = filtered.filter((w) => state.pinned.includes(w.id))
-  const open = state.weapons.find((w) => w.id === openId) ?? null
-  const hbOpen = allPlatinumDone(state)
+  const open = weapons.find((w) => w.id === openId) ?? null
+  const hbOpen = platinumGateDone(state)
 
   return (
     <div className="weapons-view">
@@ -63,7 +88,7 @@ export function WeaponsView({ state, dispatch }: { state: State; dispatch: Dispa
           <button className={`chip ${cls === 'all' ? 'active' : ''}`} onClick={() => setCls('all')}>
             Todas
           </button>
-          {CLASSES.filter((c) => state.weapons.some((w) => w.cls === c.id)).map((c) => (
+          {CLASSES.filter((c) => weapons.some((w) => w.cls === c.id)).map((c) => (
             <button
               key={c.id}
               className={`chip ${cls === c.id ? 'active' : ''}`}
@@ -105,15 +130,13 @@ export function WeaponsView({ state, dispatch }: { state: State; dispatch: Dispa
       {CLASSES.map((c) => {
         const list = filtered.filter((w) => w.cls === c.id)
         if (!list.length) return null
-        const all = state.weapons.filter((w) => w.cls === c.id)
-        const golds = all.filter((w) => levelOf(state, w.id) >= GOLD_LEVEL).length
         const platOpen = classGoldDone(state, c.id)
         return (
           <section key={c.id} className="class-group">
             <header className="class-head">
               <h2>{c.label}</h2>
               <span className="muted">
-                Gold {golds}/{all.length}
+                Gold {countAtLeast(state, GOLD_LEVEL, c.id)}/{goldRequired(c.id)}
               </span>
               <span className={`badge ${platOpen ? 'badge-plat' : 'badge-locked'}`}>
                 {platOpen ? 'Platinum liberado' : 'Platinum bloqueado'}
@@ -150,11 +173,14 @@ function WeaponRow({
   const level = levelOf(state, weapon.id)
   const pinned = state.pinned.includes(weapon.id)
   const nextBlocked = level < MAX_LEVEL ? gateReason(state, weapon, level + 1) : null
+  const released = isReleased(weapon)
+  const season = seasonLabel(weapon)
+  const next = level < MAX_LEVEL ? stepInfo(weapon, LADDER[level], state.mode) : null
 
   const setLevel = (l: number) => dispatch({ type: 'setLevel', id: weapon.id, level: l })
 
   return (
-    <li className={`weapon-row ${level >= HB_LEVEL ? 'complete' : ''}`}>
+    <li className={`weapon-row ${level >= HB_LEVEL ? 'complete' : ''} ${released ? '' : 'unreleased'}`}>
       <button
         className={`pin ${pinned ? 'on' : ''}`}
         onClick={() => dispatch({ type: 'togglePin', id: weapon.id })}
@@ -164,20 +190,32 @@ function WeaponRow({
       >
         ★
       </button>
-      <button className="weapon-name" onClick={() => onOpen(weapon.id)} title="Ver detalhes">
-        <span className="name">{weapon.name}</span>
-        <span className={`current tier-text-${level ? LADDER[level - 1].tier : 'none'}`}>{currentCamo(level)}</span>
+      <button className="weapon-name" onClick={() => onOpen(weapon.id)} title="Ver desafios">
+        <span className="name">
+          {weapon.name}
+          {season && <span className="season-tag">{season}</span>}
+        </span>
+        <span className={`current tier-text-${level ? LADDER[level - 1].tier : 'none'}`}>
+          {currentCamo(weapon, level)}
+          {next && released && (
+            <span className="next-up">
+              {' '}
+              · próx.: {stepName(weapon, LADDER[level])} — {next.challenge}
+            </span>
+          )}
+        </span>
       </button>
       <div className="pips" role="group" aria-label={`Progresso de ${weapon.name}`}>
         {LADDER.map((step) => {
           const done = level > step.index
           const blocked = !done && gateReason(state, weapon, step.index + 1)
+          const name = stepName(weapon, step)
           return (
             <button
               key={step.index}
               className={`pip tier-${step.tier} ${done ? 'done' : ''} ${blocked ? 'blocked' : ''}`}
-              title={blocked ? `${step.name} — ${blocked}` : step.name}
-              aria-label={`${step.name}${done ? ' (concluída)' : ''}`}
+              title={blocked ? `${name} — ${blocked}` : `${name} — ${stepInfo(weapon, step, state.mode).challenge ?? ''}`}
+              aria-label={`${name}${done ? ' (concluída)' : ''}`}
               onClick={() => setLevel(done && level === step.index + 1 ? step.index : step.index + 1)}
               disabled={!!blocked}
             />
