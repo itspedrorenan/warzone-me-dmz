@@ -1,7 +1,7 @@
 import { CLASSES, type Weapon } from '../data'
 import { weaponImage } from '../data/weaponImages'
 
-/** Miniatura em traço. A imagem é usada como máscara, então a cor do traço vem do token --text. */
+/** Miniatura da arma no estilo dos ícones de build do jogo (arma clara, detalhes em cinza). */
 export function WeaponThumb({ weapon, size = 'sm' }: { weapon: Weapon; size?: 'sm' | 'lg' }) {
   const src = weaponImage(weapon.id)
   if (!src) {
@@ -11,12 +11,5 @@ export function WeaponThumb({ weapon, size = 'sm' }: { weapon: Weapon; size?: 's
       </span>
     )
   }
-  return (
-    <span
-      className={`thumb thumb-${size}`}
-      role="img"
-      aria-label={weapon.name}
-      style={{ WebkitMaskImage: `url(${src})`, maskImage: `url(${src})` }}
-    />
-  )
+  return <img className={`thumb thumb-${size}`} src={src} alt={weapon.name} loading="lazy" decoding="async" />
 }

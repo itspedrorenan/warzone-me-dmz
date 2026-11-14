@@ -2,7 +2,8 @@
 
 ## Como está hoje (opção 2)
 
-- As 33 armas de lançamento têm miniatura em traço preto e branco, gerada a partir das imagens
+- As 33 armas de lançamento têm miniatura no estilo dos ícones de build do jogo (arma clara, detalhes
+  em cinza, fundo transparente), gerada a partir das imagens
   oficiais do [post de lançamento do MW4](https://www.callofduty.com/blog/2026/10/call-of-duty-modern-warfare-4-launch-multiplayer-operators-weapons-equipment-create-a-class)
   (cards `MW4-RFL-OPS-WEAPONS-009.webp` a `-041.webp`, na ordem dos títulos do post).
 - Arquivos: `public/weapons/<id-da-arma>.webp`. A lista de quais armas têm imagem fica em
@@ -10,11 +11,13 @@
 - Imagens © Activision. O crédito aparece em Ajustes → Fonte dos dados.
 - **Sem imagem ainda** (mostram um espaço reservado com a classe): Cronen Osprey, CSG-35, JAK 12 e
   ZLR Talonhawk. Os posts oficiais da Season 1 não trazem imagem individual delas.
+- **Podem melhorar com print do jogo:** Mosin-Nagant (a coronha escura de madeira se confunde com o
+  fundo e sai incompleta).
 
 ## Para fazer depois (opção 3): prints do próprio jogo
 
 Ideia: trocar ou completar as miniaturas usando prints tirados no jogo, convertidos para o mesmo
-traço preto e branco. Serve para as armas sem imagem e para qualquer uma cuja miniatura atual
+estilo. Serve para as armas sem imagem e para qualquer uma cuja miniatura atual
 não ficou boa. As imagens continuam sendo da Activision, como na opção 2.
 
 ### Como tirar os prints
@@ -33,6 +36,7 @@ pip install opencv-python-headless pillow numpy
 python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/weapons/cronen-osprey.webp --crop 0.2,0.8,0.1,0.9
 ```
 
+- O estilo padrão é `--style flat` (o do app). `--style line` gera só o traço.
 - `--crop y0,y1,x0,x1` recorta a região da arma em frações da imagem (0 a 1). Ajuste até a arma
   ficar inteira e sem pedaços do menu. O padrão do script serve só para os cards oficiais.
 - Depois de gerar, acrescente o id em `src/data/weaponImages.ts`.

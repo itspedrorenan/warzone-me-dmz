@@ -214,7 +214,7 @@ export function SettingsView({
           {new Date(DATA_SOURCE.importedAt + 'T00:00:00').toLocaleDateString('pt-BR')}. Para atualizar, veja o README.
         </p>
         <p className="muted">
-          Miniaturas: traço gerado a partir das imagens oficiais das armas publicadas em callofduty.com. Imagens ©
+          Miniaturas: geradas a partir das imagens oficiais das armas publicadas em callofduty.com. Imagens ©
           Activision. Projeto de fã, sem afiliação com a Activision.
         </p>
       </section>

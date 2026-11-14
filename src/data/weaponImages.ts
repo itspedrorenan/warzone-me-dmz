@@ -1,4 +1,4 @@
-// Miniaturas em traço preto e branco geradas a partir das imagens oficiais das armas
+// Miniaturas no estilo dos ícones de build do jogo, geradas a partir das imagens oficiais das armas
 // (post de lançamento do MW4 em callofduty.com). Imagens © Activision.
 // Ficam em public/weapons/<id>.webp; armas sem imagem mostram um espaço reservado.
 

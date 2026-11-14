@@ -324,8 +324,8 @@ h1, h2, h3 { font-family: 'Rajdhani', sans-serif; letter-spacing: 0.02em; margin
 .swatch:not(.done) { background: transparent; opacity: 1; border: 2px solid var(--line); }
 .swatch-sm { background: transparent !important; border: 2px solid var(--text); }
 
-/* Miniaturas das armas (traço via máscara, cor do token --text) */
-.thumb { display: block; flex: none; background: var(--text); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain; }
+/* Miniaturas das armas (estilo dos ícones de build do jogo) */
+.thumb { display: block; flex: none; object-fit: contain; object-position: center; }
 .thumb-sm { width: 96px; height: 44px; }
 .thumb-lg { width: 100%; height: 110px; }
 .thumb-empty { background: none; border: 1px dashed var(--line); border-radius: 8px; color: var(--muted); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; display: grid; place-items: center; }
