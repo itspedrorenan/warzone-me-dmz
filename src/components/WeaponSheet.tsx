@@ -3,6 +3,7 @@ import { LADDER, classLabel, seasonLabel, stepInfo, stepName } from '../data'
 import { allWeapons, gateReason, levelOf, type Action, type State } from '../store'
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
+import { WeaponThumb } from './WeaponThumb'
 
 export function WeaponSheet({
   id,
@@ -57,6 +58,10 @@ export function WeaponSheet({
             ×
           </button>
         </header>
+
+        <div className="sheet-thumb">
+          <WeaponThumb weapon={weapon} size="lg" />
+        </div>
 
         <div className="sheet-actions">
           <ModeSwitch mode={state.mode} dispatch={dispatch} small />

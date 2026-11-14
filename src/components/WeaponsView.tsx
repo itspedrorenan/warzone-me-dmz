@@ -14,6 +14,7 @@ import {
 } from '../data'
 import { allWeapons, countAtLeast, levelOf, classGoldDone, type Action, type State } from '../store'
 import { vibrate } from '../hooks'
+import { WeaponThumb } from './WeaponThumb'
 
 type StatusFilter = 'all' | 'todo' | 'gold' | 'platinum' | 'done'
 
@@ -141,6 +142,8 @@ function WeaponRow({
   return (
     <li className={`weapon-row ${level >= HB_LEVEL ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
       <button className="wr-main" onClick={() => onOpen(weapon.id)}>
+        <WeaponThumb weapon={weapon} />
+        <span className="wr-body">
         <span className="wr-top">
           <span className="name">{weapon.name}</span>
           {season && <span className="season-tag">{season}</span>}
@@ -152,6 +155,7 @@ function WeaponRow({
           {LADDER.map((s) => (
             <span key={s.index} className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`} />
           ))}
+        </span>
         </span>
       </button>
       <button

@@ -13,6 +13,7 @@ import {
 } from '../store'
 import { vibrate } from '../hooks'
 import type { Tab } from '../App'
+import { WeaponThumb } from './WeaponThumb'
 
 export function GrindView({
   state,
@@ -103,6 +104,10 @@ function GrindCard({
           ×
         </button>
       </header>
+
+      <button className="gc-thumb" onClick={() => onOpen(weapon.id)} aria-label={`Ver desafios de ${weapon.name}`}>
+        <WeaponThumb weapon={weapon} size="lg" />
+      </button>
 
       <div className="mini-ladder" aria-hidden="true">
         {LADDER.map((s) => (
