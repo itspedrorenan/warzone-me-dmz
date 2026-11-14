@@ -325,7 +325,7 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .seg { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
 .seg.done { box-shadow: none; }
 .swatch:not(.done) { background: transparent; opacity: 1; border: 2px solid var(--line); }
-.swatch-sm { background: transparent !important; border: 2px solid var(--text); }
+.swatch-sm[class] { background-color: transparent; border: 2px solid var(--text); }
 
 /* Miniaturas das armas (imagem oficial recortada) */
 .thumb { display: block; flex: none; object-fit: contain; object-position: center; }
@@ -338,14 +338,6 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .sheet-thumb { margin: 10px 0 2px; }
 
 /* Texturas das camuflagens (imagens oficiais): só aparecem em camuflagem concluída
-   e no quadrado "Agora". A imagem vem pela variável --tex definida no elemento. */
-.seg.done[style*="--tex"],
-.swatch.done[style*="--tex"],
-.swatch-sm[style*="--tex"],
-.mastery-swatch[style*="--tex"],
-.milestone-swatch[style*="--tex"] {
-  background: var(--tex) center / cover no-repeat !important;
-  border-color: transparent;
-}
+   e no quadrado "Agora". A imagem vem no style do próprio elemento (texStyle). */
 .swatch.done.has-tex { color: transparent; text-shadow: none; }
-.seg.done[style*="--tex"] { height: 10px; }
+.seg.done[style*="background-image"] { height: 10px; }

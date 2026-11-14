@@ -29,8 +29,17 @@ export function stepTexture(weapon: Weapon, step: LadderStep): string | null {
   }
 }
 
-/** Estilo inline com a textura como variável CSS (--tex). */
-// Endereço absoluto: dentro de uma variável CSS, url() relativo seria resolvido a partir do arquivo CSS.
-export const texStyle = (url: string | null) =>
-  url ? ({ '--tex': `url("${new URL(url, document.baseURI).href}")` } as CSSProperties) : undefined
+/** Estilo inline com a textura da camuflagem. */
+// A imagem vai direto no style do elemento, com o mesmo caminho relativo das fotos das armas
+// (resolvido a partir da página, que funciona em qualquer host).
+export const texStyle = (url: string | null): CSSProperties | undefined =>
+  url
+    ? {
+        backgroundImage: `url("${url}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        borderColor: 'transparent',
+      }
+    : undefined
 
