@@ -74,3 +74,10 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
 3. Mande para o Claude numa sessão: ele recorta cada textura em `public/camos/<nome-da-camuflagem>.webp`
    (ex.: `myriad.webp`) e acrescenta o id em `src/data/camoImages.ts`. O nome de cada especial
    está em `src/data/divergence.generated.json`.
+
+## Fotos da arma com cada camuflagem
+
+- No painel da arma, tocar no quadrado de uma camuflagem mostra a arma com ela aplicada.
+- 630 fotos (35 armas × 14 da escada + 4 de prestígio) do CodCentral, com autorização, em
+  `public/renders/`. Lista gerada por `scripts/codcentral/list-renders.mjs`.
+- Sem foto: JAK 12 e ZLR Talonhawk (ainda não lançadas).

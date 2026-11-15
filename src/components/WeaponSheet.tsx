@@ -1,11 +1,35 @@
-import { useEffect, type Dispatch } from 'react'
-import { LADDER, classLabel, prestigePending, prestigeReqText, seasonLabel, stepInfo, stepName } from '../data'
+import { useEffect, useState, type Dispatch } from 'react'
+import {
+  LADDER,
+  classLabel,
+  prestigePending,
+  prestigeReqText,
+  seasonLabel,
+  stepInfo,
+  stepName,
+  type LadderStep,
+  type Weapon,
+} from '../data'
 import { allWeapons, gateReason, levelOf, prestigeOf, type Action, type State } from '../store'
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
+import { renderImage, stepRenderKey } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
+
+/** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
+type Preview = { kind: 'step'; index: number } | { kind: 'prestige'; id: string } | null
+
+function previewInfo(weapon: Weapon, p: Preview): { name: string; src: string | null } | null {
+  if (!p) return null
+  if (p.kind === 'step') {
+    const step = LADDER[p.index]
+    return { name: stepName(weapon, step), src: renderImage(weapon.id, stepRenderKey(weapon, step)) }
+  }
+  const camo = weapon.prestige.find((c) => c.id === p.id)
+  return camo ? { name: camo.name, src: renderImage(weapon.id, camo.id) } : null
+}
 
 export function WeaponSheet({
   id,
@@ -19,6 +43,7 @@ export function WeaponSheet({
   onClose: () => void
 }) {
   const weapon = allWeapons(state).find((w) => w.id === id)
+  const [preview, setPreview] = useState<Preview>(null)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -32,8 +57,23 @@ export function WeaponSheet({
 
   if (!weapon) return null
   const level = levelOf(state, weapon.id)
+  const pcount = prestigeOf(state, weapon.id)
   const season = seasonLabel(weapon)
   const pinned = state.pinned.includes(weapon.id)
+  const shown = previewInfo(weapon, preview)
+
+  const toggleStep = (step: LadderStep) => {
+    const done = level > step.index
+    dispatch({ type: 'setLevel', id: weapon.id, level: done && level === step.index + 1 ? step.index : step.index + 1 })
+    vibrate(state.haptics)
+  }
+  const togglePrestige = (i: number) => {
+    const done = pcount > i
+    dispatch({ type: 'setPrestige', id: weapon.id, count: done && pcount === i + 1 ? i : i + 1 })
+    vibrate(state.haptics)
+  }
+  const isSelected = (p: Preview) =>
+    !!preview && !!p && preview.kind === p.kind && JSON.stringify(preview) === JSON.stringify(p)
 
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -44,25 +84,44 @@ export function WeaponSheet({
         aria-label={`Desafios de ${weapon.name}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sheet-grip" aria-hidden="true" />
-        <header className="sheet-head">
-          <div>
-            <p className="eyebrow">
-              {classLabel(weapon.cls)}
-              {season && ` · ${season}`}
-            </p>
-            <h2>{weapon.name}</h2>
-            <p className="muted">
-              {level}/{LADDER.length} camuflagens
+        <div className="sheet-top">
+          <div className="sheet-grip" aria-hidden="true" />
+          <header className="sheet-head">
+            <div>
+              <p className="eyebrow">
+                {classLabel(weapon.cls)}
+                {season && ` · ${season}`}
+              </p>
+              <h2>{weapon.name}</h2>
+              <p className="muted">
+                {level}/{LADDER.length} camuflagens · prestígio {pcount}/{weapon.prestige.length}
+              </p>
+            </div>
+            <button className="icon-btn" onClick={onClose} aria-label="Fechar">
+              ×
+            </button>
+          </header>
+
+          <div className="sheet-thumb">
+            {shown?.src ? (
+              <img className="thumb thumb-lg render" src={shown.src} alt={`${weapon.name} com ${shown.name}`} />
+            ) : (
+              <WeaponThumb weapon={weapon} size="lg" />
+            )}
+            <p className="preview-label">
+              {shown ? (
+                <>
+                  {shown.name}
+                  {!shown.src && <span className="muted"> · sem foto com esta camuflagem</span>}
+                  <button className="link-btn" onClick={() => setPreview(null)}>
+                    Ver sem camuflagem
+                  </button>
+                </>
+              ) : (
+                <span className="muted">Toque no quadrado de uma camuflagem para ver a arma com ela.</span>
+              )}
             </p>
           </div>
-          <button className="icon-btn" onClick={onClose} aria-label="Fechar">
-            ×
-          </button>
-        </header>
-
-        <div className="sheet-thumb">
-          <WeaponThumb weapon={weapon} size="lg" />
         </div>
 
         <div className="sheet-actions">
@@ -84,78 +143,80 @@ export function WeaponSheet({
             const blocked = !done ? gateReason(state, weapon, step.index + 1) : null
             const info = stepInfo(weapon, step, state.mode)
             const name = stepName(weapon, step)
+            const p: Preview = { kind: 'step', index: step.index }
             return (
-              <li key={step.index}>
+              <li
+                key={step.index}
+                className={`ladder-step ${done ? 'done' : ''} ${step.index === level ? 'next' : ''} ${isSelected(p) ? 'selected' : ''}`}
+              >
                 <button
-                  className={`ladder-step ${done ? 'done' : ''} ${step.index === level ? 'next' : ''}`}
-                  onClick={() => {
-                    dispatch({
-                      type: 'setLevel',
-                      id: weapon.id,
-                      level: done && level === step.index + 1 ? step.index : step.index + 1,
-                    })
-                    vibrate(state.haptics)
-                  }}
+                  className={`swatch tier-${step.tier} ${done ? 'done' : ''} has-tex`}
+                  onClick={() => setPreview(p)}
+                  aria-label={`Ver ${weapon.name} com ${name}`}
+                >
+                  <CamoTex url={stepTexture(weapon, step)} muted={!done} />
+                </button>
+                <button className="ladder-text" onClick={() => setPreview(p)}>
+                  <strong>
+                    {name}
+                    {info.pending && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
+                  </strong>
+                  {info.challenge && <span className="challenge">{info.challenge}</span>}
+                  {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
+                  {blocked && <span className="blocked-text">🔒 {blocked}</span>}
+                </button>
+                <button
+                  className={`row-check ${done ? 'on' : ''}`}
+                  onClick={() => toggleStep(step)}
                   disabled={!!blocked}
                   aria-pressed={done}
+                  aria-label={done ? `Desmarcar ${name}` : `Marcar ${name}`}
                 >
-                  <span
-                    className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${stepTexture(weapon, step) ? 'has-tex' : ''}`}
-                    aria-hidden="true"
-                  >
-                    <CamoTex url={stepTexture(weapon, step)} muted={!done} />
-                  </span>
-                  <span className="ladder-text">
-                    <strong>
-                      {name}
-                      {info.pending && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
-                    </strong>
-                    {info.challenge && <span className="challenge">{info.challenge}</span>}
-                    {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
-                    {blocked && <span className="blocked-text">🔒 {blocked}</span>}
-                  </span>
-                  <span className={`row-check ${done ? 'on' : ''}`} aria-hidden="true">
-                    {done ? '✓' : ''}
-                  </span>
+                  {done ? '✓' : ''}
                 </button>
               </li>
             )
           })}
         </ol>
-        <p className="muted tip">Toque numa camuflagem para marcar até ela. Toque de novo na última para desmarcar.</p>
+        <p className="muted tip">
+          O check marca a camuflagem (e as anteriores). Toque de novo no check da última para desmarcar.
+        </p>
 
         {weapon.prestige.length > 0 && (
           <section className="prestige">
             <h3 className="section-title">
-              Prestígio <span className="muted">{prestigeOf(state, weapon.id)}/{weapon.prestige.length}</span>
+              Prestígio <span className="muted">{pcount}/{weapon.prestige.length}</span>
             </h3>
             <ol className="ladder">
               {weapon.prestige.map((camo, i) => {
-                const count = prestigeOf(state, weapon.id)
-                const done = count > i
+                const done = pcount > i
+                const p: Preview = { kind: 'prestige', id: camo.id }
                 return (
-                  <li key={camo.id}>
+                  <li
+                    key={camo.id}
+                    className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''} ${isSelected(p) ? 'selected' : ''}`}
+                  >
                     <button
-                      className={`ladder-step ${done ? 'done' : ''} ${i === count ? 'next' : ''}`}
-                      onClick={() => {
-                        dispatch({ type: 'setPrestige', id: weapon.id, count: done && count === i + 1 ? i : i + 1 })
-                        vibrate(state.haptics)
-                      }}
-                      aria-pressed={done}
+                      className={`swatch tier-prestige ${done ? 'done' : ''} has-tex`}
+                      onClick={() => setPreview(p)}
+                      aria-label={`Ver ${weapon.name} com ${camo.name}`}
                     >
-                      <span className={`swatch tier-prestige ${done ? 'done' : ''} has-tex`} aria-hidden="true">
-                        <CamoTex url={camoImage(camo.id)} muted={!done} />
-                      </span>
-                      <span className="ladder-text">
-                        <strong>
-                          {camo.name}
-                          {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
-                        </strong>
-                        <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
-                      </span>
-                      <span className={`row-check ${done ? 'on' : ''}`} aria-hidden="true">
-                        {done ? '✓' : ''}
-                      </span>
+                      <CamoTex url={camoImage(camo.id)} muted={!done} />
+                    </button>
+                    <button className="ladder-text" onClick={() => setPreview(p)}>
+                      <strong>
+                        {camo.name}
+                        {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
+                      </strong>
+                      <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
+                    </button>
+                    <button
+                      className={`row-check ${done ? 'on' : ''}`}
+                      onClick={() => togglePrestige(i)}
+                      aria-pressed={done}
+                      aria-label={done ? `Desmarcar ${camo.name}` : `Marcar ${camo.name}`}
+                    >
+                      {done ? '✓' : ''}
                     </button>
                   </li>
                 )
@@ -175,7 +236,7 @@ export function WeaponSheet({
         </label>
 
         <p className="credits">
-          Imagens das armas e camuflagens © Activision. Texturas das especiais:{' '}
+          Imagens das armas e camuflagens © Activision. Fotos com camuflagem e texturas das especiais:{' '}
           <a href="https://codcentral.net/blog/mw4-dmz-camo-challenges/" target="_blank" rel="noreferrer">
             CodCentral
           </a>
