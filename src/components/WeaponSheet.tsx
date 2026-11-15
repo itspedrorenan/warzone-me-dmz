@@ -46,6 +46,22 @@ export function WeaponSheet({
 }) {
   const weapon = allWeapons(state).find((w) => w.id === id)
   const [preview, setPreview] = useState<Preview>(null)
+  // TESTE TEMPORÁRIO: duas versões da lista (borda em todos os cards × divisórias). Remover após a escolha.
+  const [listStyle, setListStyle] = useState<'stroke' | 'divider'>(() => {
+    try {
+      return localStorage.getItem('camo-tracker:list-test') === 'divider' ? 'divider' : 'stroke'
+    } catch {
+      return 'stroke'
+    }
+  })
+  const chooseList = (v: 'stroke' | 'divider') => {
+    setListStyle(v)
+    try {
+      localStorage.setItem('camo-tracker:list-test', v)
+    } catch {
+      /* sem armazenamento */
+    }
+  }
   // Cabeçalho compacto ao rolar (título menor, sem a dica); a foto da arma continua visível.
   const [collapsed, setCollapsed] = useState(false)
   const onScroll = (e: UIEvent<HTMLElement>) => {
@@ -156,7 +172,17 @@ export function WeaponSheet({
           </button>
         </div>
 
-        <ol className="ladder">
+        <div className="list-test" role="group" aria-label="Teste de estilo da lista">
+          <span>Teste</span>
+          <button className={listStyle === 'stroke' ? 'on' : ''} onClick={() => chooseList('stroke')}>
+            A · Stroke
+          </button>
+          <button className={listStyle === 'divider' ? 'on' : ''} onClick={() => chooseList('divider')}>
+            B · Divisor
+          </button>
+        </div>
+
+        <ol className={`ladder list-${listStyle}`}>
           {LADDER.map((step) => {
             const done = isDone(state, weapon.id, step.index)
             const blocked = !done ? gateReason(state, weapon, step.index) : null
@@ -209,7 +235,7 @@ export function WeaponSheet({
             <h3 className="section-title">
               Prestígio <span className="muted">{pcount}/{weapon.prestige.length}</span>
             </h3>
-            <ol className="ladder">
+            <ol className={`ladder list-${listStyle}`}>
               {weapon.prestige.map((camo, i) => {
                 const done = pcount > i
                 const p: Preview = { kind: 'prestige', id: camo.id }
