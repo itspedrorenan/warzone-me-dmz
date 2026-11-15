@@ -422,3 +422,4 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
   font-family: var(--font-title);
   letter-spacing: -0.01em;
 }
+.preview-hint { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

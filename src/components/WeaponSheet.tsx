@@ -124,7 +124,7 @@ export function WeaponSheet({
                   </button>
                 </>
               ) : (
-                <span className="muted">Toque no quadrado de uma camuflagem para ver a arma com ela.</span>
+                <span className="muted preview-hint">Toque no quadrado para ver na arma.</span>
               )}
             </p>
           </div>
