@@ -31,7 +31,7 @@ export default function App() {
   const legacy = state.game === 'mw4' ? null : legacyGame(state.game)
 
   return (
-    <div className="app">
+    <div className="app" data-game={legacy ? legacy.game : 'mw4'}>
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true" />

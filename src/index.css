@@ -569,3 +569,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .swatch-initial { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-title); font-weight: 700; color: var(--muted); }
 .legacy-preview .muted { font-size: 0.8rem; }
 .game-logo-text { font-family: var(--font-title); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--text); line-height: 1; }
+
+/* Cor de destaque por jogo: MW4 amarelo (padrão), MW III vermelho do logo. */
+.app[data-game='mw3'] { --primary: #d70000; --primary-ink: #ffffff; --accent: #ff3b30; --accent-ink: #ffffff; }
+.app[data-game='mw3'] .chip.active { color: var(--primary-ink); }
