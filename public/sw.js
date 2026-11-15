@@ -1,7 +1,10 @@
 // Service worker: deixa o app funcionando offline depois da primeira visita.
 // Páginas: rede primeiro (pega atualizações), cache se estiver offline.
-// Arquivos estáticos e fontes: cache primeiro.
-const CACHE = 'camo-tracker-v1'
+// Arquivos com hash no nome (assets/): cache primeiro (o nome muda a cada versão).
+// Demais arquivos (logos, fotos, texturas, fontes): devolve o que está no cache e atualiza em
+// segundo plano — assim um logo trocado com o mesmo nome aparece na abertura seguinte.
+// Trocar o nome do cache apaga o cache antigo dos aparelhos.
+const CACHE = 'camo-tracker-v2'
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './favicon.svg']
 
 self.addEventListener('install', (e) => {
@@ -38,17 +41,23 @@ self.addEventListener('fetch', (e) => {
     return
   }
 
+  const save = (res) => {
+    if (res.ok || res.type === 'opaque') {
+      const copy = res.clone()
+      caches.open(CACHE).then((c) => c.put(req, copy))
+    }
+    return res
+  }
+  const hashed = sameOrigin && url.pathname.includes('/assets/')
   e.respondWith(
-    caches.match(req).then(
-      (hit) =>
-        hit ||
-        fetch(req).then((res) => {
-          if (res.ok || res.type === 'opaque') {
-            const copy = res.clone()
-            caches.open(CACHE).then((c) => c.put(req, copy))
-          }
-          return res
-        })
-    )
+    caches.match(req).then((hit) => {
+      if (hit && hashed) return hit
+      const fresh = fetch(req).then(save)
+      if (hit) {
+        fresh.catch(() => {})
+        return hit
+      }
+      return fresh
+    })
   )
 })
