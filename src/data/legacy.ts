@@ -7,7 +7,16 @@
 export { legacyText, legacyFixed } from './legacyText'
 
 /** Base = camuflagens próprias da arma; o resto são as de maestria do jogo. */
-export type LegacyTier = 'base' | 'gold' | 'platinum' | 'damascus' | 'obsidian' | 'gilded' | 'forged' | 'priceless'
+export type LegacyTier =
+  | 'base'
+  | 'gold'
+  | 'platinum'
+  | 'damascus'
+  | 'obsidian'
+  | 'polyatomic'
+  | 'gilded'
+  | 'forged'
+  | 'priceless'
 
 export interface LegacyStep {
   name: string
@@ -29,12 +38,14 @@ export interface LegacyWeapon {
 export type LegacyRules =
   | { kind: 'mw19' }
   | {
-      kind: 'mw3'
-      /** Forged: quantas armas da classe com Gilded. */
-      forgedNeed: Record<string, number>
-      /** Priceless: quantas armas com Forged. */
-      pricelessNeed: number
-      /** Interstellar: vem sozinha com Priceless em N armas. */
+      /** MW II / MW III: 3 de maestria em cadeia (Gold→Platinum→Polyatomic, Gilded→Forged→Priceless). */
+      kind: 'tiered'
+      tiers: [LegacyTier, LegacyTier, LegacyTier]
+      /** 2ª: quantas armas da classe com a 1ª. */
+      secondNeed: Record<string, number>
+      /** 3ª: quantas armas com a 2ª. */
+      thirdNeed: number
+      /** Final automática (Orion, Interstellar): vem sozinha com a 3ª em N armas. */
       finale: { name: string; image: string; need: number } | null
     }
 
@@ -99,16 +110,24 @@ export function legacyCount(g: LegacyGame, p: LegacyProgress, tier: LegacyTier, 
 
 const classSize = (g: LegacyGame, cls: string) => g.weapons.filter((w) => w.cls === cls).length
 const baseCount = (w: LegacyWeapon) => w.steps.filter((s) => s.tier === 'base').length
-/** No MW III a meta da classe nunca passa do número de armas da classe que existem aqui. */
-const forgedNeed = (g: LegacyGame, cls: string) =>
-  g.rules.kind === 'mw3' ? Math.min(g.rules.forgedNeed[cls] ?? classSize(g, cls), classSize(g, cls)) : 0
+/** A meta da classe nunca passa do número de armas da classe que existem aqui. */
+const secondNeed = (g: LegacyGame, cls: string) =>
+  g.rules.kind === 'tiered' ? Math.min(g.rules.secondNeed[cls] ?? classSize(g, cls), classSize(g, cls)) : 0
+const tierLabel = (g: LegacyGame, tier: LegacyTier) => g.tiers.find((t) => t.tier === tier)?.label ?? tier
 
 /** Pré-requisito em texto (para "Abre com"). Null para as base. */
 export function legacyUnlockText(g: LegacyGame, step: LegacyStep, w: LegacyWeapon): string | null {
+  if (step.tier === 'base') return null
   const plural = (n: number) => (n === 1 ? 'a camuflagem base desta arma' : `as ${n} camuflagens base desta arma`)
+  if (g.rules.kind === 'tiered') {
+    const [first, second, third] = g.rules.tiers
+    if (step.tier === first) return plural(baseCount(w))
+    if (step.tier === second) return `${tierLabel(g, first)} desta arma e em ${secondNeed(g, w.cls)} armas da classe`
+    if (step.tier === third) return `${tierLabel(g, second)} desta arma e em ${g.rules.thirdNeed} armas`
+    return null
+  }
   switch (step.tier) {
     case 'gold':
-    case 'gilded':
       return plural(baseCount(w))
     case 'platinum':
       return `Gold nas ${classSize(g, w.cls)} armas da classe`
@@ -116,10 +135,6 @@ export function legacyUnlockText(g: LegacyGame, step: LegacyStep, w: LegacyWeapo
       return `Platinum nas ${g.weapons.length} armas`
     case 'obsidian':
       return 'Damascus desta arma'
-    case 'forged':
-      return `Gilded desta arma e em ${forgedNeed(g, w.cls)} armas da classe`
-    case 'priceless':
-      return g.rules.kind === 'mw3' ? `Forged desta arma e em ${g.rules.pricelessNeed} armas` : null
     default:
       return null
   }
@@ -129,11 +144,29 @@ export function legacyUnlockText(g: LegacyGame, step: LegacyStep, w: LegacyWeapo
 export function legacyGate(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, i: number, enforce: boolean): string | null {
   if (!enforce) return null
   const step = w.steps[i]
+  if (step.tier === 'base') return null
   const allBase = () => w.steps.every((s, k) => s.tier !== 'base' || legacyDone(p, w.id, k))
   const baseMsg = () => (baseCount(w) === 1 ? 'Termine a camuflagem base.' : `Termine as ${baseCount(w)} camuflagens base.`)
+
+  if (g.rules.kind === 'tiered') {
+    const [first, second, third] = g.rules.tiers
+    if (step.tier === first) return allBase() ? null : baseMsg()
+    if (step.tier === second) {
+      if (!hasTier(p, w, first)) return `Termine o ${tierLabel(g, first)} desta arma.`
+      const need = secondNeed(g, w.cls)
+      const missing = need - legacyCount(g, p, first, w.cls)
+      return missing <= 0 ? null : `Termine o ${tierLabel(g, first)} em ${need} armas da classe (faltam ${missing}).`
+    }
+    if (step.tier === third) {
+      if (!hasTier(p, w, second)) return `Termine o ${tierLabel(g, second)} desta arma.`
+      const missing = g.rules.thirdNeed - legacyCount(g, p, second)
+      return missing <= 0 ? null : `Termine o ${tierLabel(g, second)} em ${g.rules.thirdNeed} armas (faltam ${missing}).`
+    }
+    return null
+  }
+
   switch (step.tier) {
     case 'gold':
-    case 'gilded':
       return allBase() ? null : baseMsg()
     case 'platinum': {
       const missing = classSize(g, w.cls) - legacyCount(g, p, 'gold', w.cls)
@@ -145,18 +178,6 @@ export function legacyGate(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, i:
     }
     case 'obsidian':
       return hasTier(p, w, 'damascus') ? null : 'Termine o Damascus desta arma.'
-    case 'forged': {
-      if (!hasTier(p, w, 'gilded')) return 'Termine o Gilded desta arma.'
-      const need = forgedNeed(g, w.cls)
-      const missing = need - legacyCount(g, p, 'gilded', w.cls)
-      return missing <= 0 ? null : `Termine o Gilded em ${need} armas da classe (faltam ${missing}).`
-    }
-    case 'priceless': {
-      if (!hasTier(p, w, 'forged')) return 'Termine o Forged desta arma.'
-      if (g.rules.kind !== 'mw3') return null
-      const missing = g.rules.pricelessNeed - legacyCount(g, p, 'forged')
-      return missing <= 0 ? null : `Termine o Forged em ${g.rules.pricelessNeed} armas (faltam ${missing}).`
-    }
     default:
       return null
   }
@@ -164,9 +185,9 @@ export function legacyGate(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, i:
 
 /** Camuflagem final que vem sozinha (Interstellar no MW III), se houver. */
 export function legacyFinale(g: LegacyGame, p: LegacyProgress) {
-  if (g.rules.kind !== 'mw3' || !g.rules.finale) return null
+  if (g.rules.kind !== 'tiered' || !g.rules.finale) return null
   const { name, image, need } = g.rules.finale
-  const have = legacyCount(g, p, 'priceless')
+  const have = legacyCount(g, p, g.rules.tiers[2])
   return { name, image, need, have, done: have >= need }
 }
 

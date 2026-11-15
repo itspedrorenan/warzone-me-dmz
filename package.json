@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "import:divergence": "node scripts/import-divergence.mjs",
     "import:codmunity": "node scripts/import-codmunity.mjs",
-    "build:vercel": "node scripts/import-codmunity.mjs mw19 mw3 || echo 'jogos antigos indisponíveis (ou parte deles): seguindo assim'; npm run build"
+    "build:vercel": "node scripts/import-codmunity.mjs mw19 mw2 mw3 || echo 'jogos antigos indisponíveis (ou parte deles): seguindo assim'; npm run build"
   },
   "dependencies": {
     "lucide-react": "^1.73.0",

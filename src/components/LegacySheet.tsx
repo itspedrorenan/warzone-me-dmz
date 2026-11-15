@@ -65,6 +65,7 @@ export function LegacySheet({
   const nextStep = steps.findIndex((s) => !legacyDone(progress, weapon.id, s.index))
   const inGroup = (g: Group) => steps.filter((s) => g === 'all' || (g === 'base') === (s.tier === 'base'))
   const finale = legacyFinale(game, progress)
+  const lastTier = game.tiers[game.tiers.length - 1]?.label ?? ''
   const finaleCount = (g: Group) => (finale && g !== 'base' ? 1 : 0)
   const doneIn = (g: Group) =>
     inGroup(g).filter((s) => legacyDone(progress, weapon.id, s.index)).length + (finale?.done && g !== 'base' ? 1 : 0)
@@ -215,11 +216,11 @@ export function LegacySheet({
                 <strong>{finale.name}</strong>
                 <span className="challenge">Sem desafio: vem para todas as armas juntas.</span>
                 <span className="hint">
-                  Abre com: Priceless em {finale.need} armas ({finale.have}/{finale.need})
+                  Abre com: {lastTier} em {finale.need} armas ({finale.have}/{finale.need})
                 </span>
                 {!finale.done && (
                   <span className="blocked-text">
-                    <Lock size={12} aria-hidden="true" /> Termine o Priceless em {finale.need} armas.
+                    <Lock size={12} aria-hidden="true" /> Termine o {lastTier} em {finale.need} armas.
                   </span>
                 )}
                 {finale.done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}

@@ -22,7 +22,8 @@ const NOUNS: [RegExp, string][] = [
   [/^headshots?\b/, 'headshots'],
   [/^double kills\b/, 'kills duplos'],
   [/^multikills\b/, 'multikills'],
-  [/^one shot one kills\b|^one shot kills\b/, 'kills com um tiro'],
+  [/^one shot one kills\b|^one[- ]shot kills\b/, 'kills com um tiro'],
+  [/^ads kills\b/, 'kills mirando (ADS)'],
   [/^hip ?fire kills\b/, 'kills sem mirar (hipfire)'],
   [/^longshot kills\b/, 'kills de longa distância'],
   [/^penetration kills\b/, 'kills atravessando superfícies'],
@@ -60,6 +61,9 @@ const MODS: [RegExp, string][] = [
   [/^with (\d+) (magazine|mag)\b/, 'com $1 pente'],
   [/^while crouching or sliding\b/, 'agachado ou deslizando'],
   [/^while crouch(ing|ed)\b/, 'agachado'],
+  [/^while prone\b/, 'deitado'],
+  [/^(while )?using a suppressor\b/, 'com silenciador'],
+  [/^with akimbo weapons\b/, 'com armas akimbo'],
   [/^while sliding\b/, 'deslizando'],
   [/^while moving\b/, 'em movimento'],
   [/^while strafing\b/, 'andando de lado'],
@@ -92,6 +96,7 @@ const MODS: [RegExp, string][] = [
 
 // "Destruir N …" / "Afetar N …"
 const OBJECTS: [RegExp, string][] = [
+  [/^(enemy )?streaks, equipment,? or vehicles\b/, 'killstreaks, equipamentos ou veículos inimigos'],
   [/^(enemy )?equipment or vehicles\b/, 'equipamentos ou veículos inimigos'],
   [/^(enemy )?equipment\b|^pieces of equipment\b/, 'equipamentos inimigos'],
   [/^(enemy )?aerial killstreaks\b/, 'killstreaks aéreas'],

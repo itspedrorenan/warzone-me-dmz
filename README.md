@@ -14,18 +14,18 @@ npm run dev      # http://localhost:5173 (no celular: use o IP do computador na 
 npm run build    # gera dist/
 ```
 
-## Jogos antigos (MW 2019, MW III) — só local
+## Jogos antigos (MW 2019, MW II, MW III) — só local
 
 Os desafios do Modern Warfare (2019) vêm do CODMunity, com permissão **só para uso local**.
 Por isso eles não ficam no repositório nem vão para a Vercel. Para ver o MW 2019 na sua
 máquina:
 
 ```sh
-npm run import:codmunity -- mw19 mw3   # gera src/data/local/*.json (no .gitignore)
+npm run import:codmunity -- mw19 mw2 mw3   # gera src/data/local/*.json (no .gitignore)
 npm run dev -- --host              # abra o endereço "Network" no celular, na mesma rede Wi-Fi
 ```
 
-Com o arquivo presente, aparece um seletor de jogo no topo do app (MW4 / MW 2019 / MW III). Sem ele,
+Com o arquivo presente, aparece um seletor de jogo no topo do app (MW4 / MW 2019 / MW II / MW III). Sem ele,
 o app mostra só o MW4.
 
 Na Vercel (site privado, com Vercel Authentication) o comando de build é `npm run build:vercel`:

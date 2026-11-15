@@ -41,12 +41,23 @@ const GAMES = {
     rules: 'mw19',
     mastery: ['Gold', 'Platinum', 'Damascus', 'Obsidian'],
   },
+  mw2: {
+    grind: 'mw2_multi',
+    label: 'Modern Warfare II',
+    short: 'MW II',
+    rules: 'tiered',
+    // Nome na fonte → nome exibido (a fonte escreve "platinium").
+    mastery: ['Gold', 'Platinum', 'Polyatomic'],
+    sourceNames: ['gold', 'platinium', 'polyatomic'],
+    finale: 'orion',
+  },
   mw3: {
     grind: 'mw3_multi',
     label: 'Modern Warfare III',
     short: 'MW III',
-    rules: 'mw3',
+    rules: 'tiered',
     mastery: ['Gilded', 'Forged', 'Priceless'],
+    finale: 'Interstellar',
   },
 }
 
@@ -84,7 +95,8 @@ async function importGame(id) {
     const list = (byWeapon.get(w.WeaponName) ?? []).sort((a, b) => order(a) - order(b))
     if (!list.length) continue // armas sem desafios (ex.: algumas corpo a corpo no MW III)
     const base = list.filter((c) => c.SubCategory !== 'Mastery')
-    const mastery = game.mastery.map((name) => list.find((c) => c.SubCategory === 'Mastery' && c.Name === name))
+    const src = game.sourceNames ?? game.mastery
+    const mastery = src.map((name) => list.find((c) => c.SubCategory === 'Mastery' && c.Name === name))
     const cls = CLASS[w.Category]?.[0] ?? 'ar'
     weapons.push({
       id: w.slug || slug(w.WeaponName),
@@ -97,7 +109,7 @@ async function importGame(id) {
         ...mastery.map((c, i) => ({
           name: game.mastery[i],
           tier: slug(game.mastery[i]),
-          image: image(c?.Image) ?? masteryImage[game.mastery[i]] ?? null,
+          image: image(c?.Image) ?? masteryImage[src[i]] ?? null,
           challenge: text(c?.Challenge),
         })),
       ],
@@ -110,18 +122,22 @@ async function importGame(id) {
     return { id: c, label, short }
   })
 
-  // Regras específicas do MW III (vêm da configuração do próprio tracker).
+  // MW II / MW III: 3 de maestria em cadeia + uma final automática (regras da configuração do tracker).
+  //   1ª: as base da arma · 2ª: a 1ª desta arma + a 1ª em N armas da classe ·
+  //   3ª: a 2ª desta arma + a 2ª em M armas · final: a 3ª em K armas (vem sozinha).
   let rules = { kind: game.rules }
-  if (game.rules === 'mw3') {
-    const forgedNeed = Object.fromEntries(
+  if (game.rules === 'tiered') {
+    const secondNeed = Object.fromEntries(
       Object.entries(config.categories ?? {}).map(([cat, v]) => [CLASS[cat]?.[0] ?? slug(cat), v.unlockSecond]),
     )
-    const inter = (config.camos ?? []).find((c) => c.name === 'Interstellar')
+    const fin = (config.camos ?? []).find((c) => c.name === game.finale)
+    const title = (n) => n.charAt(0).toUpperCase() + n.slice(1)
     rules = {
-      kind: 'mw3',
-      forgedNeed,
-      pricelessNeed: config.countUnlockThird ?? 36,
-      finale: inter ? { name: 'Interstellar', image: inter.image, need: config.countUnlockMastery ?? 36 } : null,
+      kind: 'tiered',
+      tiers: game.mastery.map(slug),
+      secondNeed,
+      thirdNeed: config.countUnlockThird ?? 36,
+      finale: fin ? { name: fin.title ?? title(fin.name), image: fin.image, need: config.countUnlockMastery ?? 36 } : null,
     }
   }
 
