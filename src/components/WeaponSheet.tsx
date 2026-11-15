@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type Dispatch, type UIEvent } from 'react'
+import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import {
   LADDER,
   classLabel,
@@ -46,25 +46,17 @@ export function WeaponSheet({
 }) {
   const weapon = allWeapons(state).find((w) => w.id === id)
   const [preview, setPreview] = useState<Preview>(null)
-  // Cabeçalho compacto ao rolar. `anchor` = posição em que ele foi aberto por último
-  // (topo ou toque num quadrado); rolar 64px a partir dali compacta de novo.
+  // Cabeçalho compacto ao rolar (título menor, sem a dica); a foto da arma continua visível.
   const [collapsed, setCollapsed] = useState(false)
-  const anchor = useRef(0)
-  const sheetRef = useRef<HTMLElement>(null)
   const onScroll = (e: UIEvent<HTMLElement>) => {
     const y = e.currentTarget.scrollTop
     if (y < 8) {
-      anchor.current = 0
       if (collapsed) setCollapsed(false)
-    } else if (!collapsed && Math.abs(y - anchor.current) > 64) {
+    } else if (!collapsed && y > 64) {
       setCollapsed(true)
     }
   }
-  const showPreview = (p: Preview) => {
-    setPreview(p)
-    anchor.current = sheetRef.current?.scrollTop ?? 0
-    setCollapsed(false)
-  }
+  const showPreview = (p: Preview) => setPreview(p)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -100,7 +92,6 @@ export function WeaponSheet({
     <div className="sheet-backdrop" onClick={onClose}>
       <aside
         className="sheet"
-        ref={sheetRef}
         onScroll={onScroll}
         role="dialog"
         aria-modal="true"
