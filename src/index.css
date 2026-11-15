@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap');
 
 /* App só para celular: uma coluna estreita. Em telas maiores fica centralizada como um celular. */
 
@@ -13,17 +13,17 @@
   --line-strong: #5c5c5c;
   --text: #ffffff;
   --muted: #a6a6a6;
-  --accent: #ead16d;   /* amarelo: checks, números, progresso */
-  --accent-ink: #1c1c1c;
-  --primary: #3059ab;  /* azul: ações e seleção */
-  --primary-ink: #ffffff;
+  --accent: #ffd101;   /* amarelo do logo do MW4: checks, números, progresso */
+  --accent-ink: #0c0c0c;
+  --primary: #ffd101;  /* amarelo do logo do MW4: ações e seleção (cor primária) */
+  --primary-ink: #0c0c0c;
   --link: #6b90c7;
   --danger: #ff6b5b;
-  --warn: #ead16d;
+  --warn: #ffd101;
   --overlay: rgba(12, 12, 12, 0.8);
-  --mp: #3059ab;
-  --dmz: #3059ab;
-  --wz: #3059ab;
+  --mp: #ffd101;
+  --dmz: #ffd101;
+  --wz: #ffd101;
 
   /* Camuflagens sem textura: neutras quando concluídas. */
   --military: #ffffff;
@@ -38,8 +38,9 @@
   --r-sm: 4px;
   --r: 8px;
 
-  /* Fonte única do app (mono). */
+  /* Fontes: Geist Mono no texto, Geist (sans) nos títulos. */
   --font: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-title: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --nav-h: 64px;
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -207,7 +208,7 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .swatch-sm.tier-harmonic { background: var(--harmonic); background-size: 200% 200%; animation: shimmer 4s linear infinite; }
 
 /* Armas ------------------------------------------------------------------- */
-.filters { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.filters { display: grid; grid-template-columns: 1fr; gap: 8px; }
 .search, .select { height: 44px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 0 12px; min-width: 0; }
 .chips { display: flex; gap: 8px; overflow-x: auto; margin: 8px -16px 16px; padding: 0 16px 4px; scrollbar-width: none; }
 .chips::-webkit-scrollbar { display: none; }
@@ -248,7 +249,7 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .ladder { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
 .ladder-step { width: 100%; display: flex; gap: 12px; align-items: flex-start; padding: 8px; border-radius: var(--r); border: 1px solid transparent; background: none; text-align: left; }
 .ladder-step:active { background: var(--panel); }
-.ladder-step.next { border-color: var(--accent); background: var(--panel-2); }
+.ladder-step.next { border-color: var(--line-strong); }
 .ladder-step.done .ladder-text strong { color: var(--muted); }
 .swatch { flex: none; width: 40px; height: 40px; border-radius: var(--r-sm); border: 1px solid var(--line); display: grid; place-items: center; font-weight: 800; color: var(--accent-ink); opacity: 0.3; }
 .swatch.tier-military { background: var(--military); }
@@ -415,3 +416,9 @@ input[type="checkbox"]:disabled { border-color: var(--line); }
 .ladder-text { background: none; border: 0; padding: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
 .row-check { background: none; cursor: pointer; }
 .row-check:disabled { cursor: not-allowed; }
+
+/* Títulos em Geist (sans) */
+h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-value, .mastery-mini strong {
+  font-family: var(--font-title);
+  letter-spacing: -0.01em;
+}

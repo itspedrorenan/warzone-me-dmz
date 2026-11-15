@@ -3,7 +3,6 @@ import {
   CLASSES,
   LADDER,
   GOLD_LEVEL,
-  PLAT_LEVEL,
   HB_LEVEL,
   goldRequired,
   isReleased,
@@ -18,16 +17,6 @@ import { WeaponThumb } from './WeaponThumb'
 import { stepTexture } from '../data/camoImages'
 import { CamoTex } from './CamoTex'
 
-type StatusFilter = 'all' | 'todo' | 'gold' | 'platinum' | 'done'
-
-const STATUS: { id: StatusFilter; label: string }[] = [
-  { id: 'all', label: 'Todas' },
-  { id: 'todo', label: 'Sem Gold' },
-  { id: 'gold', label: 'Falta Platinum' },
-  { id: 'platinum', label: 'Falta Harmonic' },
-  { id: 'done', label: 'Concluídas' },
-]
-
 export function WeaponsView({
   state,
   dispatch,
@@ -39,7 +28,6 @@ export function WeaponsView({
 }) {
   const [query, setQuery] = useState('')
   const [cls, setCls] = useState<WeaponClass | 'all'>('all')
-  const [status, setStatus] = useState<StatusFilter>('all')
 
   const weapons = useMemo(() => allWeapons(state), [state])
 
@@ -48,21 +36,9 @@ export function WeaponsView({
     return weapons.filter((w) => {
       if (cls !== 'all' && w.cls !== cls) return false
       if (q && !w.name.toLowerCase().includes(q)) return false
-      const l = levelOf(state, w.id)
-      switch (status) {
-        case 'todo':
-          return l < GOLD_LEVEL
-        case 'gold':
-          return l >= GOLD_LEVEL && l < PLAT_LEVEL
-        case 'platinum':
-          return l >= PLAT_LEVEL && l < HB_LEVEL
-        case 'done':
-          return l >= HB_LEVEL
-        default:
-          return true
-      }
+      return true
     })
-  }, [weapons, state, query, cls, status])
+  }, [weapons, query, cls])
 
   return (
     <div className="weapons-view">
@@ -75,18 +51,6 @@ export function WeaponsView({
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Buscar arma"
         />
-        <select
-          className="select"
-          value={status}
-          onChange={(e) => setStatus(e.target.value as StatusFilter)}
-          aria-label="Filtrar por status"
-        >
-          {STATUS.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.label}
-            </option>
-          ))}
-        </select>
       </div>
       <div className="chips" role="group" aria-label="Filtrar por classe">
         <button className={`chip ${cls === 'all' ? 'active' : ''}`} onClick={() => setCls('all')}>
