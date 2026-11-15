@@ -341,8 +341,10 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
    e no quadrado "Agora". A imagem vem no style do próprio elemento (texStyle). */
 .seg, .swatch, .swatch-sm, .mastery-swatch, .milestone-swatch { position: relative; overflow: hidden; }
 .tex { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+/* Ainda não conquistada: em cinza e apagada. */
+.tex.muted { filter: grayscale(1); opacity: 0.4; }
 .swatch.done.has-tex .check-mark { display: none; }
-.seg.done:has(.tex) { height: 10px; }
+.seg:has(.tex) { height: 10px; }
 
 /* Cantos retos também nos controles nativos (iOS arredonda busca, select e checkbox). */
 input[type="search"], input[type="number"], input:not([type]), select, textarea {

@@ -55,5 +55,5 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
 - Têm textura: militares 1–8, Gold, Platinum, Harmonic Break, Divergence, as 9 maestrias e 14
   especiais que aparecem no post (HAN 86, Sang 9mm, Wz.55 Striga, Oden, Mosin-Nagant, Hyeon Burst,
   FSS Carbon Edge, Signal 50, Krait P68, Kastov 762). As demais especiais e o Flashpoint ficam brancos.
-- Onde aparecem: camuflagem concluída (escada da arma, barrinha de progresso, maestrias, Divergence)
-  e o quadrado "Agora" no Grind. Pendente continua só com contorno.
+- Onde aparecem: escada da arma, barrinha de progresso, quadrado "Agora" no Grind, maestrias e
+  Divergence. Concluída aparece em cores; pendente aparece em cinza e apagada.

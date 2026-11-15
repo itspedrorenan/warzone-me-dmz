@@ -60,7 +60,7 @@ export function ProgressView({ state, dispatch }: { state: State; dispatch: Disp
           className="milestone-swatch"
           aria-hidden="true"
         >
-          {divergenceUnlocked(state) && <CamoTex url={camoImage('divergence')} />}
+          <CamoTex url={camoImage('divergence')} muted={!divergenceUnlocked(state)} />
         </div>
         <div>
           <h3>{DIVERGENCE.name}</h3>
@@ -131,7 +131,7 @@ function ModeChain({
               className={`mastery-swatch m-${mode}-${i}`}
               aria-hidden="true"
             >
-              {ms.done && <CamoTex url={camoImage(def.id)} />}
+              <CamoTex url={camoImage(def.id)} muted={!ms.done} />
             </div>
             <div className="mastery-body">
               <h3>

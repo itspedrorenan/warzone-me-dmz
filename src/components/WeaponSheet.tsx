@@ -100,10 +100,10 @@ export function WeaponSheet({
                   aria-pressed={done}
                 >
                   <span
-                    className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${done && stepTexture(weapon, step) ? 'has-tex' : ''}`}
+                    className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${stepTexture(weapon, step) ? 'has-tex' : ''}`}
                     aria-hidden="true"
                   >
-                    {done && <CamoTex url={stepTexture(weapon, step)} />}
+                    <CamoTex url={stepTexture(weapon, step)} muted={!done} />
                     {done ? <span className="check-mark">✓</span> : ''}
                   </span>
                   <span className="ladder-text">

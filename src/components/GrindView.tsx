@@ -117,7 +117,7 @@ function GrindCard({
             key={s.index}
             className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''} ${level === s.index ? 'now' : ''}`}
           >
-            {level > s.index && <CamoTex url={stepTexture(weapon, s)} />}
+            <CamoTex url={stepTexture(weapon, s)} muted={level <= s.index} />
           </span>
         ))}
       </div>
