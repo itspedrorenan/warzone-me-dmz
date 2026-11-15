@@ -58,6 +58,9 @@ Os logos de Modern Warfare 4, DMZ e Warzone em `public/modes/` foram enviados pe
 projeto. O do MW4 está nas cores originais; os de DMZ e Warzone viraram silhuetas brancas (o do
 DMZ sem o "Call of Duty" de cima).
 
+Os logos dos jogos em `public/games/` (MW4, Modern Warfare 2019 e Modern Warfare III) também
+foram enviados pelo dono deste projeto: MW4 e MW III nas cores originais, MW 2019 em branco.
+
 ## CODMunity (codmunity.gg) — jogos antigos, uso local
 
 Os desafios de camuflagem do Modern Warfare (2019), com as imagens das armas e das

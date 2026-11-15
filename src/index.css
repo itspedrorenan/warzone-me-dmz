@@ -548,9 +548,15 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* ---------------------------------------------------------------------------
    Jogos antigos (MW 2019…): seletor de jogo e telas
    --------------------------------------------------------------------------- */
-.game-switch { position: relative; display: inline-flex; align-items: center; flex: none; }
-.game-switch select { appearance: none; -webkit-appearance: none; height: 36px; padding: 0 32px 0 12px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--text); font-family: var(--font); font-weight: 700; font-size: 0.85rem; }
-.game-switch svg { position: absolute; right: 10px; pointer-events: none; color: var(--muted); }
+.game-switch { position: relative; flex: none; }
+.game-current { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 12px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--muted); }
+.game-logo { display: block; height: 16px; width: auto; }
+.game-menu { position: absolute; top: calc(100% + 4px); left: 0; z-index: 20; min-width: 180px; margin: 0; padding: 4px; list-style: none; background: var(--panel); border: 1px solid var(--line-strong); border-radius: var(--r); box-shadow: 0 8px 24px rgb(0 0 0 / 0.5); }
+.game-menu button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; height: 44px; padding: 0 12px; background: none; border: 0; border-radius: var(--r-sm); color: var(--primary); }
+.game-menu button.active { background: var(--line); }
+.game-menu .game-logo { height: 18px; }
+/* Com o seletor de jogo, ele ocupa o lugar do quadrado da marca */
+.brand:has(.game-switch) .brand-mark { display: none; }
 .legacy-thumb { display: grid; place-items: center; height: 72px; background: var(--bg); border-radius: var(--r-sm); }
 .legacy-thumb img { max-width: 90%; max-height: 56px; object-fit: contain; }
 .legacy-hero, .legacy-preview { display: grid; place-items: center; width: 100%; aspect-ratio: 2.35 / 1; background: var(--bg); border-radius: var(--r-sm); overflow: hidden; }
