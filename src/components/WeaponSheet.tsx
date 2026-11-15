@@ -17,7 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
-import { Lock, Star, X } from 'lucide-react'
+import { Check, Lock, Star, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
@@ -177,6 +177,7 @@ export function WeaponSheet({
                       <Lock size={12} aria-hidden="true" /> {blocked}
                     </span>
                   )}
+                  {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                 </button>
               </li>
             )
@@ -218,6 +219,7 @@ export function WeaponSheet({
                         {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
                       </strong>
                       <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
+                      {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                     </button>
                   </li>
                 )
