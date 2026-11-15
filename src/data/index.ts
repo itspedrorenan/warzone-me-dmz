@@ -152,7 +152,7 @@ const fmt = (n: number) => n.toLocaleString('pt-BR')
 export function challengeText(c: Challenge | undefined): string {
   if (!c || c.status !== 'available') return 'Requisito ainda não confirmado.'
   const times = c.times !== undefined ? `, ${fmt(c.times)} vezes` : ''
-  const who = c.target === 'players' ? ' em jogadores' : c.target === 'enemies' ? ' em inimigos' : ''
+  const who = c.target === 'enemies' ? ' em inimigos' : ''
   switch (c.type) {
     case 'kills_in_match':
       return `${fmt(c.amount)} kills${who} em uma partida${times}`
