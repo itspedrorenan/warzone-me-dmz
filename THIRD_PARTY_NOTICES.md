@@ -54,4 +54,7 @@ por `scripts/codcentral/build-sprites.py`.
 Fotos das armas e as demais texturas foram recortadas de imagens oficiais publicadas em
 callofduty.com.
 
+Os logos de Modern Warfare 4, DMZ e Warzone em `public/modes/` foram enviados pelo dono deste
+projeto e convertidos para silhuetas brancas (o logo do DMZ sem o "Call of Duty" de cima).
+
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.

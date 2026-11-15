@@ -537,3 +537,10 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .mastery-mode-title { margin: 0 0 12px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--muted); }
 .mastery-mode-title .muted { text-transform: none; letter-spacing: 0; font-size: 0.72rem; }
 .ladder-step.divergence .ladder-text { cursor: default; }
+/* Modos com os logos (brancos) */
+.mode-btn { display: inline-grid; place-items: center; min-width: 56px; padding: 0 12px; }
+.mode-btn .mode-logo { display: block; height: 16px; width: auto; opacity: 0.4; transition: opacity 0.15s; }
+.mode-btn.mode-dmz .mode-logo { height: 18px; }
+.mode-btn.active, .mode-btn.mode-mp.active, .mode-btn.mode-dmz.active, .mode-btn.mode-wz.active { background: var(--line); box-shadow: inset 0 -2px 0 var(--primary); }
+.mode-btn.active .mode-logo { opacity: 1; }
+.mode-switch.small .mode-btn { min-width: 52px; }

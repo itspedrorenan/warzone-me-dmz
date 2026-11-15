@@ -12,8 +12,9 @@ export function ModeSwitch({ mode, dispatch, small }: { mode: Mode; dispatch: Di
           aria-checked={mode === m.id}
           className={`mode-btn mode-${m.id} ${mode === m.id ? 'active' : ''}`}
           onClick={() => dispatch({ type: 'setMode', mode: m.id })}
+          aria-label={m.label}
         >
-          {m.short}
+          <img className="mode-logo" src={`./modes/${m.id}.webp`} alt="" draggable={false} />
         </button>
       ))}
     </div>
