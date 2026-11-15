@@ -191,23 +191,23 @@ export function gateReason(s: State, weapon: Weapon, step: number): string | nul
     if (!u) return null
     const need = militaryForUnlock(weapon, u)
     if (need !== null) {
-      return has(need) ? null : `Marque a Militar ${need + 1} antes (${unlockText(u)}).`
+      return has(need) ? null : `Conclua a Militar ${need + 1} antes (${unlockText(u)}).`
     }
     if (weapon.military?.unit === u.type && !MILITARY_STEPS.every(has)) {
-      return `Marque todas as militares antes (${unlockText(u)}).`
+      return `Conclua todas as militares antes (${unlockText(u)}).`
     }
     return null
   }
   if (step === GOLD_STEP && (mask & BEFORE_GOLD) !== BEFORE_GOLD) {
-    return 'Gold exige todas as militares e especiais.'
+    return 'Termine todas as militares e especiais.'
   }
   if (step === PLAT_STEP) {
-    if (!has(GOLD_STEP)) return 'Platinum exige o Gold desta arma.'
-    if (!classGoldDone(s, weapon.cls)) return `Platinum exige Gold em ${goldRequired(weapon.cls)} armas da classe.`
+    if (!has(GOLD_STEP)) return 'Termine o Gold desta arma.'
+    if (!classGoldDone(s, weapon.cls)) return `Termine o Gold em ${goldRequired(weapon.cls)} armas da classe.`
   }
   if (step === HB_STEP) {
-    if (!has(PLAT_STEP)) return 'Harmonic Break exige o Platinum desta arma.'
-    if (!platinumGateDone(s)) return `Harmonic Break exige Platinum em ${LAUNCH_WEAPONS} armas.`
+    if (!has(PLAT_STEP)) return 'Termine o Platinum desta arma.'
+    if (!platinumGateDone(s)) return `Termine o Platinum em ${LAUNCH_WEAPONS} armas.`
   }
   return null
 }

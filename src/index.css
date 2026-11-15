@@ -471,3 +471,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .sheet-top.collapsed .sheet-head .icon-btn { width: 32px; height: 32px; }
 /* Quadrado da camuflagem sem borda cinza (só o traço amarelo de pré-visualização) */
 .ladder-step > .swatch, .ladder-step > .swatch:not(.done) { border: 0; }
+/* Motivo do bloqueio em fonte menor */
+.ladder-step .blocked-text { font-size: 0.7rem; }
+/* Fechar do painel: só o ícone, sem caixa */
+.sheet-head .icon-btn { background: none; border: 0; }
