@@ -4,3 +4,6 @@ dist
 .DS_Store
 __pycache__/
 .cache/
+
+# Dados de jogos antigos (CODMunity): permissão só para uso local. Não versionar.
+src/data/local/

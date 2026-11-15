@@ -544,3 +544,19 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .mode-btn.active, .mode-btn.mode-mp.active, .mode-btn.mode-dmz.active, .mode-btn.mode-wz.active { background: var(--line); box-shadow: inset 0 -2px 0 var(--primary); }
 .mode-btn.active .mode-logo { opacity: 1; }
 .mode-switch.small .mode-btn { min-width: 52px; }
+
+/* ---------------------------------------------------------------------------
+   Jogos antigos (MW 2019…): seletor de jogo e telas
+   --------------------------------------------------------------------------- */
+.game-switch { position: relative; display: inline-flex; align-items: center; flex: none; }
+.game-switch select { appearance: none; -webkit-appearance: none; height: 36px; padding: 0 32px 0 12px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-sm); color: var(--text); font-family: var(--font); font-weight: 700; font-size: 0.85rem; }
+.game-switch svg { position: absolute; right: 10px; pointer-events: none; color: var(--muted); }
+.legacy-thumb { display: grid; place-items: center; height: 72px; background: var(--bg); border-radius: var(--r-sm); }
+.legacy-thumb img { max-width: 90%; max-height: 56px; object-fit: contain; }
+.legacy-hero, .legacy-preview { display: grid; place-items: center; width: 100%; aspect-ratio: 2.35 / 1; background: var(--bg); border-radius: var(--r-sm); overflow: hidden; }
+.legacy-hero img { width: 80%; max-height: 80%; object-fit: contain; }
+.legacy-preview img { width: 100%; height: 100%; object-fit: cover; }
+.legacy-unlock { font-size: 0.72rem; }
+.seg[class*='legacy-'] { flex: 1; }
+.seg.legacy-gold, .seg.legacy-platinum, .seg.legacy-damascus, .seg.legacy-obsidian { flex: 1.6; }
+.seg.legacy-base + .seg.legacy-gold { margin-left: 4px; }

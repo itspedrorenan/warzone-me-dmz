@@ -14,6 +14,20 @@ npm run dev      # http://localhost:5173 (no celular: use o IP do computador na 
 npm run build    # gera dist/
 ```
 
+## Jogos antigos (MW 2019) — só local
+
+Os desafios do Modern Warfare (2019) vêm do CODMunity, com permissão **só para uso local**.
+Por isso eles não ficam no repositório nem vão para a Vercel. Para ver o MW 2019 na sua
+máquina:
+
+```sh
+npm run import:codmunity -- mw19   # gera src/data/local/mw19.json (no .gitignore)
+npm run dev -- --host              # abra o endereço "Network" no celular, na mesma rede Wi-Fi
+```
+
+Com o arquivo presente, aparece um seletor de jogo no topo do app (MW4 / MW 2019). Sem ele,
+o app mostra só o MW4.
+
 ## Dados e imagens
 
 - Armas, desafios, maestrias e prestígio: [Divergence](https://github.com/ItchyBeard/Divergence) (MIT),

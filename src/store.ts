@@ -51,6 +51,10 @@ export interface State {
   prestige: Record<string, number>
   /** Maestrias de modo marcadas por arma: bit i = MASTERIES[i]. */
   modeMastery: Record<string, number>
+  /** Jogo aberto: 'mw4' ou um jogo antigo (ver data/legacy, só local). */
+  game: string
+  /** Progresso dos jogos antigos: jogo → arma → máscara de degraus. */
+  legacy: Record<string, Record<string, number>>
 }
 
 export const initialState = (): State => ({
@@ -68,6 +72,8 @@ export const initialState = (): State => ({
   haptics: true,
   prestige: {},
   modeMastery: {},
+  game: 'mw4',
+  legacy: {},
 })
 
 function load(): State {
@@ -145,6 +151,13 @@ export function sanitize(input: unknown): State {
       Object.entries((s.prestige as object) ?? {}).map(([k, v]) => [
         k,
         Math.max(0, Math.min(4, Math.round(Number(v) || 0))),
+      ]),
+    ),
+    game: typeof s.game === 'string' ? s.game : 'mw4',
+    legacy: Object.fromEntries(
+      Object.entries((s.legacy as object) ?? {}).map(([g, weapons]) => [
+        g,
+        Object.fromEntries(Object.entries((weapons as object) ?? {}).map(([w, m]) => [w, Number(m) || 0])),
       ]),
     ),
     modeMastery: Object.fromEntries(
@@ -308,6 +321,8 @@ export type Action =
   | { type: 'setHaptics'; value: boolean }
   | { type: 'setPrestige'; id: string; count: number }
   | { type: 'toggleModeMastery'; id: string; index: number }
+  | { type: 'setGame'; game: string }
+  | { type: 'setLegacyProgress'; game: string; progress: Record<string, number> }
   | { type: 'addWeapon'; name: string; cls: WeaponClass }
   | { type: 'updateCustomWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls'>> }
   | { type: 'removeCustomWeapon'; id: string }
@@ -382,6 +397,10 @@ export function reducer(s: State, a: Action): State {
       }
       return { ...s, modeMastery: { ...s.modeMastery, [a.id]: mask } }
     }
+    case 'setGame':
+      return { ...s, game: a.game }
+    case 'setLegacyProgress':
+      return { ...s, legacy: { ...s.legacy, [a.game]: a.progress } }
     case 'setNote':
       return { ...s, notes: { ...s.notes, [a.id]: a.note } }
     case 'togglePin':

@@ -5,6 +5,10 @@ import { useWakeLock } from './hooks'
 import { ModeSwitch } from './components/ModeSwitch'
 import { WeaponsView } from './components/WeaponsView'
 import { WeaponSheet } from './components/WeaponSheet'
+import { GameSwitch } from './components/GameSwitch'
+import { LegacyWeaponsView } from './components/LegacyWeaponsView'
+import { LegacySheet } from './components/LegacySheet'
+import { legacyGame } from './data/legacy'
 
 export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
 
@@ -18,8 +22,13 @@ const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: b
 export default function App() {
   const [state, dispatch] = useTracker()
   const [tab, setTab] = useState<Tab>('weapons')
-  const [openId, setOpenId] = useState<string | null>(null)
+  // Painel aberto, junto com o jogo a que pertence (trocar de jogo fecha o painel).
+  const [open, setOpen] = useState<{ game: string; id: string } | null>(null)
+  const openId = open && open.game === state.game ? open.id : null
+  const setOpenId = (id: string | null) => setOpen(id ? { game: state.game, id } : null)
   const wake = useWakeLock(state.keepAwake)
+  // Jogo antigo aberto (só existe quando o arquivo local foi gerado nesta máquina).
+  const legacy = state.game === 'mw4' ? null : legacyGame(state.game)
 
   return (
     <div className="app">
@@ -27,6 +36,7 @@ export default function App() {
         <div className="brand">
           <span className="brand-mark" aria-hidden="true" />
           <h1>Camo Tracker</h1>
+          <GameSwitch game={legacy ? legacy.game : 'mw4'} dispatch={dispatch} />
         </div>
         {wake.supported && (
           <button
@@ -39,12 +49,16 @@ export default function App() {
             <span className="sr-only">Tela sempre ligada</span>
           </button>
         )}
-        <ModeSwitch mode={state.mode} dispatch={dispatch} />
+        {!legacy && <ModeSwitch mode={state.mode} dispatch={dispatch} />}
       </header>
 
       <main className="content">
         {tab === 'weapons' ? (
-          <WeaponsView state={state} dispatch={dispatch} onOpen={setOpenId} />
+          legacy ? (
+            <LegacyWeaponsView key={legacy.game} game={legacy} state={state} dispatch={dispatch} onOpen={setOpenId} />
+          ) : (
+            <WeaponsView state={state} dispatch={dispatch} onOpen={setOpenId} />
+          )
         ) : (
           <div className="empty-card">
             <p className="empty-title">{TABS.find((t) => t.id === tab)?.label}</p>
@@ -67,7 +81,12 @@ export default function App() {
         ))}
       </nav>
 
-      {openId && <WeaponSheet id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />}
+      {openId &&
+        (legacy ? (
+          <LegacySheet game={legacy} id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />
+        ) : (
+          <WeaponSheet id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />
+        ))}
     </div>
   )
 }

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "import:divergence": "node scripts/import-divergence.mjs"
+    "import:divergence": "node scripts/import-divergence.mjs",
+    "import:codmunity": "node scripts/import-codmunity.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.73.0",

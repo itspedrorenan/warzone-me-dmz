@@ -58,4 +58,12 @@ Os logos de Modern Warfare 4, DMZ e Warzone em `public/modes/` foram enviados pe
 projeto. O do MW4 está nas cores originais; os de DMZ e Warzone viraram silhuetas brancas (o do
 DMZ sem o "Call of Duty" de cima).
 
+## CODMunity (codmunity.gg) — jogos antigos, uso local
+
+Os desafios de camuflagem do Modern Warfare (2019), com as imagens das armas e das
+camuflagens (carregadas direto de assets.codmunity.gg), vêm do CODMunity. O dono deste projeto
+informou ter permissão do CODMunity **só para uso local** (15/11/2026). Por isso o script
+`scripts/import-codmunity.mjs` grava os dados em `src/data/local/`, que está no `.gitignore`:
+eles não são versionados nem publicados.
+
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.
