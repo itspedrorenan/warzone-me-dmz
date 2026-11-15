@@ -55,6 +55,7 @@ Fotos das armas e as demais texturas foram recortadas de imagens oficiais public
 callofduty.com.
 
 Os logos de Modern Warfare 4, DMZ e Warzone em `public/modes/` foram enviados pelo dono deste
-projeto e convertidos para silhuetas brancas (o logo do DMZ sem o "Call of Duty" de cima).
+projeto. O do MW4 está nas cores originais; os de DMZ e Warzone viraram silhuetas brancas (o do
+DMZ sem o "Call of Duty" de cima).
 
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.
