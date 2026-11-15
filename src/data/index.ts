@@ -116,7 +116,7 @@ const OBJECTIVES: Record<string, string> = {
   crouched_kills: 'kills agachado',
   direct_shot_kills: 'kills com acerto direto',
   double_kills: 'kills duplos',
-  eliminations_in_match: 'eliminações em uma única partida',
+  eliminations_in_match: 'kills em uma única partida',
   focused_kills: 'kills com Focused',
   grenade_launcher_kills: 'kills com lança-granadas acoplado',
   headshot_kills: 'kills com headshot',
@@ -157,7 +157,7 @@ export function challengeText(c: Challenge | undefined): string {
     case 'kills_in_match':
       return `${fmt(c.amount)} kills${who} em uma partida${times}`
     case 'eliminations_in_match':
-      return `${fmt(c.amount)} eliminações${who} em uma única partida${times}`
+      return `${fmt(c.amount)} kills${who} em uma única partida${times}`
     case 'rapid_kills': {
       const secs = c.description?.match(/(\d+)\s*seconds?/i)?.[1] ?? '5'
       return `${fmt(c.amount)} kills${who} em ${secs} segundos${times}`
