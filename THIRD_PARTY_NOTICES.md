@@ -67,6 +67,7 @@ Os desafios de camuflagem do Modern Warfare (2019), com as imagens das armas e d
 camuflagens (carregadas direto de assets.codmunity.gg), vêm do CODMunity. O dono deste projeto
 informou ter permissão do CODMunity **só para uso local** (15/11/2026). Por isso o script
 `scripts/import-codmunity.mjs` grava os dados em `src/data/local/`, que está no `.gitignore`:
-eles não são versionados nem publicados.
+eles não são versionados. A pedido dele, o site privado na Vercel (protegido por Vercel
+Authentication, só o dono acessa) baixa esses dados durante o build (`npm run build:vercel`).
 
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.

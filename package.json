@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "import:divergence": "node scripts/import-divergence.mjs",
-    "import:codmunity": "node scripts/import-codmunity.mjs"
+    "import:codmunity": "node scripts/import-codmunity.mjs",
+    "build:vercel": "node scripts/import-codmunity.mjs mw19 || echo 'MW 2019 indisponível: seguindo sem ele'; npm run build"
   },
   "dependencies": {
     "lucide-react": "^1.73.0",

@@ -28,6 +28,10 @@ npm run dev -- --host              # abra o endereço "Network" no celular, na m
 Com o arquivo presente, aparece um seletor de jogo no topo do app (MW4 / MW 2019). Sem ele,
 o app mostra só o MW4.
 
+Na Vercel (site privado, com Vercel Authentication) o comando de build é `npm run build:vercel`:
+ele baixa os dados do CODMunity durante o build, então eles entram só no site protegido e nunca no
+repositório. Se o download falhar, o build segue sem o MW 2019.
+
 ## Dados e imagens
 
 - Armas, desafios, maestrias e prestígio: [Divergence](https://github.com/ItchyBeard/Divergence) (MIT),
