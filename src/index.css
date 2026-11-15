@@ -580,3 +580,8 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .app[data-game='mw2'] { --primary: #7ec92e; --primary-ink: #0c0c0c; --accent: #7ec92e; --accent-ink: #0c0c0c; }
 .legacy-noimg { font-family: var(--font-title); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; }
 .legacy-hero .legacy-noimg { font-size: 1.4rem; letter-spacing: 0.04em; }
+/* Logos dos jogos numa régua comum: o "MW" ocupa 70% da altura (o resto é folga para o 사 do MW4),
+   então a altura total é maior para o MW continuar com ~15px. */
+.game-logo { height: 22px; }
+.game-menu .game-logo { height: 26px; }
+.mode-btn.mode-mp .mode-logo { height: 18px; }
