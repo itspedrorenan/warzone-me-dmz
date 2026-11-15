@@ -40,9 +40,10 @@ Arquivos: `anaconda.webp`, `ash-pine.webp`, `asphalt.webp`, `backcountry.webp`, 
 
 ### Fotos das armas com camuflagem
 
-As 630 fotos em `public/renders/<arma>/<camuflagem>.webp` (cada arma com cada camuflagem da escada e
-de prestígio) também vieram da biblioteca do CodCentral, com a mesma autorização. Baixadas uma vez,
-uma a cada 0,5 s, por `scripts/codcentral/fetch-renders.sh`.
+As 630 fotos de cada arma com cada camuflagem da escada e de prestígio também vieram da biblioteca
+do CodCentral, com a mesma autorização. Baixadas uma vez, uma a cada 0,5 s, por
+`scripts/codcentral/fetch-renders.sh`, e juntadas numa tira por arma em `public/renders/<arma>.webp`
+por `scripts/codcentral/build-sprites.py`.
 
 ## Imagens oficiais
 

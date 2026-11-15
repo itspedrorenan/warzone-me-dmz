@@ -1,11 +1,10 @@
 // Fotos de cada arma com cada camuflagem aplicada (CodCentral, com autorização; imagens © Activision).
-// Ficam em public/renders/<arma>/<camuflagem>.webp; a lista é gerada por scripts/codcentral/list-renders.mjs.
+// Cada arma tem uma tira vertical em public/renders/<arma>.webp com uma faixa por camuflagem, na ordem
+// de renderImages.generated.json. Gerado por scripts/codcentral/build-sprites.py.
 import list from './renderImages.generated.json'
 import type { LadderStep, Weapon } from './index'
 
-const RENDERS: Record<string, Set<string>> = Object.fromEntries(
-  Object.entries(list as Record<string, string[]>).map(([w, names]) => [w, new Set(names)])
-)
+const RENDERS = list as Record<string, string[]>
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
@@ -27,5 +26,15 @@ export function stepRenderKey(weapon: Weapon, step: LadderStep): string {
   }
 }
 
-export const renderImage = (weaponId: string, key: string) =>
-  key && RENDERS[weaponId]?.has(key) ? `./renders/${weaponId}/${key}.webp` : null
+export interface RenderFrame {
+  src: string
+  /** Posição da faixa na tira e total de faixas. */
+  index: number
+  count: number
+}
+
+export function renderImage(weaponId: string, key: string): RenderFrame | null {
+  const keys = RENDERS[weaponId]
+  const index = key && keys ? keys.indexOf(key) : -1
+  return index >= 0 ? { src: `./renders/${weaponId}.webp`, index, count: keys.length } : null
+}

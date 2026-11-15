@@ -15,13 +15,13 @@ import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
-import { renderImage, stepRenderKey } from '../data/renderImages'
+import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
 type Preview = { kind: 'step'; index: number } | { kind: 'prestige'; id: string } | null
 
-function previewInfo(weapon: Weapon, p: Preview): { name: string; src: string | null } | null {
+function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFrame | null } | null {
   if (!p) return null
   if (p.kind === 'step') {
     const step = LADDER[p.index]
@@ -104,7 +104,13 @@ export function WeaponSheet({
 
           <div className="sheet-thumb">
             {shown?.src ? (
-              <img className="thumb thumb-lg render" src={shown.src} alt={`${weapon.name} com ${shown.name}`} />
+              <div className="render" role="img" aria-label={`${weapon.name} com ${shown.name}`}>
+                <img
+                  src={shown.src.src}
+                  alt=""
+                  style={{ transform: `translateY(-${(shown.src.index * 100) / shown.src.count}%)` }}
+                />
+              </div>
             ) : (
               <WeaponThumb weapon={weapon} size="lg" />
             )}
