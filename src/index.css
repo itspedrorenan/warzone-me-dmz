@@ -568,3 +568,4 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .seg.legacy-base + .seg.legacy-gold { margin-left: 4px; }
 .swatch-initial { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-title); font-weight: 700; color: var(--muted); }
 .legacy-preview .muted { font-size: 0.8rem; }
+.game-logo-text { font-family: var(--font-title); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--text); line-height: 1; }

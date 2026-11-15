@@ -10,9 +10,16 @@ const LOGOS: Record<string, string> = {
   mw3: './games/mw3.webp',
 }
 
-function GameLogo({ id, label }: { id: string; label: string }) {
+function GameLogo({ id, label, short }: { id: string; label: string; short: string }) {
   const src = LOGOS[id]
-  return src ? <img className="game-logo" src={src} alt={label} draggable={false} /> : <span>{label}</span>
+  // Sem logo (ainda): mostra o nome curto em texto, ex.: "MW II".
+  return src ? (
+    <img className="game-logo" src={src} alt={label} draggable={false} />
+  ) : (
+    <span className="game-logo-text" aria-label={label}>
+      {short}
+    </span>
+  )
 }
 
 /** Seletor de jogo no topo: botão com o logo do jogo atual que abre a lista de logos.
@@ -35,8 +42,8 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
 
   if (!LEGACY_GAMES.length) return null
   const games = [
-    { id: 'mw4', label: 'Modern Warfare 4' },
-    ...LEGACY_GAMES.map((g) => ({ id: g.game, label: g.label })),
+    { id: 'mw4', label: 'Modern Warfare 4', short: 'MW4' },
+    ...LEGACY_GAMES.map((g) => ({ id: g.game, label: g.label, short: g.short })),
   ]
   const current = games.find((g) => g.id === game) ?? games[0]
 
@@ -49,7 +56,7 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
         aria-expanded={open}
         aria-label={`Jogo: ${current.label}`}
       >
-        <GameLogo id={current.id} label={current.label} />
+        <GameLogo id={current.id} label={current.label} short={current.short} />
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       {open && (
@@ -65,7 +72,7 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
                   setOpen(false)
                 }}
               >
-                <GameLogo id={g.id} label={g.label} />
+                <GameLogo id={g.id} label={g.label} short={g.short} />
                 {g.id === current.id && <Check size={16} aria-hidden="true" />}
               </button>
             </li>
