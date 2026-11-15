@@ -11,13 +11,15 @@ import { LegacySheet } from './components/LegacySheet'
 import { legacyGame } from './data/legacy'
 import { GAMES } from './data/games'
 import { HomeView } from './components/HomeView'
+import { ProgressView } from './components/ProgressView'
+import { summaryLegacy, summaryMW4 } from './progress'
 
 export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
 
 const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: boolean }[] = [
   { id: 'grind', label: 'Grind', Icon: Flame, ready: false },
   { id: 'weapons', label: 'Armas', Icon: Crosshair, ready: true },
-  { id: 'progress', label: 'Progresso', Icon: ChartNoAxesColumn, ready: false },
+  { id: 'progress', label: 'Progresso', Icon: ChartNoAxesColumn, ready: true },
   { id: 'settings', label: 'Ajustes', Icon: Settings, ready: false },
 ]
 
@@ -76,6 +78,12 @@ export default function App() {
           ) : (
             <WeaponsView state={state} dispatch={dispatch} onOpen={setOpenId} />
           )
+        ) : tab === 'progress' ? (
+          <ProgressView
+            summary={legacy ? summaryLegacy(legacy, state) : summaryMW4(state)}
+            gameLabel={legacy ? legacy.label : 'Modern Warfare 4'}
+            onOpen={setOpenId}
+          />
         ) : (
           <div className="empty-card">
             <p className="empty-title">{TABS.find((t) => t.id === tab)?.label}</p>
