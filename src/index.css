@@ -590,10 +590,10 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
    Tela inicial: imagem de fundo com degradê até a cor do app + grade de logos
    --------------------------------------------------------------------------- */
 .home { position: relative; min-height: 100dvh; overflow: hidden; background: var(--bg); }
-.home-bg { position: absolute; inset: 0 0 auto; height: 62dvh; }
-.home-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 50%; }
+.home-bg { position: absolute; inset: 0 0 auto; height: 82dvh; }
+.home-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; }
 /* degradê de baixo: a imagem some na cor de fundo; um pouco escuro em cima para a barra de status */
-.home-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(0 0 0 / 0.45) 0%, rgb(0 0 0 / 0) 22%, rgb(28 28 28 / 0) 45%, var(--bg) 100%); }
+.home-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(28 28 28 / 0) 0%, rgb(28 28 28 / 0) 38%, rgb(28 28 28 / 0.7) 62%, var(--bg) 92%); }
 .home-body { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100dvh; padding: calc(24px + var(--safe-t)) 20px calc(32px + var(--safe-b)); gap: 24px; }
 .home-head h1 { margin: 0; font-family: var(--font-title); font-size: 2rem; font-weight: 800; letter-spacing: 0; text-transform: uppercase; }
 .home-head p { margin: 8px 0 0; color: var(--muted); font-size: 0.85rem; }
