@@ -437,3 +437,15 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .preview-label .link-btn { margin-left: auto; flex: none; }
 .sheet-actions { margin: 16px 0 12px; }
 .render.thumb-lg, .render.thumb-card, .render.thumb-sm { height: auto; }
+
+/* Ícones (Lucide) */
+.filters { position: relative; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.filters .search { padding-left: 40px; }
+.nav-btn svg { fill: none; }
+.awake svg { fill: none; stroke: var(--muted); }
+.awake.on svg { fill: none; stroke: var(--warn); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.blocked-text svg { vertical-align: -1px; }
+.row-check svg { display: block; }
+.weapon-card .pin svg { display: block; }

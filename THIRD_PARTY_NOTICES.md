@@ -45,6 +45,10 @@ do CodCentral, com a mesma autorização. Baixadas uma vez, uma a cada 0,5 s, po
 `scripts/codcentral/fetch-renders.sh`, e juntadas numa tira por arma em `public/renders/<arma>.webp`
 por `scripts/codcentral/build-sprites.py`.
 
+## Lucide (ícones)
+
+Ícones do [Lucide](https://lucide.dev) (`lucide-react`), licença ISC. Copyright (c) Lucide Contributors.
+
 ## Imagens oficiais
 
 Fotos das armas e as demais texturas foram recortadas de imagens oficiais publicadas em

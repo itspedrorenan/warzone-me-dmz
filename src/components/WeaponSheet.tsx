@@ -17,6 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
+import { Check, Lock, Star, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
@@ -99,7 +100,7 @@ export function WeaponSheet({
               </p>
             </div>
             <button className="icon-btn" onClick={onClose} aria-label="Fechar">
-              ×
+              <X size={20} aria-hidden="true" />
             </button>
           </header>
 
@@ -134,7 +135,8 @@ export function WeaponSheet({
               vibrate(state.haptics)
             }}
           >
-            {pinned ? '★ No grind' : '☆ Pôr no grind'}
+            <Star size={16} aria-hidden="true" fill={pinned ? 'currentColor' : 'none'} />
+            {pinned ? 'No grind' : 'Pôr no grind'}
           </button>
         </div>
 
@@ -164,7 +166,11 @@ export function WeaponSheet({
                   </strong>
                   {info.challenge && <span className="challenge">{info.challenge}</span>}
                   {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
-                  {blocked && <span className="blocked-text">🔒 {blocked}</span>}
+                  {blocked && (
+                    <span className="blocked-text">
+                      <Lock size={12} aria-hidden="true" /> {blocked}
+                    </span>
+                  )}
                 </button>
                 <button
                   className={`row-check ${done ? 'on' : ''}`}
@@ -173,7 +179,7 @@ export function WeaponSheet({
                   aria-pressed={done}
                   aria-label={done ? `Desmarcar ${name}` : `Marcar ${name}`}
                 >
-                  {done ? '✓' : ''}
+                  {done && <Check size={18} strokeWidth={3} aria-hidden="true" />}
                 </button>
               </li>
             )
@@ -217,7 +223,7 @@ export function WeaponSheet({
                       aria-pressed={done}
                       aria-label={done ? `Desmarcar ${camo.name}` : `Marcar ${camo.name}`}
                     >
-                      {done ? '✓' : ''}
+                      {done && <Check size={18} strokeWidth={3} aria-hidden="true" />}
                     </button>
                   </li>
                 )

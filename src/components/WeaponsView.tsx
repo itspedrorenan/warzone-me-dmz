@@ -16,6 +16,7 @@ import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
 import { stepTexture } from '../data/camoImages'
 import { CamoTex } from './CamoTex'
+import { Search, Star } from 'lucide-react'
 
 export function WeaponsView({
   state,
@@ -43,6 +44,7 @@ export function WeaponsView({
   return (
     <div className="weapons-view">
       <div className="filters">
+        <Search className="search-icon" size={18} aria-hidden="true" />
         <input
           className="search"
           type="search"
@@ -133,7 +135,7 @@ function WeaponRow({
         aria-pressed={pinned}
         aria-label={pinned ? `Tirar ${weapon.name} do grind` : `Colocar ${weapon.name} no grind`}
       >
-        ★
+        <Star size={18} aria-hidden="true" fill={pinned ? 'currentColor' : 'none'} />
       </button>
     </li>
   )

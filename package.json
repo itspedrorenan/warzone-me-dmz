@@ -11,6 +11,7 @@
     "import:divergence": "node scripts/import-divergence.mjs"
   },
   "dependencies": {
+    "lucide-react": "^1.73.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
