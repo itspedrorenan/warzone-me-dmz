@@ -123,8 +123,13 @@ function LegacyCard({
     <li className={`weapon-card legacy ${legacyDone(progress, weapon.id, top) ? 'complete' : ''}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb legacy-thumb">
-          {weapon.icon ? (
-            <img src={legacyImg(weapon.icon, 'thumb')!} alt={weapon.name} loading="lazy" decoding="async" />
+          {weapon.icon || weapon.photo ? (
+            <img
+              src={legacyImg(weapon.icon || weapon.photo!, 'thumb')!}
+              alt={weapon.name}
+              loading="lazy"
+              decoding="async"
+            />
           ) : (
             // A fonte não tem imagem desta arma (ex.: MW II): mostra a classe.
             <span className="legacy-noimg" aria-hidden="true">
@@ -141,7 +146,7 @@ function LegacyCard({
             const done = legacyDone(progress, weapon.id, i)
             return (
               <span key={i} className={`seg legacy-${s.tier} ${done ? 'done' : ''}`}>
-                <CamoTex url={legacyImg(s.image, 'swatch')} muted={!done} />
+                <CamoTex url={legacyImg(s.image ?? s.photo ?? null, 'swatch')} muted={!done} />
               </span>
             )
           })}

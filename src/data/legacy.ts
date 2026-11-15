@@ -24,6 +24,8 @@ export interface LegacyStep {
   image: string | null
   /** Texto do desafio em inglês, como vem da fonte (null se a fonte não informa). */
   challenge: string | null
+  /** Foto da arma com esta camuflagem aplicada (Game8), quando existe. */
+  photo?: string | null
 }
 
 export interface LegacyWeapon {
@@ -32,6 +34,8 @@ export interface LegacyWeapon {
   cls: string
   icon: string
   unlock: string | null
+  /** Foto padrão da arma (Game8), usada quando a fonte não tem a imagem dela. */
+  photo?: string | null
   steps: LegacyStep[]
 }
 
@@ -76,7 +80,11 @@ export const legacyGame = (id: string) => LEGACY_GAMES.find((g) => g.game === id
 export function legacyImg(url: string | null, size: 'thumb' | 'hero' | 'swatch'): string | null {
   if (!url) return null
   const dims = { thumb: '400x160', hero: '800x320', swatch: '120x48' }[size]
-  return url.includes('assets.codmunity.gg') ? `${url}${url.includes('?') ? '&' : '?'}size=${dims}&quality=80&format=webp` : url
+  // Game8: "/show" é a foto inteira; "/thumb" é a versão menor (~13 KB).
+  if (url.includes('img.game8.co')) return size === 'hero' ? url : url.replace(/\/show$/, '/thumb')
+  return url.includes('assets.codmunity.gg')
+    ? `${url}${url.includes('?') ? '&' : '?'}size=${dims}&quality=80&format=webp`
+    : url
 }
 
 // ---------------------------------------------------------------------------
@@ -141,12 +149,19 @@ export function legacyUnlockText(g: LegacyGame, step: LegacyStep, w: LegacyWeapo
 }
 
 /** Motivo pelo qual a camuflagem ainda não pode ser marcada (ou null). */
-export function legacyGate(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, i: number, enforce: boolean): string | null {
+export function legacyGate(
+  g: LegacyGame,
+  p: LegacyProgress,
+  w: LegacyWeapon,
+  i: number,
+  enforce: boolean,
+): string | null {
   if (!enforce) return null
   const step = w.steps[i]
   if (step.tier === 'base') return null
   const allBase = () => w.steps.every((s, k) => s.tier !== 'base' || legacyDone(p, w.id, k))
-  const baseMsg = () => (baseCount(w) === 1 ? 'Termine a camuflagem base.' : `Termine as ${baseCount(w)} camuflagens base.`)
+  const baseMsg = () =>
+    baseCount(w) === 1 ? 'Termine a camuflagem base.' : `Termine as ${baseCount(w)} camuflagens base.`
 
   if (g.rules.kind === 'tiered') {
     const [first, second, third] = g.rules.tiers
@@ -160,7 +175,9 @@ export function legacyGate(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, i:
     if (step.tier === third) {
       if (!hasTier(p, w, second)) return `Termine o ${tierLabel(g, second)} desta arma.`
       const missing = g.rules.thirdNeed - legacyCount(g, p, second)
-      return missing <= 0 ? null : `Termine o ${tierLabel(g, second)} em ${g.rules.thirdNeed} armas (faltam ${missing}).`
+      return missing <= 0
+        ? null
+        : `Termine o ${tierLabel(g, second)} em ${g.rules.thirdNeed} armas (faltam ${missing}).`
     }
     return null
   }

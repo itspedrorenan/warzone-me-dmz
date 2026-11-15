@@ -111,13 +111,24 @@ export function LegacySheet({
 
           <div className="sheet-thumb">
             {shown ? (
-              <div className="legacy-preview" aria-label={`Camuflagem ${shown.name}`}>
-                {shown.image ? <img src={legacyImg(shown.image, 'hero')!} alt="" /> : <span className="muted">Sem imagem desta camuflagem</span>}
-              </div>
+              shown.photo ? (
+                // Foto da arma com a camuflagem (como no MW4)
+                <div className="legacy-photo">
+                  <img src={legacyImg(shown.photo, 'hero')!} alt={`${weapon.name} com ${shown.name}`} />
+                </div>
+              ) : (
+                <div className="legacy-preview" aria-label={`Camuflagem ${shown.name}`}>
+                  {shown.image ? (
+                    <img src={legacyImg(shown.image, 'hero')!} alt="" />
+                  ) : (
+                    <span className="muted">Sem imagem desta camuflagem</span>
+                  )}
+                </div>
+              )
             ) : (
               <div className="legacy-hero">
-                {weapon.icon ? (
-                  <img src={legacyImg(weapon.icon, 'hero')!} alt={weapon.name} />
+                {weapon.icon || weapon.photo ? (
+                  <img src={legacyImg(weapon.icon || weapon.photo!, 'hero')!} alt={weapon.name} />
                 ) : (
                   <span className="legacy-noimg">{weapon.name}</span>
                 )}
@@ -132,7 +143,11 @@ export function LegacySheet({
                   </button>
                 </>
               ) : (
-                <span className="muted preview-hint">Toque no quadrado para ver a camuflagem.</span>
+                <span className="muted preview-hint">
+                  {weapon.steps.some((x) => x.photo)
+                    ? 'Toque no quadrado para ver na arma.'
+                    : 'Toque no quadrado para ver a camuflagem.'}
+                </span>
               )}
             </p>
           </div>
@@ -187,8 +202,9 @@ export function LegacySheet({
                   onClick={() => setPreview(step.index)}
                   aria-label={`Ver ${step.name}`}
                 >
-                  <CamoTex url={legacyImg(step.image, 'swatch')} muted={!done} />
-                  {!step.image && <span className="swatch-initial">{step.name.charAt(0)}</span>}
+                  {/* Sem textura da camuflagem: usa um recorte da foto da arma com ela */}
+                  <CamoTex url={legacyImg(step.image ?? step.photo ?? null, 'swatch')} muted={!done} />
+                  {!step.image && !step.photo && <span className="swatch-initial">{step.name.charAt(0)}</span>}
                 </button>
                 <button
                   className="ladder-text"
@@ -248,8 +264,14 @@ export function LegacySheet({
         </label>
 
         <p className="credits">
-          Desafios e imagens: <a href={game.source.url}>{game.source.name}</a>, para uso local com autorização. ©
-          Activision.
+          Desafios e imagens: <a href={game.source.url}>{game.source.name}</a>
+          {weapon.steps.some((x) => x.photo) && (
+            <>
+              {' '}
+              e fotos com camuflagem do <a href="https://game8.co/games/MW3/archives/431223">Game8</a>
+            </>
+          )}
+          , para uso local com autorização. © Activision.
         </p>
       </aside>
     </div>
