@@ -152,15 +152,14 @@ const fmt = (n: number) => n.toLocaleString('pt-BR')
 export function challengeText(c: Challenge | undefined): string {
   if (!c || c.status !== 'available') return 'Requisito ainda não confirmado.'
   const times = c.times !== undefined ? `, ${fmt(c.times)} vezes` : ''
-  const who = c.target === 'enemies' ? ' em inimigos' : ''
   switch (c.type) {
     case 'kills_in_match':
-      return `${fmt(c.amount)} kills${who} em uma partida${times}`
+      return `${fmt(c.amount)} kills em uma partida${times}`
     case 'eliminations_in_match':
-      return `${fmt(c.amount)} kills${who} em uma única partida${times}`
+      return `${fmt(c.amount)} kills em uma única partida${times}`
     case 'rapid_kills': {
       const secs = c.description?.match(/(\d+)\s*seconds?/i)?.[1] ?? '5'
-      return `${fmt(c.amount)} kills${who} em ${secs} segundos${times}`
+      return `${fmt(c.amount)} kills em ${secs} segundos${times}`
     }
     case 'lt_dog_tags_exfil_in_deployment':
       return `Extrair ${fmt(c.amount)} dog tags de tenente em uma incursão${times}`
@@ -172,7 +171,7 @@ export function challengeText(c: Challenge | undefined): string {
   }
   const obj = OBJECTIVES[c.type]
   if (!obj) return c.description ?? `${fmt(c.amount)} ${c.type.replaceAll('_', ' ')}${times}`
-  return `${fmt(c.amount)} ${obj}${who}${times}`
+  return `${fmt(c.amount)} ${obj}${times}`
 }
 
 /** Meta numérica de um desafio para o contador (repetições, se houver). */
