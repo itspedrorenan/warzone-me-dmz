@@ -1,4 +1,4 @@
-import { useEffect, useState, type Dispatch } from 'react'
+import { useEffect, useRef, useState, type Dispatch, type UIEvent } from 'react'
 import {
   LADDER,
   classLabel,
@@ -46,6 +46,25 @@ export function WeaponSheet({
 }) {
   const weapon = allWeapons(state).find((w) => w.id === id)
   const [preview, setPreview] = useState<Preview>(null)
+  // Cabeçalho compacto ao rolar. `anchor` = posição em que ele foi aberto por último
+  // (topo ou toque num quadrado); rolar 64px a partir dali compacta de novo.
+  const [collapsed, setCollapsed] = useState(false)
+  const anchor = useRef(0)
+  const sheetRef = useRef<HTMLElement>(null)
+  const onScroll = (e: UIEvent<HTMLElement>) => {
+    const y = e.currentTarget.scrollTop
+    if (y < 8) {
+      anchor.current = 0
+      if (collapsed) setCollapsed(false)
+    } else if (!collapsed && Math.abs(y - anchor.current) > 64) {
+      setCollapsed(true)
+    }
+  }
+  const showPreview = (p: Preview) => {
+    setPreview(p)
+    anchor.current = sheetRef.current?.scrollTop ?? 0
+    setCollapsed(false)
+  }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
@@ -81,12 +100,14 @@ export function WeaponSheet({
     <div className="sheet-backdrop" onClick={onClose}>
       <aside
         className="sheet"
+        ref={sheetRef}
+        onScroll={onScroll}
         role="dialog"
         aria-modal="true"
         aria-label={`Desafios de ${weapon.name}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sheet-top">
+        <div className={`sheet-top ${collapsed ? 'collapsed' : ''}`}>
           <div className="sheet-grip" aria-hidden="true" />
           <header className="sheet-head">
             <div>
@@ -96,7 +117,11 @@ export function WeaponSheet({
               </p>
               <h2>{weapon.name}</h2>
               <p className="muted">
-                {level}/{LADDER.length} camuflagens · prestígio {pcount}/{weapon.prestige.length}
+                {level}/{LADDER.length} camuflagens
+                <span className="prestige-count">
+                  {' '}
+                  · prestígio {pcount}/{weapon.prestige.length}
+                </span>
               </p>
             </div>
             <button className="icon-btn" onClick={onClose} aria-label="Fechar">
@@ -154,7 +179,7 @@ export function WeaponSheet({
               >
                 <button
                   className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
-                  onClick={() => setPreview(p)}
+                  onClick={() => showPreview(p)}
                   aria-label={`Ver ${weapon.name} com ${name}`}
                 >
                   <CamoTex url={stepTexture(weapon, step)} muted={!done} />
@@ -203,7 +228,7 @@ export function WeaponSheet({
                   >
                     <button
                       className={`swatch tier-prestige ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
-                      onClick={() => setPreview(p)}
+                      onClick={() => showPreview(p)}
                       aria-label={`Ver ${weapon.name} com ${camo.name}`}
                     >
                       <CamoTex url={camoImage(camo.id)} muted={!done} />

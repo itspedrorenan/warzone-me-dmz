@@ -12,7 +12,8 @@
   --line: #3d3d3d;     /* bordas sutis */
   --line-strong: #5c5c5c;
   --text: #ffffff;
-  --muted: #a6a6a6;
+  --muted: #a6a6a6;    /* texto secundário */
+  --text-3: #858585;   /* texto terciário (dicas) */
   --accent: #ffd101;   /* amarelo do logo do MW4: checks, números, progresso */
   --accent-ink: #0c0c0c;
   --primary: #ffd101;  /* amarelo do logo do MW4: ações e seleção (cor primária) */
@@ -262,7 +263,7 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .ladder-step:disabled .swatch { filter: grayscale(1); }
 .ladder-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .challenge { font-size: 0.92rem; color: var(--muted); }
-.hint { font-size: 0.8rem; color: var(--muted); }
+.hint { font-size: 0.8rem; color: var(--text-3); }
 .blocked-text { margin: 0; font-size: 0.82rem; color: var(--warn); }
 .verify-dot { display: inline-block; width: 8px; height: 8px; border-radius: var(--r-xs); background: var(--warn); margin: 0 8px; vertical-align: middle; }
 .tip { margin: 8px 0 16px; }
@@ -455,3 +456,15 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* Quadrado em pré-visualização: traço fino. Some quando o card está marcado (o card já tem borda amarela). */
 .swatch.previewing { outline: 1px solid var(--primary); outline-offset: 2px; }
 .ladder-step.done .swatch.previewing { outline: none; }
+
+/* Cabeçalho da arma encolhe ao rolar a lista */
+.sheet { overflow-anchor: none; }
+.sheet-top .eyebrow, .sheet-head h2, .sheet-head p.muted, .sheet-head .icon-btn { transition: font-size 0.15s ease, width 0.15s ease, height 0.15s ease; }
+.sheet-top.collapsed { padding-bottom: 8px; }
+.sheet-top.collapsed .sheet-grip { margin-bottom: 4px; }
+.sheet-top.collapsed .eyebrow { font-size: 0.6rem; }
+.sheet-top.collapsed .sheet-head h2 { font-size: 1.15rem; margin-top: 2px; }
+.sheet-top.collapsed .sheet-head p.muted { font-size: 0.72rem; margin-top: 2px; }
+.sheet-top.collapsed .prestige-count, .sheet-top.collapsed .sheet-thumb { display: none; }
+.sheet-top.collapsed .sheet-head { align-items: center; }
+.sheet-top.collapsed .sheet-head .icon-btn { width: 32px; height: 32px; }
