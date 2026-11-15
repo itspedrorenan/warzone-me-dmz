@@ -73,7 +73,7 @@ Authentication, só o dono acessa) baixa esses dados durante o build (`npm run b
 ## Game8 (game8.co) — fotos com camuflagem, uso local
 
 As fotos das armas com cada camuflagem aplicada no MW III e no MW II (carregadas direto de
-img.game8.co) vêm da página de desafios de camuflagem do Game8. O dono deste projeto informou ter
+img.game8.co) vêm das páginas de desafios de camuflagem do Game8 (a do MW III e a do MW II). O dono deste projeto informou ter
 autorização para uso local (15/11/2026). Como os dados do CODMunity, os endereços dessas fotos ficam
 só em `src/data/local/` (no `.gitignore`) e entram apenas no site privado da Vercel.
 

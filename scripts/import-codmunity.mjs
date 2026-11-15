@@ -62,35 +62,75 @@ const GAMES = {
 }
 
 // Fotos das armas com cada camuflagem aplicada, do Game8 (o dono do projeto tem autorização para uso
-// local). Uma página traz MW III e MW II; casamos por arma + nome da camuflagem.
-const GAME8_URL = 'https://game8.co/games/MW3/archives/431223'
-const GAME8_GAMES = new Set(['mw2', 'mw3'])
-let game8Rows = null
+// local). Cada jogo lê as suas páginas, em ordem de preferência; casamos por arma + nome da camuflagem.
+const GAME8_PAGES = {
+  mw3: 'https://game8.co/games/MW3/archives/431223', // tabela: camuflagem | arma | desafio
+  mw2: 'https://game8.co/games/MW2/archives/394566', // uma seção por arma ("M4 Camo Challenges")
+}
+const GAME8_FOR = { mw2: ['mw2', 'mw3'], mw3: ['mw3'] }
+const game8Cache = new Map()
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9]/g, '')
-async function game8() {
-  if (game8Rows) return game8Rows
-  game8Rows = new Map()
-  try {
-    console.log(`Baixando fotos do Game8 (${GAME8_URL}) …`)
-    const res = await fetch(GAME8_URL, { headers: { 'User-Agent': 'camo-tracker (uso local)' } })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const html = await res.text()
-    const re = /<td class="Camo_cell[^"]*">([\s\S]*?)<\/td>\s*<td class="Weapon_cell[^"]*">([\s\S]*?)<\/td>/g
-    const unescape = (t) => t.replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"')
-    for (const [, camo, weapon] of html.matchAll(re)) {
-      const src = camo.match(/data-src='([^']+)'/)?.[1]
-      const name = camo.match(/<b class='a-bold'>([\s\S]*?)<\/b>/)?.[1]
-      const w = unescape(weapon.replace(/<[^>]+>/g, '').trim())
-      if (!src || !name || !src.startsWith('https://img.game8.co/')) continue
-      const key = norm(w)
-      if (!game8Rows.has(key)) game8Rows.set(key, new Map())
-      game8Rows.get(key).set(norm(unescape(name)), src)
-    }
-    console.log(`Game8: fotos de ${game8Rows.size} armas`)
-  } catch (e) {
-    console.warn(`Game8 indisponível (${e.message}): seguindo sem as fotos`)
+const unescape = (t) =>
+  t.replace(/&amp;/g, '&').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/<[^>]+>/g, '').trim()
+
+function parseGame8(html) {
+  const rows = new Map()
+  const add = (weapon, camo, src) => {
+    if (!src || !camo || !src.startsWith('https://img.game8.co/')) return
+    const key = norm(weapon)
+    if (!rows.has(key)) rows.set(key, new Map())
+    if (!rows.get(key).has(norm(camo))) rows.get(key).set(norm(camo), src)
   }
-  return game8Rows
+  // Formato 1 (MW III): cada linha tem a célula da camuflagem e a da arma.
+  const re1 = /<td class="Camo_cell[^"]*">([\s\S]*?)<\/td>\s*<td class="Weapon_cell[^"]*">([\s\S]*?)<\/td>/g
+  for (const [, camo, weapon] of html.matchAll(re1)) {
+    add(unescape(weapon), unescape(camo.match(/<b class='a-bold'>([\s\S]*?)<\/b>/)?.[1] ?? ''), camo.match(/data-src='([^']+)'/)?.[1])
+  }
+  // Formato 2 (MW II): título "<arma> Camo Challenges" seguido da tabela da arma.
+  const parts = html.split(/<h3 class='a-header--3'[^>]*>/).slice(1)
+  for (const part of parts) {
+    const title = unescape(part.slice(0, part.indexOf('</h3>')))
+    const m = title.match(/^(.*?) Camo Challenges$/)
+    if (!m) continue
+    const body = part.slice(0, part.search(/<h[23] /) > 0 ? part.search(/<h[23] /) : undefined)
+    for (const [, cell] of body.matchAll(/<td class="center">([\s\S]*?)<\/td>/g)) {
+      const src = cell.match(/data-src='([^']+)'/)?.[1]
+      const name = cell.match(/<b class='a-bold'>([\s\S]*?)<\/b>/)?.[1]
+      if (src && name) add(m[1], unescape(name), src)
+    }
+  }
+  return rows
+}
+
+async function game8Page(key) {
+  if (game8Cache.has(key)) return game8Cache.get(key)
+  let rows = new Map()
+  try {
+    console.log(`Baixando fotos do Game8 (${GAME8_PAGES[key]}) …`)
+    const res = await fetch(GAME8_PAGES[key], { headers: { 'User-Agent': 'camo-tracker (uso local)' } })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    rows = parseGame8(await res.text())
+    console.log(`Game8 (${key}): fotos de ${rows.size} armas`)
+  } catch (e) {
+    console.warn(`Game8 (${key}) indisponível (${e.message}): seguindo sem essas fotos`)
+  }
+  game8Cache.set(key, rows)
+  return rows
+}
+
+/** Semelhança entre 0 e 1 (distância de edição), para nomes com erro de digitação ("Unkown", "The Horros"). */
+function similarity(a, b) {
+  if (a === b) return 1
+  const m = a.length
+  const n = b.length
+  if (!m || !n) return 0
+  let prev = Array.from({ length: n + 1 }, (_, j) => j)
+  for (let i = 1; i <= m; i++) {
+    const cur = [i]
+    for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))
+    prev = cur
+  }
+  return 1 - prev[n] / Math.max(m, n)
 }
 
 const slug = (s) =>
@@ -116,12 +156,31 @@ async function importGame(id) {
     if (!byWeapon.has(c.WeaponName)) byWeapon.set(c.WeaponName, [])
     byWeapon.get(c.WeaponName).push(c)
   }
-  const photos = GAME8_GAMES.has(id) ? await game8() : new Map()
-  // Foto da arma com a camuflagem: o Game8 nomeia "Razor Feather" ou "Gold MCPR-300".
+  const pages = await Promise.all((GAME8_FOR[id] ?? []).map(game8Page))
+  // Foto da arma com a camuflagem: o Game8 nomeia "Razor Feather" ou "Gold MCPR-300". Procura nas
+  // páginas do jogo em ordem; se o nome não bate exato, aceita um parecido (erros de digitação).
   const photoOf = (weapon, camo) => {
-    const m = photos.get(norm(weapon))
-    return m?.get(norm(camo)) ?? m?.get(norm(`${camo} ${weapon}`)) ?? null
+    for (const photos of pages) {
+      const m = photos.get(norm(weapon))
+      if (!m) continue
+      const exact = m.get(norm(camo)) ?? m.get(norm(`${camo} ${weapon}`))
+      if (exact) return exact
+    }
+    for (const photos of pages) {
+      const m = photos.get(norm(weapon))
+      if (!m) continue
+      let best = null
+      let score = 0
+      for (const [name, src] of m) {
+        const sc = similarity(norm(camo), name)
+        if (sc > score) [best, score] = [src, sc]
+      }
+      if (best && score >= 0.75) return best
+    }
+    return null
   }
+  // Para a foto padrão da arma: a primeira página do jogo tem prioridade.
+  const photos = new Map([...pages].reverse().flatMap((p) => [...p]))
   const order = (c) => c.Order ?? c.ID ?? 0
   const text = (v) => (typeof v === 'string' && v.trim() ? v.trim() : null)
   const image = (v) => (typeof v === 'string' && v.startsWith('http') ? v : null)
@@ -144,7 +203,8 @@ async function importGame(id) {
       unlock: text(w.Unlock),
       steps: [
         ...base.map((c) => ({
-          name: c.Name,
+          // A fonte usa "Unkown" quando não sabe o nome da camuflagem.
+          name: /^unk?n?own$/i.test(String(c.Name).trim()) ? 'Nome não informado' : c.Name,
           tier: 'base',
           image: image(c.Image),
           photo: photoOf(w.WeaponName, c.Name),
