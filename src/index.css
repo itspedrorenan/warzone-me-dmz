@@ -482,19 +482,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .sheet .prestige { margin: 24px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }
 .sheet .prestige .section-title { margin: 0 0 12px; }
 
-/* TESTE TEMPORÁRIO de estilo da lista (remover após a escolha) */
-.list-test { display: flex; align-items: center; gap: 4px; margin: 0 0 12px; padding: 4px; border: 1px dashed var(--line-strong); border-radius: var(--r); font-size: 0.72rem; }
-.list-test span { color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; padding: 0 8px; }
-.list-test button { flex: 1; height: 32px; background: none; border: 0; border-radius: var(--r-sm); color: var(--muted); font: inherit; font-weight: 700; }
-.list-test button.on { background: var(--panel-2); color: var(--text); }
-/* A · Stroke: todos os cards com borda */
-.ladder.list-stroke .ladder-step { border-color: var(--line); }
-.ladder.list-stroke .ladder-step.next { border-color: var(--line-strong); }
-.ladder.list-stroke .ladder-step.done { border-color: var(--primary); }
-/* B · Divisor: sem caixa, linha entre as camuflagens */
-.ladder.list-divider { gap: 0; }
-.ladder.list-divider .ladder-step,
-.ladder.list-divider .ladder-step.next,
-.ladder.list-divider .ladder-step.done { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; }
-.ladder.list-divider .ladder-step:last-child { border-bottom: 0; }
-.ladder.list-divider .ladder-step > .swatch { margin-left: 0; }
+/* Lista em cards com borda (versão A · Stroke escolhida) */
+.ladder .ladder-step { border-color: var(--line); }
+.ladder .ladder-step.next { border-color: var(--line-strong); }
+.ladder .ladder-step.done { border-color: var(--primary); }
