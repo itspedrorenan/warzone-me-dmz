@@ -57,3 +57,15 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
   FSS Carbon Edge, Signal 50, Krait P68, Kastov 762). As demais especiais e o Flashpoint ficam brancos.
 - Onde aparecem: escada da arma, barrinha de progresso, quadrado "Agora" no Grind, maestrias e
   Divergence. Concluída aparece em cores; pendente aparece em cinza e apagada.
+
+## Para fazer depois: texturas das especiais (prints do jogo)
+
+Faltam 97 das 111 camuflagens especiais (só HAN 86 e Sang 9mm estão completas) e o Flashpoint.
+Não há outra fonte oficial; guias de outros sites não podem ser copiados.
+
+1. No jogo, abra o menu de camuflagens de cada arma, na aba das especiais, com as 3 visíveis.
+2. Um print por arma, sem nada por cima das camuflagens. Nomeie com o id da arma
+   (ex.: `m4-especiais.png`).
+3. Mande para o Claude numa sessão: ele recorta cada textura em `public/camos/<nome-da-camuflagem>.webp`
+   (ex.: `myriad.webp`) e acrescenta o id em `src/data/camoImages.ts`. O nome de cada especial
+   está em `src/data/divergence.generated.json`.
