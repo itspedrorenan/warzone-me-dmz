@@ -20,6 +20,11 @@ import { CamoTex } from './CamoTex'
 import { Check, Flame, Info, Lock, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
+/** Grupos de camuflagens (abas do painel). */
+type Group = 'all' | 'military' | 'special' | 'prestige' | 'mastery'
+const STEP_GROUP = (step: LadderStep): Group =>
+  step.tier === 'military' ? 'military' : step.tier === 'special' ? 'special' : 'mastery'
+
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
 type Preview = { kind: 'step'; index: number } | { kind: 'prestige'; id: string } | null
 
@@ -27,7 +32,10 @@ function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFra
   if (!p) return null
   if (p.kind === 'step') {
     const step = LADDER[p.index]
-    return { name: stepName(weapon, step), src: renderImage(weapon.id, stepRenderKey(weapon, step)) }
+    return {
+      name: stepName(weapon, step),
+      src: renderImage(weapon.id, stepRenderKey(weapon, step)),
+    }
   }
   const camo = weapon.prestige.find((c) => c.id === p.id)
   return camo ? { name: camo.name, src: renderImage(weapon.id, camo.id) } : null
@@ -46,6 +54,7 @@ export function WeaponSheet({
 }) {
   const weapon = allWeapons(state).find((w) => w.id === id)
   const [preview, setPreview] = useState<Preview>(null)
+  const [group, setGroup] = useState<Group>('all')
   // Cabeçalho compacto ao rolar (título menor, sem a dica); a foto da arma continua visível.
   const [collapsed, setCollapsed] = useState(false)
   const onScroll = (e: UIEvent<HTMLElement>) => {
@@ -70,8 +79,47 @@ export function WeaponSheet({
 
   if (!weapon) return null
   const count = doneCount(state, weapon.id)
-  const nextStep = LADDER.findIndex((st) => !isDone(state, weapon.id, st.index))
   const pcount = prestigeOf(state, weapon.id)
+  const nextStep = LADDER.findIndex((st) => !isDone(state, weapon.id, st.index))
+  const countIn = (g: Group) => LADDER.filter((st) => STEP_GROUP(st) === g)
+  const doneIn = (g: Group) => countIn(g).filter((st) => isDone(state, weapon.id, st.index)).length
+  const groups: { id: Group; label: string; done: number; total: number }[] = [
+    {
+      id: 'all',
+      label: 'Todas',
+      done: count + pcount,
+      total: LADDER.length + weapon.prestige.length,
+    },
+    {
+      id: 'military',
+      label: 'Militar',
+      done: doneIn('military'),
+      total: countIn('military').length,
+    },
+    {
+      id: 'special',
+      label: 'Especial',
+      done: doneIn('special'),
+      total: countIn('special').length,
+    },
+    {
+      id: 'prestige',
+      label: 'Prestígio',
+      done: pcount,
+      total: weapon.prestige.length,
+    },
+    {
+      id: 'mastery',
+      label: 'Maestria',
+      done: doneIn('mastery'),
+      total: countIn('mastery').length,
+    },
+  ].filter((g) => g.total > 0) as {
+    id: Group
+    label: string
+    done: number
+    total: number
+  }[]
   const season = seasonLabel(weapon)
   const pinned = state.pinned.includes(weapon.id)
   const shown = previewInfo(weapon, preview)
@@ -82,7 +130,11 @@ export function WeaponSheet({
   }
   const togglePrestige = (i: number) => {
     const done = pcount > i
-    dispatch({ type: 'setPrestige', id: weapon.id, count: done && pcount === i + 1 ? i : i + 1 })
+    dispatch({
+      type: 'setPrestige',
+      id: weapon.id,
+      count: done && pcount === i + 1 ? i : i + 1,
+    })
     vibrate(state.haptics)
   }
   const isSelected = (p: Preview) =>
@@ -156,68 +208,94 @@ export function WeaponSheet({
           </button>
         </div>
 
-        <ol className="ladder">
-          {LADDER.map((step) => {
-            const done = isDone(state, weapon.id, step.index)
-            const blocked = !done ? gateReason(state, weapon, step.index) : null
-            const info = stepInfo(weapon, step, state.mode)
-            const name = stepName(weapon, step)
-            const p: Preview = { kind: 'step', index: step.index }
-            return (
-              <li
-                key={step.index}
-                className={`ladder-step ${done ? 'done' : ''} ${step.index === nextStep ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
-              >
-                <button
-                  className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
-                  onClick={() => showPreview(p)}
-                  aria-label={`Ver ${weapon.name} com ${name}`}
-                >
-                  <CamoTex url={stepTexture(weapon, step)} muted={!done} />
-                </button>
-                <button
-                  className="ladder-text"
-                  onClick={() => toggleStep(step)}
-                  disabled={!!blocked}
-                  aria-pressed={done}
-                  aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${name}`}
-                >
-                  <strong>
-                    {name}
-                    {info.pending && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
-                  </strong>
-                  {info.challenge && <span className="challenge">{info.challenge}</span>}
-                  {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
-                  {blocked && (
-                    <span className="blocked-text">
-                      <Lock size={12} aria-hidden="true" /> {blocked}
-                    </span>
-                  )}
-                  {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
-                </button>
-              </li>
-            )
-          })}
-        </ol>
-        <p className="notice">
-          <Info size={14} aria-hidden="true" />
-          <span>Toque no card para marcar ou desmarcar. Marcar uma militar marca as anteriores.</span>
-        </p>
+        <div className="chips group-tabs" role="tablist" aria-label="Grupos de camuflagens">
+          {groups.map((g) => (
+            <button
+              key={g.id}
+              role="tab"
+              aria-selected={group === g.id}
+              className={`chip ${group === g.id ? 'active' : ''}`}
+              onClick={() => setGroup(g.id)}
+            >
+              {g.label}{' '}
+              <span className="chip-count">
+                {g.done}/{g.total}
+              </span>
+            </button>
+          ))}
+        </div>
 
-        {weapon.prestige.length > 0 && (
-          <section className="prestige">
-            <h3 className="section-title">
-              Prestígio <span className="muted">{pcount}/{weapon.prestige.length}</span>
-            </h3>
+        {group !== 'prestige' && (
+          <>
+            <ol className="ladder">
+              {LADDER.filter((st) => group === 'all' || STEP_GROUP(st) === group).map((step) => {
+                const done = isDone(state, weapon.id, step.index)
+                const blocked = !done ? gateReason(state, weapon, step.index) : null
+                const info = stepInfo(weapon, step, state.mode)
+                const name = stepName(weapon, step)
+                const p: Preview = { kind: 'step', index: step.index }
+                return (
+                  <li
+                    key={step.index}
+                    className={`ladder-step ${done ? 'done' : ''} ${step.index === nextStep ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
+                  >
+                    <button
+                      className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
+                      onClick={() => showPreview(p)}
+                      aria-label={`Ver ${weapon.name} com ${name}`}
+                    >
+                      <CamoTex url={stepTexture(weapon, step)} muted={!done} />
+                    </button>
+                    <button
+                      className="ladder-text"
+                      onClick={() => toggleStep(step)}
+                      disabled={!!blocked}
+                      aria-pressed={done}
+                      aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${name}`}
+                    >
+                      <strong>
+                        {name}
+                        {info.pending && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
+                      </strong>
+                      {info.challenge && <span className="challenge">{info.challenge}</span>}
+                      {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
+                      {blocked && (
+                        <span className="blocked-text">
+                          <Lock size={12} aria-hidden="true" /> {blocked}
+                        </span>
+                      )}
+                      {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
+            <p className="notice">
+              <Info size={14} aria-hidden="true" />
+              <span>
+                Toque no card para marcar ou desmarcar.
+                {group === 'all' || group === 'military' ? ' Marcar uma militar marca as anteriores.' : ''}
+              </span>
+            </p>
+          </>
+        )}
+
+        {weapon.prestige.length > 0 && (group === 'all' || group === 'prestige') && (
+          <section className={`prestige ${group === 'prestige' ? 'solo' : ''}`}>
+            {group === 'all' && (
+              <h3 className="section-title">
+                Prestígio{' '}
+                <span className="muted">
+                  {pcount}/{weapon.prestige.length}
+                </span>
+              </h3>
+            )}
             <ol className="ladder">
               {weapon.prestige.map((camo, i) => {
                 const done = pcount > i
                 const p: Preview = { kind: 'prestige', id: camo.id }
                 return (
-                  <li
-                    key={camo.id}
-                    className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''}`}
-                  >
+                  <li key={camo.id} className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''}`}>
                     <button
                       className={`swatch tier-prestige ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
                       onClick={() => showPreview(p)}
@@ -233,7 +311,9 @@ export function WeaponSheet({
                     >
                       <strong>
                         {camo.name}
-                        {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
+                        {prestigePending(camo) && (
+                          <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />
+                        )}
                       </strong>
                       <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
                       {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
