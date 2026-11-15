@@ -452,3 +452,6 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .ladder-text strong { font-family: var(--font-title); font-size: 1.05rem; font-weight: 600; }
 .ladder-step .ladder-text { position: relative; padding-right: 44px; }
 .step-check { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+/* Quadrado em pré-visualização: traço fino. Some quando o card está marcado (o card já tem borda amarela). */
+.swatch.previewing { outline: 1px solid var(--primary); outline-offset: 2px; }
+.ladder-step.done .swatch.previewing { outline: none; }
