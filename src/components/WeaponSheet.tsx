@@ -17,7 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
-import { Check, Lock, Star, X } from 'lucide-react'
+import { Lock, Star, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
@@ -150,16 +150,22 @@ export function WeaponSheet({
             return (
               <li
                 key={step.index}
-                className={`ladder-step ${done ? 'done' : ''} ${step.index === level ? 'next' : ''} ${isSelected(p) ? 'selected' : ''}`}
+                className={`ladder-step ${done ? 'done' : ''} ${step.index === level ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
               >
                 <button
-                  className={`swatch tier-${step.tier} ${done ? 'done' : ''} has-tex`}
+                  className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
                   onClick={() => setPreview(p)}
                   aria-label={`Ver ${weapon.name} com ${name}`}
                 >
                   <CamoTex url={stepTexture(weapon, step)} muted={!done} />
                 </button>
-                <button className="ladder-text" onClick={() => setPreview(p)}>
+                <button
+                  className="ladder-text"
+                  onClick={() => toggleStep(step)}
+                  disabled={!!blocked}
+                  aria-pressed={done}
+                  aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${name}`}
+                >
                   <strong>
                     {name}
                     {info.pending && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
@@ -172,21 +178,12 @@ export function WeaponSheet({
                     </span>
                   )}
                 </button>
-                <button
-                  className={`row-check ${done ? 'on' : ''}`}
-                  onClick={() => toggleStep(step)}
-                  disabled={!!blocked}
-                  aria-pressed={done}
-                  aria-label={done ? `Desmarcar ${name}` : `Marcar ${name}`}
-                >
-                  {done && <Check size={18} strokeWidth={3} aria-hidden="true" />}
-                </button>
               </li>
             )
           })}
         </ol>
         <p className="muted tip">
-          O check marca a camuflagem (e as anteriores). Toque de novo no check da última para desmarcar.
+          Toque no card para marcar a camuflagem (e as anteriores). Toque de novo na última para desmarcar.
         </p>
 
         {weapon.prestige.length > 0 && (
@@ -201,29 +198,26 @@ export function WeaponSheet({
                 return (
                   <li
                     key={camo.id}
-                    className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''} ${isSelected(p) ? 'selected' : ''}`}
+                    className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''}`}
                   >
                     <button
-                      className={`swatch tier-prestige ${done ? 'done' : ''} has-tex`}
+                      className={`swatch tier-prestige ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
                       onClick={() => setPreview(p)}
                       aria-label={`Ver ${weapon.name} com ${camo.name}`}
                     >
                       <CamoTex url={camoImage(camo.id)} muted={!done} />
                     </button>
-                    <button className="ladder-text" onClick={() => setPreview(p)}>
+                    <button
+                      className="ladder-text"
+                      onClick={() => togglePrestige(i)}
+                      aria-pressed={done}
+                      aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${camo.name}`}
+                    >
                       <strong>
                         {camo.name}
                         {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
                       </strong>
                       <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
-                    </button>
-                    <button
-                      className={`row-check ${done ? 'on' : ''}`}
-                      onClick={() => togglePrestige(i)}
-                      aria-pressed={done}
-                      aria-label={done ? `Desmarcar ${camo.name}` : `Marcar ${camo.name}`}
-                    >
-                      {done && <Check size={18} strokeWidth={3} aria-hidden="true" />}
                     </button>
                   </li>
                 )
