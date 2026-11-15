@@ -144,7 +144,16 @@ async function importGame(id) {
   if (!game) throw new Error(`jogo desconhecido: ${id} (jogos: ${Object.keys(GAMES).join(', ')})`)
   const url = `https://codmunity.gg/api/public/camo-tracker/${encodeURIComponent(game.grind)}`
   console.log(`Baixando ${url} …`)
-  const res = await fetch(url, { headers: { Accept: 'application/json', 'User-Agent': 'camo-tracker (uso local)' } })
+  // O servidor deles às vezes demora e devolve 524 (tempo esgotado): tenta de novo até 3 vezes.
+  let res
+  for (let attempt = 1; ; attempt++) {
+    res = await fetch(url, { headers: { Accept: 'application/json', 'User-Agent': 'camo-tracker (uso local)' } }).catch(
+      (e) => ({ ok: false, status: e.message }),
+    )
+    if (res.ok || attempt >= 3) break
+    console.warn(`  tentativa ${attempt} falhou (HTTP ${res.status}); tentando de novo em ${attempt * 10}s`)
+    await new Promise((r) => setTimeout(r, attempt * 10_000))
+  }
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const page = (await res.json()).page
   const grind = page.camoGrinds.find((g) => g.name === game.grind) ?? {}
