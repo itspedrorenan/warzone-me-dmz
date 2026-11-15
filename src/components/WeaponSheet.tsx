@@ -104,7 +104,6 @@ export function WeaponSheet({
                     aria-hidden="true"
                   >
                     <CamoTex url={stepTexture(weapon, step)} muted={!done} />
-                    {done ? <span className="check-mark">✓</span> : ''}
                   </span>
                   <span className="ladder-text">
                     <strong>
@@ -114,6 +113,9 @@ export function WeaponSheet({
                     {info.challenge && <span className="challenge">{info.challenge}</span>}
                     {info.unlock && <span className="hint">Abre com: {info.unlock}</span>}
                     {blocked && <span className="blocked-text">🔒 {blocked}</span>}
+                  </span>
+                  <span className={`row-check ${done ? 'on' : ''}`} aria-hidden="true">
+                    {done ? '✓' : ''}
                   </span>
                 </button>
               </li>
@@ -150,6 +152,9 @@ export function WeaponSheet({
                           {prestigePending(camo) && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
                         </strong>
                         <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
+                      </span>
+                      <span className={`row-check ${done ? 'on' : ''}`} aria-hidden="true">
+                        {done ? '✓' : ''}
                       </span>
                     </button>
                   </li>
