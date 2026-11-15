@@ -25,7 +25,8 @@ import {
   type State,
 } from '../store'
 import { vibrate } from '../hooks'
-import { camoImage, texStyle } from '../data/camoImages'
+import { camoImage } from '../data/camoImages'
+import { CamoTex } from './CamoTex'
 
 const pct = (n: number, d: number) => (d ? Math.min(100, Math.round((n / d) * 100)) : 0)
 
@@ -57,9 +58,10 @@ export function ProgressView({ state, dispatch }: { state: State; dispatch: Disp
       <div className={`milestone camo-divergence ${divergenceUnlocked(state) ? 'unlocked' : ''}`}>
         <div
           className="milestone-swatch"
-          style={divergenceUnlocked(state) ? texStyle(camoImage('divergence')) : undefined}
           aria-hidden="true"
-        />
+        >
+          {divergenceUnlocked(state) && <CamoTex url={camoImage('divergence')} />}
+        </div>
         <div>
           <h3>{DIVERGENCE.name}</h3>
           <p>{DIVERGENCE.requirement}</p>
@@ -127,9 +129,10 @@ function ModeChain({
           <article key={def.id} className={`mastery-card ${ms.done ? 'done' : ''} ${unlocked ? '' : 'locked'}`}>
             <div
               className={`mastery-swatch m-${mode}-${i}`}
-              style={ms.done ? texStyle(camoImage(def.id)) : undefined}
               aria-hidden="true"
-            />
+            >
+              {ms.done && <CamoTex url={camoImage(def.id)} />}
+            </div>
             <div className="mastery-body">
               <h3>
                 {def.name}

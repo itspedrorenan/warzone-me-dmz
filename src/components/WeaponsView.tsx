@@ -15,7 +15,8 @@ import {
 import { allWeapons, countAtLeast, levelOf, classGoldDone, type Action, type State } from '../store'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
-import { stepTexture, texStyle } from '../data/camoImages'
+import { stepTexture } from '../data/camoImages'
+import { CamoTex } from './CamoTex'
 
 type StatusFilter = 'all' | 'todo' | 'gold' | 'platinum' | 'done'
 
@@ -157,8 +158,9 @@ function WeaponRow({
             <span
               key={s.index}
               className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`}
-              style={level > s.index ? texStyle(stepTexture(weapon, s)) : undefined}
-            />
+            >
+              {level > s.index && <CamoTex url={stepTexture(weapon, s)} />}
+            </span>
           ))}
         </span>
         </span>

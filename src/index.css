@@ -339,8 +339,10 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 
 /* Texturas das camuflagens (imagens oficiais): só aparecem em camuflagem concluída
    e no quadrado "Agora". A imagem vem no style do próprio elemento (texStyle). */
-.swatch.done.has-tex { color: transparent; text-shadow: none; }
-.seg.done[style*="background-image"] { height: 10px; }
+.seg, .swatch, .swatch-sm, .mastery-swatch, .milestone-swatch { position: relative; overflow: hidden; }
+.tex { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.swatch.done.has-tex .check-mark { display: none; }
+.seg.done:has(.tex) { height: 10px; }
 
 /* Cantos retos também nos controles nativos (iOS arredonda busca, select e checkbox). */
 input[type="search"], input[type="number"], input:not([type]), select, textarea {

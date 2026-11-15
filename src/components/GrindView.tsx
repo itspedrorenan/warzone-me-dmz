@@ -14,7 +14,8 @@ import {
 import { vibrate } from '../hooks'
 import type { Tab } from '../App'
 import { WeaponThumb } from './WeaponThumb'
-import { stepTexture, texStyle } from '../data/camoImages'
+import { stepTexture } from '../data/camoImages'
+import { CamoTex } from './CamoTex'
 
 export function GrindView({
   state,
@@ -115,8 +116,9 @@ function GrindCard({
           <span
             key={s.index}
             className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''} ${level === s.index ? 'now' : ''}`}
-            style={level > s.index ? texStyle(stepTexture(weapon, s)) : undefined}
-          />
+          >
+            {level > s.index && <CamoTex url={stepTexture(weapon, s)} />}
+          </span>
         ))}
       </div>
 
@@ -129,9 +131,10 @@ function GrindCard({
             <div className="gc-now">
               <span
                 className={`swatch-sm tier-${step.tier} ${stepTexture(weapon, step) ? 'has-tex' : ''}`}
-                style={texStyle(stepTexture(weapon, step))}
                 aria-hidden="true"
-              />
+              >
+                <CamoTex url={stepTexture(weapon, step)} />
+              </span>
               <div>
                 <span className="gc-label">Agora</span>
                 <strong className="gc-camo">

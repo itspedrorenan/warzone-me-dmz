@@ -4,7 +4,8 @@ import { allWeapons, gateReason, levelOf, type Action, type State } from '../sto
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
-import { stepTexture, texStyle } from '../data/camoImages'
+import { stepTexture } from '../data/camoImages'
+import { CamoTex } from './CamoTex'
 
 export function WeaponSheet({
   id,
@@ -100,10 +101,10 @@ export function WeaponSheet({
                 >
                   <span
                     className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${done && stepTexture(weapon, step) ? 'has-tex' : ''}`}
-                    style={done ? texStyle(stepTexture(weapon, step)) : undefined}
                     aria-hidden="true"
                   >
-                    {done ? '✓' : ''}
+                    {done && <CamoTex url={stepTexture(weapon, step)} />}
+                    {done ? <span className="check-mark">✓</span> : ''}
                   </span>
                   <span className="ladder-text">
                     <strong>

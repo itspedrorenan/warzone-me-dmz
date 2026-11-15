@@ -2,7 +2,6 @@
 // (callofduty.com). Imagens © Activision. Geradas por scripts/camo-textures/swatches.py.
 // Ficam em public/camos/<id>.webp. Especiais usam o nome da camuflagem como id (ex.: "hot-rod").
 
-import type { CSSProperties } from 'react'
 import type { LadderStep, Weapon } from './index'
 
 const IDS = new Set<string>(["autumn", "chiral", "damascus-reforged", "deathbed", "divergence", "empyros", "gold", "harmonic-break", "helio", "hot-rod", "kitty-kaos", "mercurial-drift", "military-1", "military-2", "military-3", "military-4", "military-5", "military-6", "military-7", "military-8", "orion-reforged", "parallax", "platinum", "polyatomic-reforged", "red", "ripple-tide", "smoke", "snakeskin", "space-time", "stellation", "sticker-shock", "stormwave", "sunburn", "urban-flamingo", "yellow"])
@@ -28,18 +27,3 @@ export function stepTexture(weapon: Weapon, step: LadderStep): string | null {
       return camoImage('harmonic-break')
   }
 }
-
-/** Estilo inline com a textura da camuflagem. */
-// A imagem vai direto no style do elemento, com o mesmo caminho relativo das fotos das armas
-// (resolvido a partir da página, que funciona em qualquer host).
-export const texStyle = (url: string | null): CSSProperties | undefined =>
-  url
-    ? {
-        backgroundImage: `url("${url}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        borderColor: 'transparent',
-      }
-    : undefined
-
