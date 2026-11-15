@@ -59,10 +59,14 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
 - Onde aparecem: escada da arma, barrinha de progresso, quadrado "Agora" no Grind, maestrias e
   Divergence. Concluída aparece em cores; pendente aparece em cinza e apagada.
 
-## Para fazer depois: texturas das especiais (prints do jogo)
+## Texturas das especiais
 
-Faltam 97 das 111 camuflagens especiais (só HAN 86 e Sang 9mm estão completas) e o Flashpoint.
-Não há outra fonte oficial; guias de outros sites não podem ser copiados.
+- 14 especiais vêm do post oficial; as outras 91 vêm do CodCentral, com autorização (ver
+  `THIRD_PARTY_NOTICES.md`). Baixadas uma vez, uma por segundo, de
+  `codcentral.net/assets/library/mw4/dmz/camos/<arma>/swatch-<camuflagem>.webp`.
+- Faltam: as 3 especiais da JAK 12 e as da ZLR Talonhawk (ainda sem nome publicado) e o Flashpoint.
+
+## Se faltar alguma especial (prints do jogo)
 
 1. No jogo, abra o menu de camuflagens de cada arma, na aba das especiais, com as 3 visíveis.
 2. Um print por arma, sem nada por cima das camuflagens. Nomeie com o id da arma

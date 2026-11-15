@@ -391,3 +391,4 @@ input[type="checkbox"]:disabled { border-color: var(--line); }
 .row-check { flex: none; align-self: center; width: 28px; height: 28px; border: 2px solid var(--line); display: grid; place-items: center; font-weight: 800; font-size: 1rem; color: var(--accent-ink); }
 .row-check.on { background: var(--text); border-color: var(--text); }
 .ladder-step:disabled .row-check { opacity: 0.4; }
+.credits { margin: 14px 0 0; font-size: 0.72rem; color: var(--muted); line-height: 1.5; }

@@ -173,6 +173,18 @@ export function WeaponSheet({
             placeholder="Ex.: build para longshots"
           />
         </label>
+
+        <p className="credits">
+          Imagens das armas e camuflagens © Activision. Texturas das especiais:{' '}
+          <a href="https://codcentral.net/blog/mw4-dmz-camo-challenges/" target="_blank" rel="noreferrer">
+            CodCentral
+          </a>
+          , com autorização. Dados:{' '}
+          <a href="https://github.com/ItchyBeard/Divergence" target="_blank" rel="noreferrer">
+            Divergence
+          </a>{' '}
+          (MIT).
+        </p>
       </aside>
     </div>
   )
