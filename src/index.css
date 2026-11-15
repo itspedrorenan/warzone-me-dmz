@@ -590,29 +590,14 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
    Tela inicial: imagem de fundo com degradê até a cor do app + grade de logos
    --------------------------------------------------------------------------- */
 .home { position: relative; min-height: 100dvh; overflow: hidden; background: var(--bg); }
-.home-bg { position: absolute; inset: 0 0 auto; height: 82dvh; }
+.home-bg { position: absolute; inset: 0; }
 .home-bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; }
 /* degradê de baixo: a imagem some na cor de fundo; um pouco escuro em cima para a barra de status */
-.home-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(28 28 28 / 0) 0%, rgb(28 28 28 / 0) 38%, rgb(28 28 28 / 0.7) 62%, var(--bg) 92%); }
+.home-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgb(28 28 28 / 0) 0%, rgb(28 28 28 / 0) 55%, rgb(28 28 28 / 0.75) 78%, var(--bg) 96%); }
 .home-body { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 100dvh; padding: calc(24px + var(--safe-t)) 20px calc(32px + var(--safe-b)); gap: 24px; }
-.home-head h1 { margin: 0; font-family: var(--font-title); font-size: 2rem; font-weight: 800; letter-spacing: 0; text-transform: uppercase; }
-.home-head p { margin: 8px 0 0; color: var(--muted); font-size: 0.85rem; }
-.home-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.home-tile { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 16px; width: 100%; height: 112px; padding: 16px; background: rgb(42 42 42 / 0.8); border: 1px solid var(--line); border-radius: var(--r); text-align: left; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-.home-tile:active { border-color: var(--line-strong); background: var(--panel-2); }
-.home-logo { display: block; height: 34px; width: auto; max-width: 100%; object-fit: contain; object-position: left center; }
-.home-tile .game-logo-text { font-size: 1.4rem; }
-.home-tile-label { font-size: 0.72rem; color: var(--muted); }
-/* traço com a cor de cada jogo na base do card */
-.home-tile { position: relative; overflow: hidden; }
-.home-tile::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--tile-color, var(--line)); }
-.home-tile[data-game='mw19'] { --tile-color: #1f6fe5; }
-.home-tile[data-game='mw2'] { --tile-color: #7ec92e; }
-.home-tile[data-game='mw3'] { --tile-color: #c62a1d; }
-.home-tile[data-game='mw4'] { --tile-color: #ffd101; }
+/* "Grindar" na base: texto grande, sem caixa */
+.home-start { align-self: center; padding: 16px 32px; background: none; border: 0; color: var(--text); font-family: var(--font-title); font-size: 2.4rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; text-shadow: 0 2px 16px rgb(0 0 0 / 0.6); }
+.home-start:active { color: var(--primary); }
 /* item "Início" no menu de jogos */
 .game-menu-home { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
 .game-menu-home button span { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.85rem; font-weight: 600; }
-/* Fade da cor de cada jogo, subindo da base do card */
-.home-tile { background: linear-gradient(to top, color-mix(in srgb, var(--tile-color) 34%, transparent) 0%, color-mix(in srgb, var(--tile-color) 10%, transparent) 55%, transparent 100%), rgb(42 42 42 / 0.8); }
-.home-tile:active { background: linear-gradient(to top, color-mix(in srgb, var(--tile-color) 45%, transparent) 0%, transparent 100%), var(--panel-2); }

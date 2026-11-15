@@ -38,8 +38,7 @@ export default function App() {
     return (
       <div className="app" data-game={legacy ? legacy.game : 'mw4'}>
         <HomeView
-          dispatch={dispatch}
-          onPick={() => {
+          onStart={() => {
             setTab('weapons')
             setHome(false)
           }}
