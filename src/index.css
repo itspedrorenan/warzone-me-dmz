@@ -613,3 +613,6 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* item "Início" no menu de jogos */
 .game-menu-home { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--line); }
 .game-menu-home button span { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 0.85rem; font-weight: 600; }
+/* Fade da cor de cada jogo, subindo da base do card */
+.home-tile { background: linear-gradient(to top, color-mix(in srgb, var(--tile-color) 34%, transparent) 0%, color-mix(in srgb, var(--tile-color) 10%, transparent) 55%, transparent 100%), rgb(42 42 42 / 0.8); }
+.home-tile:active { background: linear-gradient(to top, color-mix(in srgb, var(--tile-color) 45%, transparent) 0%, transparent 100%), var(--panel-2); }
