@@ -532,3 +532,8 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .group-tabs { margin: 0 -20px 16px; padding: 0 20px 4px; }
 .chip-count { font-weight: 500; opacity: 0.7; margin-left: 4px; }
 .sheet .prestige.solo { margin-top: 0; padding-top: 0; border-top: 0; }
+/* Maestria de modo: um bloco por modo */
+.mastery-mode + .mastery-mode { margin-top: 24px; }
+.mastery-mode-title { margin: 0 0 12px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--muted); }
+.mastery-mode-title .muted { text-transform: none; letter-spacing: 0; font-size: 0.72rem; }
+.ladder-step.divergence .ladder-text { cursor: default; }

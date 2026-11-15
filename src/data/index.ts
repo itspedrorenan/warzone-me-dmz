@@ -302,6 +302,8 @@ export interface MasteryDef {
   /** Meta numérica sugerida (contador). 0 = só marcar como concluído. */
   target: number
   verify?: boolean
+  /** Temporada em que a cadeia do modo chega ao jogo (0 = lançamento). */
+  season: number
 }
 
 export const MASTERIES: MasteryDef[] = MODES.flatMap(({ id: mode }) =>
@@ -313,6 +315,7 @@ export const MASTERIES: MasteryDef[] = MODES.flatMap(({ id: mode }) =>
     requirement: challengeText(m.challenge),
     target: challengeTarget(m.challenge),
     verify: isPending(m.challenge),
+    season: data.masteries[mode].availableFromSeason ?? 0,
   }))
 )
 
@@ -333,6 +336,9 @@ const today = () => {
 }
 
 export const isReleased = (w: Weapon) => !!w.custom || (!!w.releaseDate && w.releaseDate <= today())
+
+/** A temporada já começou? (alguma arma dela já foi lançada; a 0 é o lançamento do jogo) */
+export const seasonStarted = (n: number) => n === 0 || DEFAULT_WEAPONS.some((w) => w.season === n && isReleased(w))
 
 export function seasonLabel(w: Weapon) {
   if (w.custom) return 'Personalizada'

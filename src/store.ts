@@ -49,6 +49,8 @@ export interface State {
   haptics: boolean
   /** Quantas camuflagens de prestígio (em ordem) cada arma já tem. */
   prestige: Record<string, number>
+  /** Maestrias de modo marcadas por arma: bit i = MASTERIES[i]. */
+  modeMastery: Record<string, number>
 }
 
 export const initialState = (): State => ({
@@ -65,6 +67,7 @@ export const initialState = (): State => ({
   keepAwake: true,
   haptics: true,
   prestige: {},
+  modeMastery: {},
 })
 
 function load(): State {
@@ -134,12 +137,21 @@ export function sanitize(input: unknown): State {
     mode: s.mode === 'dmz' || s.mode === 'wz' ? s.mode : 'mp',
     enforceGates: s.enforceGates !== false,
     challengeCount: Object.fromEntries(
-      Object.entries((s.challengeCount as object) ?? {}).map(([k, v]) => [k, Math.max(0, Math.round(Number(v) || 0))])
+      Object.entries((s.challengeCount as object) ?? {}).map(([k, v]) => [k, Math.max(0, Math.round(Number(v) || 0))]),
     ),
     keepAwake: s.keepAwake !== false,
     haptics: s.haptics !== false,
     prestige: Object.fromEntries(
-      Object.entries((s.prestige as object) ?? {}).map(([k, v]) => [k, Math.max(0, Math.min(4, Math.round(Number(v) || 0)))])
+      Object.entries((s.prestige as object) ?? {}).map(([k, v]) => [
+        k,
+        Math.max(0, Math.min(4, Math.round(Number(v) || 0))),
+      ]),
+    ),
+    modeMastery: Object.fromEntries(
+      Object.entries((s.modeMastery as object) ?? {}).map(([k, v]) => [
+        k,
+        (Number(v) || 0) & ((1 << MASTERIES.length) - 1),
+      ]),
     ),
   }
 }
@@ -219,6 +231,34 @@ export function lastDoneName(s: State, weapon: Weapon): string | null {
   return null
 }
 
+/** Maestria de modo (por arma) marcada? `i` = índice em MASTERIES. */
+export const modeMasteryDone = (s: State, weaponId: string, i: number) =>
+  ((s.modeMastery[weaponId] ?? 0) & (1 << i)) !== 0
+
+/** Anterior na cadeia do mesmo modo (ou -1 se é a primeira). */
+const chainPrev = (i: number) => (i > 0 && MASTERIES[i - 1].mode === MASTERIES[i].mode ? i - 1 : -1)
+
+/** Pré-requisito de uma maestria de modo, em texto (para "Abre com"). */
+export function modeMasteryUnlockText(i: number): string {
+  const prev = chainPrev(i)
+  if (prev >= 0) return MASTERIES[prev].name
+  return MASTERIES[i].requires === 'harmonic-break'
+    ? 'Harmonic Break desta arma'
+    : `Harmonic Break em ${LAUNCH_WEAPONS} armas`
+}
+
+/** Motivo pelo qual uma maestria de modo desta arma ainda não pode ser marcada (ou null). */
+export function modeMasteryGate(s: State, weapon: Weapon, i: number): string | null {
+  if (!s.enforceGates) return null
+  if (!isReleased(weapon)) return 'Arma ainda não lançada.'
+  const prev = chainPrev(i)
+  if (prev >= 0) return modeMasteryDone(s, weapon.id, prev) ? null : `Conclua a ${MASTERIES[prev].name} antes.`
+  if (MASTERIES[i].requires === 'harmonic-break') {
+    return isDone(s, weapon.id, HB_STEP) ? null : 'Termine o Harmonic Break desta arma.'
+  }
+  return hbGateDone(s) ? null : `Termine o Harmonic Break em ${LAUNCH_WEAPONS} armas.`
+}
+
 export function masteryState(s: State, id: string): MasteryState {
   return s.mastery[id] ?? { count: 0, done: false }
 }
@@ -267,6 +307,7 @@ export type Action =
   | { type: 'setKeepAwake'; value: boolean }
   | { type: 'setHaptics'; value: boolean }
   | { type: 'setPrestige'; id: string; count: number }
+  | { type: 'toggleModeMastery'; id: string; index: number }
   | { type: 'addWeapon'; name: string; cls: WeaponClass }
   | { type: 'updateCustomWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls'>> }
   | { type: 'removeCustomWeapon'; id: string }
@@ -275,7 +316,12 @@ export type Action =
   | { type: 'reset' }
 
 function slug(name: string) {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'arma'
+  return (
+    name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') || 'arma'
+  )
 }
 
 export function reducer(s: State, a: Action): State {
@@ -293,7 +339,7 @@ export function reducer(s: State, a: Action): State {
         next = military ? mask & ~(((1 << 8) - 1) & ~(bit - 1)) : mask & ~bit
       } else {
         if (gateReason(s, weapon, a.step)) return s
-        next = military ? mask | (bit << 1) - 1 : mask | bit
+        next = military ? mask | ((bit << 1) - 1) : mask | bit
       }
       let out: State = { ...s, progress: { ...s.progress, [a.id]: next } }
       // Ao desmarcar, o que dependia disso nesta arma também sai (ex.: Smoke sem a Militar 3).
@@ -322,6 +368,20 @@ export function reducer(s: State, a: Action): State {
       return { ...s, haptics: a.value }
     case 'setPrestige':
       return { ...s, prestige: { ...s.prestige, [a.id]: Math.max(0, Math.min(4, a.count)) } }
+    case 'toggleModeMastery': {
+      // Marcar exige o anterior da cadeia; desmarcar tira também os seguintes do mesmo modo.
+      const weapon = allWeapons(s).find((w) => w.id === a.id)
+      if (!weapon || !MASTERIES[a.index]) return s
+      let mask = s.modeMastery[a.id] ?? 0
+      if (mask & (1 << a.index)) {
+        for (let i = a.index; i < MASTERIES.length && MASTERIES[i].mode === MASTERIES[a.index].mode; i++)
+          mask &= ~(1 << i)
+      } else {
+        if (modeMasteryGate(s, weapon, a.index)) return s
+        mask |= 1 << a.index
+      }
+      return { ...s, modeMastery: { ...s.modeMastery, [a.id]: mask } }
+    }
     case 'setNote':
       return { ...s, notes: { ...s.notes, [a.id]: a.note } }
     case 'togglePin':
@@ -354,7 +414,11 @@ export function reducer(s: State, a: Action): State {
     case 'addWeapon': {
       const name = a.name.trim()
       if (!name) return s
-      const taken = new Set(allWeapons(s).map((w) => w.id).concat(DEFAULT_WEAPONS.map((w) => w.id)))
+      const taken = new Set(
+        allWeapons(s)
+          .map((w) => w.id)
+          .concat(DEFAULT_WEAPONS.map((w) => w.id)),
+      )
       let id = slug(name)
       while (taken.has(id)) id += '-x'
       return { ...s, customWeapons: [...s.customWeapons, customWeapon(id, name, a.cls)] }

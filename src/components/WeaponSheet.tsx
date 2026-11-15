@@ -1,16 +1,32 @@
 import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import {
   LADDER,
+  LAUNCH_WEAPONS,
+  MASTERIES,
   classLabel,
   prestigePending,
   prestigeReqText,
   seasonLabel,
+  seasonStarted,
   stepInfo,
   stepName,
   type LadderStep,
+  type Mode,
   type Weapon,
 } from '../data'
-import { allWeapons, doneCount, gateReason, isDone, prestigeOf, type Action, type State } from '../store'
+import {
+  allWeapons,
+  doneCount,
+  gateReason,
+  hbGateDone,
+  isDone,
+  modeMasteryDone,
+  modeMasteryGate,
+  modeMasteryUnlockText,
+  prestigeOf,
+  type Action,
+  type State,
+} from '../store'
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
@@ -21,12 +37,17 @@ import { Check, Flame, Info, Lock, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Grupos de camuflagens (abas do painel). */
-type Group = 'all' | 'military' | 'special' | 'prestige' | 'mastery'
+type Group = 'all' | 'military' | 'special' | 'completionist' | 'prestige' | 'mastery'
 const STEP_GROUP = (step: LadderStep): Group =>
-  step.tier === 'military' ? 'military' : step.tier === 'special' ? 'special' : 'mastery'
+  step.tier === 'military' ? 'military' : step.tier === 'special' ? 'special' : 'completionist'
+const MODE_LABEL: Record<Mode, string> = { mp: 'MW4', dmz: 'DMZ', wz: 'Warzone' }
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
-type Preview = { kind: 'step'; index: number } | { kind: 'prestige'; id: string } | null
+type Preview =
+  | { kind: 'step'; index: number }
+  | { kind: 'prestige'; id: string }
+  | { kind: 'mastery'; index: number }
+  | null
 
 function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFrame | null } | null {
   if (!p) return null
@@ -36,6 +57,10 @@ function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFra
       name: stepName(weapon, step),
       src: renderImage(weapon.id, stepRenderKey(weapon, step)),
     }
+  }
+  if (p.kind === 'mastery') {
+    const m = MASTERIES[p.index]
+    return m ? { name: m.name, src: renderImage(weapon.id, m.id) } : null
   }
   const camo = weapon.prestige.find((c) => c.id === p.id)
   return camo ? { name: camo.name, src: renderImage(weapon.id, camo.id) } : null
@@ -83,43 +108,32 @@ export function WeaponSheet({
   const nextStep = LADDER.findIndex((st) => !isDone(state, weapon.id, st.index))
   const countIn = (g: Group) => LADDER.filter((st) => STEP_GROUP(st) === g)
   const doneIn = (g: Group) => countIn(g).filter((st) => isDone(state, weapon.id, st.index)).length
-  const groups: { id: Group; label: string; done: number; total: number }[] = [
-    {
-      id: 'all',
-      label: 'Todas',
-      done: count + pcount,
-      total: LADDER.length + weapon.prestige.length,
-    },
-    {
-      id: 'military',
-      label: 'Militar',
-      done: doneIn('military'),
-      total: countIn('military').length,
-    },
-    {
-      id: 'special',
-      label: 'Especial',
-      done: doneIn('special'),
-      total: countIn('special').length,
-    },
-    {
-      id: 'prestige',
-      label: 'Prestígio',
-      done: pcount,
-      total: weapon.prestige.length,
-    },
-    {
-      id: 'mastery',
-      label: 'Maestria',
-      done: doneIn('mastery'),
-      total: countIn('mastery').length,
-    },
-  ].filter((g) => g.total > 0) as {
-    id: Group
-    label: string
-    done: number
-    total: number
-  }[]
+  const divergenceDone = hbGateDone(state)
+  const masteryIdx = MASTERIES.map((_, i) => i)
+  const masteryDone = masteryIdx.filter((i) => modeMasteryDone(state, weapon.id, i)).length
+  const tab = (id: Group, label: string, done: number, total: number) => ({ id, label, done, total })
+  const groups = [
+    tab(
+      'all',
+      'Todas',
+      count + (divergenceDone ? 1 : 0) + pcount + masteryDone,
+      LADDER.length + 1 + weapon.prestige.length + MASTERIES.length,
+    ),
+    tab('military', 'Militar', doneIn('military'), countIn('military').length),
+    tab('special', 'Especial', doneIn('special'), countIn('special').length),
+    tab(
+      'completionist',
+      'Completista',
+      doneIn('completionist') + (divergenceDone ? 1 : 0),
+      countIn('completionist').length + 1,
+    ),
+    tab('prestige', 'Prestígio', pcount, weapon.prestige.length),
+    tab('mastery', 'Maestria', masteryDone, MASTERIES.length),
+  ].filter((g) => g.total > 0)
+  const toggleMastery = (i: number) => {
+    dispatch({ type: 'toggleModeMastery', id: weapon.id, index: i })
+    vibrate(state.haptics)
+  }
   const season = seasonLabel(weapon)
   const pinned = state.pinned.includes(weapon.id)
   const shown = previewInfo(weapon, preview)
@@ -225,7 +239,7 @@ export function WeaponSheet({
           ))}
         </div>
 
-        {group !== 'prestige' && (
+        {group !== 'prestige' && group !== 'mastery' && (
           <>
             <ol className="ladder">
               {LADDER.filter((st) => group === 'all' || STEP_GROUP(st) === group).map((step) => {
@@ -269,6 +283,24 @@ export function WeaponSheet({
                   </li>
                 )
               })}
+              {(group === 'all' || group === 'completionist') && (
+                <li className={`ladder-step divergence ${divergenceDone ? 'done' : 'blocked'}`}>
+                  <span className="swatch tier-divergence has-tex">
+                    <CamoTex url={camoImage('divergence')} muted={!divergenceDone} />
+                  </span>
+                  <span className="ladder-text">
+                    <strong>Divergence</strong>
+                    <span className="challenge">Sem desafio: vem para todas as armas juntas.</span>
+                    <span className="hint">Abre com: Harmonic Break em {LAUNCH_WEAPONS} armas</span>
+                    {!divergenceDone && (
+                      <span className="blocked-text">
+                        <Lock size={12} aria-hidden="true" /> Termine o Harmonic Break em {LAUNCH_WEAPONS} armas.
+                      </span>
+                    )}
+                    {divergenceDone && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
+                  </span>
+                </li>
+              )}
             </ol>
             <p className="notice">
               <Info size={14} aria-hidden="true" />
@@ -322,6 +354,71 @@ export function WeaponSheet({
                 )
               })}
             </ol>
+          </section>
+        )}
+
+        {(group === 'all' || group === 'mastery') && (
+          <section className={`prestige mastery ${group === 'mastery' ? 'solo' : ''}`}>
+            {group === 'all' && (
+              <h3 className="section-title">
+                Maestria{' '}
+                <span className="muted">
+                  {masteryDone}/{MASTERIES.length}
+                </span>
+              </h3>
+            )}
+            {(['mp', 'dmz', 'wz'] as Mode[]).map((mode) => {
+              const chain = masteryIdx.filter((i) => MASTERIES[i].mode === mode)
+              if (!chain.length) return null
+              const season = MASTERIES[chain[0]].season
+              return (
+                <div key={mode} className="mastery-mode">
+                  <p className="mastery-mode-title">
+                    {MODE_LABEL[mode]}
+                    {!seasonStarted(season) && <span className="muted"> · a partir da Temporada {season}</span>}
+                  </p>
+                  <ol className="ladder">
+                    {chain.map((i) => {
+                      const m = MASTERIES[i]
+                      const done = modeMasteryDone(state, weapon.id, i)
+                      const blocked = !done ? modeMasteryGate(state, weapon, i) : null
+                      const p: Preview = { kind: 'mastery', index: i }
+                      return (
+                        <li key={m.id} className={`ladder-step ${done ? 'done' : ''} ${blocked ? 'blocked' : ''}`}>
+                          <button
+                            className={`swatch tier-mastery ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
+                            onClick={() => showPreview(p)}
+                            aria-label={`Ver ${m.name}`}
+                          >
+                            <CamoTex url={camoImage(m.id)} muted={!done} />
+                          </button>
+                          <button
+                            className="ladder-text"
+                            onClick={() => toggleMastery(i)}
+                            disabled={!!blocked}
+                            aria-pressed={done}
+                            aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${m.name}`}
+                          >
+                            <strong>
+                              {m.name}
+                              {m.verify && <span className="verify-dot" title="Ainda não confirmado — veja no jogo" />}
+                            </strong>
+                            <span className="challenge">{m.requirement}</span>
+                            <span className="hint">Abre com: {modeMasteryUnlockText(i)}</span>
+                            {blocked && (
+                              <span className="blocked-text">
+                                <Lock size={12} aria-hidden="true" /> {blocked}
+                              </span>
+                            )}
+                            {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ol>
+                </div>
+              )
+            })}
           </section>
         )}
 
