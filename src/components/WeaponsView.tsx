@@ -142,27 +142,22 @@ function WeaponRow({
   const current = level === 0 ? 'Nenhuma' : stepName(weapon, LADDER[level - 1])
 
   return (
-    <li className={`weapon-row ${level >= HB_LEVEL ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
-      <button className="wr-main" onClick={() => onOpen(weapon.id)}>
-        <WeaponThumb weapon={weapon} />
-        <span className="wr-body">
-        <span className="wr-top">
-          <span className="name">{weapon.name}</span>
-          {season && <span className="season-tag">{season}</span>}
+    <li className={`weapon-card ${level >= HB_LEVEL ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
+      <button className="wc-main" onClick={() => onOpen(weapon.id)}>
+        <span className="wc-thumb">
+          <WeaponThumb weapon={weapon} size="card" />
         </span>
-        <span className={`current tier-text-${level ? LADDER[level - 1].tier : 'none'}`}>
+        <span className="name">{weapon.name}</span>
+        {season && <span className="season-tag">{season}</span>}
+        <span className="current">
           {current} · {level}/{LADDER.length}
         </span>
         <span className="mini-ladder" aria-hidden="true">
           {LADDER.map((s) => (
-            <span
-              key={s.index}
-              className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`}
-            >
+            <span key={s.index} className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`}>
               <CamoTex url={stepTexture(weapon, s)} muted={level <= s.index} />
             </span>
           ))}
-        </span>
         </span>
       </button>
       <button

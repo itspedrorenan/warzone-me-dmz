@@ -369,3 +369,20 @@ input[type="checkbox"]:disabled { border-color: var(--line); }
 .prestige { margin: 6px 0 16px; }
 .section-title { font-size: 1rem; text-transform: uppercase; display: flex; gap: 8px; align-items: baseline; margin: 6px 0 8px; }
 .nav-btn.soon { opacity: 0.5; }
+
+/* Lista de armas em grade de 2 colunas */
+.weapon-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.weapon-card { position: relative; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.weapon-card.complete { border-color: var(--text); }
+.weapon-card.unreleased { opacity: 0.55; }
+.wc-main { width: 100%; background: none; border: 0; text-align: left; padding: 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.wc-main:active { background: var(--panel-2); }
+.wc-thumb { display: block; padding: 8px 4px 2px; }
+.thumb-card { width: 100%; height: 64px; }
+.weapon-card .name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 26px; }
+.weapon-card .season-tag { align-self: flex-start; margin-top: -2px; }
+.weapon-card .current { font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.weapon-card .mini-ladder { gap: 1px; }
+.weapon-card .seg.tier-military + .seg.tier-special, .weapon-card .seg.tier-special + .seg.tier-gold { margin-left: 2px; }
+.weapon-card .pin { position: absolute; top: 0; right: 0; width: 40px; height: 40px; border: 0; border-left: 0; background: none; font-size: 1.2rem; display: grid; place-items: center; }
+.weapon-card .pin.on { background: none; color: var(--accent); }
