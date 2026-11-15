@@ -9,6 +9,8 @@ import { GameSwitch } from './components/GameSwitch'
 import { LegacyWeaponsView } from './components/LegacyWeaponsView'
 import { LegacySheet } from './components/LegacySheet'
 import { legacyGame } from './data/legacy'
+import { GAMES } from './data/games'
+import { HomeView } from './components/HomeView'
 
 export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
 
@@ -22,6 +24,8 @@ const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: b
 export default function App() {
   const [state, dispatch] = useTracker()
   const [tab, setTab] = useState<Tab>('weapons')
+  // Tela inicial com os logos dos jogos ao abrir o app (só faz sentido com mais de um jogo).
+  const [home, setHome] = useState(GAMES.length > 1)
   // Painel aberto, junto com o jogo a que pertence (trocar de jogo fecha o painel).
   const [open, setOpen] = useState<{ game: string; id: string } | null>(null)
   const openId = open && open.game === state.game ? open.id : null
@@ -30,13 +34,27 @@ export default function App() {
   // Jogo antigo aberto (só existe quando o arquivo local foi gerado nesta máquina).
   const legacy = state.game === 'mw4' ? null : legacyGame(state.game)
 
+  if (home) {
+    return (
+      <div className="app" data-game={legacy ? legacy.game : 'mw4'}>
+        <HomeView
+          dispatch={dispatch}
+          onPick={() => {
+            setTab('weapons')
+            setHome(false)
+          }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="app" data-game={legacy ? legacy.game : 'mw4'}>
       <header className="topbar">
         <div className="brand">
           <span className="brand-mark" aria-hidden="true" />
           <h1>Camo Tracker</h1>
-          <GameSwitch game={legacy ? legacy.game : 'mw4'} dispatch={dispatch} />
+          <GameSwitch game={legacy ? legacy.game : 'mw4'} dispatch={dispatch} onHome={() => setHome(true)} />
         </div>
         {wake.supported && (
           <button

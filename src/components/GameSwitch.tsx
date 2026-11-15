@@ -1,31 +1,31 @@
 import { useEffect, useRef, useState, type Dispatch } from 'react'
-import { Check, ChevronDown } from 'lucide-react'
-import { LEGACY_GAMES } from '../data/legacy'
+import { Check, ChevronDown, House } from 'lucide-react'
+import { GAMES, GAME_LOGOS, type GameEntry } from '../data/games'
 import type { Action } from '../store'
 
-/** Logos dos jogos em public/games/ (MW4, MW II e MW III nas cores originais, MW 2019 em branco). */
-const LOGOS: Record<string, string> = {
-  mw4: './games/mw4.webp',
-  mw19: './games/mw19.webp',
-  mw2: './games/mw2.webp',
-  mw3: './games/mw3.webp',
-}
-
-function GameLogo({ id, label, short }: { id: string; label: string; short: string }) {
-  const src = LOGOS[id]
+export function GameLogo({ game, className = 'game-logo' }: { game: GameEntry; className?: string }) {
+  const src = GAME_LOGOS[game.id]
   // Sem logo (ainda): mostra o nome curto em texto, ex.: "MW II".
   return src ? (
-    <img className="game-logo" src={src} alt={label} draggable={false} />
+    <img className={className} src={src} alt={game.label} draggable={false} />
   ) : (
-    <span className="game-logo-text" aria-label={label}>
-      {short}
+    <span className="game-logo-text" aria-label={game.label}>
+      {game.short}
     </span>
   )
 }
 
-/** Seletor de jogo no topo: botão com o logo do jogo atual que abre a lista de logos.
- *  Só aparece quando há algum jogo antigo nesta máquina. */
-export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatch<Action> }) {
+/** Seletor de jogo no topo: botão com o logo do jogo atual que abre a lista de logos
+ *  (e o atalho para a tela inicial). Só aparece quando há mais de um jogo. */
+export function GameSwitch({
+  game,
+  dispatch,
+  onHome,
+}: {
+  game: string
+  dispatch: Dispatch<Action>
+  onHome: () => void
+}) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -41,13 +41,8 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
     }
   }, [open])
 
-  if (!LEGACY_GAMES.length) return null
-  // Do mais antigo ao mais novo: MW 2019, MW II, MW III e, por último, MW4.
-  const games = [
-    ...LEGACY_GAMES.map((g) => ({ id: g.game, label: g.label, short: g.short })),
-    { id: 'mw4', label: 'Modern Warfare 4', short: 'MW4' },
-  ]
-  const current = games.find((g) => g.id === game) ?? games[games.length - 1]
+  if (GAMES.length < 2) return null
+  const current = GAMES.find((g) => g.id === game) ?? GAMES[GAMES.length - 1]
 
   return (
     <div className="game-switch" ref={ref}>
@@ -58,12 +53,12 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
         aria-expanded={open}
         aria-label={`Jogo: ${current.label}`}
       >
-        <GameLogo id={current.id} label={current.label} short={current.short} />
+        <GameLogo game={current} />
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       {open && (
         <ul className="game-menu" role="listbox" aria-label="Jogo">
-          {games.map((g) => (
+          {GAMES.map((g) => (
             <li key={g.id}>
               <button
                 role="option"
@@ -74,11 +69,23 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
                   setOpen(false)
                 }}
               >
-                <GameLogo id={g.id} label={g.label} short={g.short} />
+                <GameLogo game={g} />
                 {g.id === current.id && <Check size={16} aria-hidden="true" />}
               </button>
             </li>
           ))}
+          <li className="game-menu-home">
+            <button
+              onClick={() => {
+                setOpen(false)
+                onHome()
+              }}
+            >
+              <span>
+                <House size={16} aria-hidden="true" /> Início
+              </span>
+            </button>
+          </li>
         </ul>
       )}
     </div>
