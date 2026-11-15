@@ -17,7 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
-import { Check, Lock, Star, X } from 'lucide-react'
+import { Check, Flame, Lock, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
@@ -151,7 +151,7 @@ export function WeaponSheet({
               vibrate(state.haptics)
             }}
           >
-            <Star size={16} aria-hidden="true" fill={pinned ? 'currentColor' : 'none'} />
+            <Flame size={16} aria-hidden="true" fill={pinned ? 'currentColor' : 'none'} />
             {pinned ? 'No grind' : 'Grindar'}
           </button>
         </div>

@@ -249,7 +249,7 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .sheet-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 12px 0; }
 .mode-switch.small .mode-btn { min-width: 44px; height: 36px; }
 
-.ladder { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.ladder { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
 .ladder-step { width: 100%; display: flex; gap: 12px; align-items: flex-start; padding: 8px; border-radius: var(--r); border: 1px solid transparent; background: none; text-align: left; }
 .ladder-step:active { background: var(--panel); }
 .ladder-step.next { border-color: var(--line-strong); }
