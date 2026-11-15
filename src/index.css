@@ -475,3 +475,9 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .ladder-step .blocked-text { font-size: 0.7rem; }
 /* Fechar do painel: só o ícone, sem caixa */
 .sheet-head .icon-btn { background: none; border: 0; }
+/* Aviso de uso abaixo da lista */
+.notice { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0 0; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel); color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+.notice svg { flex: none; margin-top: 1px; color: var(--muted); }
+/* Prestígio como grupo separado */
+.sheet .prestige { margin: 24px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+.sheet .prestige .section-title { margin: 0 0 12px; }

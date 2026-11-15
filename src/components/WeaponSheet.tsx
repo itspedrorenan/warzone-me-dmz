@@ -17,7 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
-import { Check, Flame, Lock, X } from 'lucide-react'
+import { Check, Flame, Info, Lock, X } from 'lucide-react'
 import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
@@ -199,8 +199,9 @@ export function WeaponSheet({
             )
           })}
         </ol>
-        <p className="muted tip">
-          Toque no card para marcar ou desmarcar. Marcar uma militar marca as anteriores.
+        <p className="notice">
+          <Info size={14} aria-hidden="true" />
+          <span>Toque no card para marcar ou desmarcar. Marcar uma militar marca as anteriores.</span>
         </p>
 
         {weapon.prestige.length > 0 && (
