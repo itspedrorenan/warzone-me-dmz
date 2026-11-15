@@ -42,11 +42,12 @@ export function GameSwitch({ game, dispatch }: { game: string; dispatch: Dispatc
   }, [open])
 
   if (!LEGACY_GAMES.length) return null
+  // Do mais antigo ao mais novo: MW 2019, MW II, MW III e, por último, MW4.
   const games = [
-    { id: 'mw4', label: 'Modern Warfare 4', short: 'MW4' },
     ...LEGACY_GAMES.map((g) => ({ id: g.game, label: g.label, short: g.short })),
+    { id: 'mw4', label: 'Modern Warfare 4', short: 'MW4' },
   ]
-  const current = games.find((g) => g.id === game) ?? games[0]
+  const current = games.find((g) => g.id === game) ?? games[games.length - 1]
 
   return (
     <div className="game-switch" ref={ref}>
