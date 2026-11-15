@@ -11,10 +11,8 @@ export function HomeView({ dispatch, onPick }: { dispatch: Dispatch<Action>; onP
         <img src="./home/bg.webp" alt="" />
       </div>
       <div className="home-body">
-        <header className="home-head">
-          <h1>Camo Tracker</h1>
-          <p>Escolha o jogo</p>
-        </header>
+        {/* Título só para leitores de tela: a arte de fundo já faz a apresentação. */}
+        <h1 className="sr-only">Camo Tracker: escolha o jogo</h1>
         <ul className="home-grid">
           {GAMES.map((g) => (
             <li key={g.id}>
