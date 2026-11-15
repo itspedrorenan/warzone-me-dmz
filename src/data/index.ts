@@ -109,41 +109,41 @@ export const LAUNCH_WEAPONS = data.launch.weapons // 33
 export const goldRequired = (cls: WeaponClass) => data.classes[cls]?.goldRequired ?? 1
 
 const OBJECTIVES: Record<string, string> = {
-  ads_kills: 'abates mirando (ADS)',
-  akimbo_kills: 'abates com akimbo',
-  behind_kills: 'abates pelas costas',
-  kills_from_behind: 'abates pelas costas',
-  crouched_kills: 'abates agachado',
-  direct_shot_kills: 'abates com acerto direto',
-  double_kills: 'abates duplos',
+  ads_kills: 'kills mirando (ADS)',
+  akimbo_kills: 'kills com akimbo',
+  behind_kills: 'kills pelas costas',
+  kills_from_behind: 'kills pelas costas',
+  crouched_kills: 'kills agachado',
+  direct_shot_kills: 'kills com acerto direto',
+  double_kills: 'kills duplos',
   eliminations_in_match: 'eliminações em uma única partida',
-  focused_kills: 'abates com Focused',
-  grenade_launcher_kills: 'abates com lança-granadas acoplado',
-  headshot_kills: 'abates com headshot',
+  focused_kills: 'kills com Focused',
+  grenade_launcher_kills: 'kills com lança-granadas acoplado',
+  headshot_kills: 'kills com headshot',
   headshots: 'headshots',
-  heavy_melee_finisher_kills: 'abates com golpe pesado (finalizador)',
-  hipfire_kills: 'abates sem mirar (hipfire)',
-  jumping_kills: 'abates pulando',
-  kills_while_moving: 'abates em movimento',
-  moving_kills: 'abates em movimento',
-  kills_without_damage: 'abates sem sofrer dano',
-  kills_without_damage_from_target: 'abates sem levar dano do alvo',
-  kills_without_dying: 'abates sem morrer',
-  kills_without_plating: 'abates sem colocar placas',
-  kills_without_releasing_trigger: 'abates sem soltar o gatilho',
-  kills_without_reloading: 'abates sem recarregar',
-  killstreaks_or_vehicles_destroyed: 'sequências de abates ou veículos destruídos',
-  ledge_hanging_kills: 'abates pendurado em beirada',
-  legendary_weapon_kills_max_level_operator: 'abates com armas Lendárias em Operador de nível máximo',
-  longshot_kills: 'abates de longa distância',
-  mounted_kills: 'abates com a arma apoiada',
-  one_shot_kills: 'abates com um tiro',
-  point_blank_kills: 'abates à queima-roupa',
-  prone_kills: 'abates deitado',
-  quickscope_kills: 'abates com quickscope',
-  silenced_kills: 'abates com silenciador',
-  sliding_kills: 'abates deslizando',
-  tier_3_plus_kills: 'abates em inimigos Tier 3+',
+  heavy_melee_finisher_kills: 'kills com golpe pesado (finalizador)',
+  hipfire_kills: 'kills sem mirar (hipfire)',
+  jumping_kills: 'kills pulando',
+  kills_while_moving: 'kills em movimento',
+  moving_kills: 'kills em movimento',
+  kills_without_damage: 'kills sem sofrer dano',
+  kills_without_damage_from_target: 'kills sem levar dano do alvo',
+  kills_without_dying: 'kills sem morrer',
+  kills_without_plating: 'kills sem colocar placas',
+  kills_without_releasing_trigger: 'kills sem soltar o gatilho',
+  kills_without_reloading: 'kills sem recarregar',
+  killstreaks_or_vehicles_destroyed: 'sequências de kills ou veículos destruídos',
+  ledge_hanging_kills: 'kills pendurado em beirada',
+  legendary_weapon_kills_max_level_operator: 'kills com armas Lendárias em Operador de nível máximo',
+  longshot_kills: 'kills de longa distância',
+  mounted_kills: 'kills com a arma apoiada',
+  one_shot_kills: 'kills com um tiro',
+  point_blank_kills: 'kills à queima-roupa',
+  prone_kills: 'kills deitado',
+  quickscope_kills: 'kills com quickscope',
+  silenced_kills: 'kills com silenciador',
+  sliding_kills: 'kills deslizando',
+  tier_3_plus_kills: 'kills em inimigos Tier 3+',
 }
 
 const fmt = (n: number) => n.toLocaleString('pt-BR')
@@ -155,17 +155,17 @@ export function challengeText(c: Challenge | undefined): string {
   const who = c.target === 'players' ? ' em jogadores' : c.target === 'enemies' ? ' em inimigos' : ''
   switch (c.type) {
     case 'kills_in_match':
-      return `${fmt(c.amount)} abates${who} em uma partida${times}`
+      return `${fmt(c.amount)} kills${who} em uma partida${times}`
     case 'eliminations_in_match':
       return `${fmt(c.amount)} eliminações${who} em uma única partida${times}`
     case 'rapid_kills': {
       const secs = c.description?.match(/(\d+)\s*seconds?/i)?.[1] ?? '5'
-      return `${fmt(c.amount)} abates${who} em ${secs} segundos${times}`
+      return `${fmt(c.amount)} kills${who} em ${secs} segundos${times}`
     }
     case 'lt_dog_tags_exfil_in_deployment':
       return `Extrair ${fmt(c.amount)} dog tags de tenente em uma incursão${times}`
     case 'top_5_with_kills':
-      return `Terminar no Top 5 com pelo menos ${fmt(c.amount)} abates${times}`
+      return `Terminar no Top 5 com pelo menos ${fmt(c.amount)} kills${times}`
     case 'tier_3_plus_kills':
     case 'legendary_weapon_kills_max_level_operator':
       return `${fmt(c.amount)} ${OBJECTIVES[c.type]}${times}`
