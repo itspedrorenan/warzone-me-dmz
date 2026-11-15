@@ -1,14 +1,18 @@
 import { useEffect, useReducer } from 'react'
 import {
+  ALL_STEPS_MASK,
   DEFAULT_WEAPONS,
-  GOLD_LEVEL,
-  HB_LEVEL,
+  GOLD_STEP,
+  HB_STEP,
+  LADDER,
   LAUNCH_WEAPONS,
   MASTERIES,
-  MAX_LEVEL,
-  PLAT_LEVEL,
+  PLAT_STEP,
   goldRequired,
   isReleased,
+  militaryForUnlock,
+  stepName,
+  unlockText,
   type Mode,
   type Weapon,
   type WeaponClass,
@@ -24,11 +28,12 @@ export interface MasteryState {
 }
 
 export interface State {
-  version: 2
+  version: 3
   /** Armas criadas pelo usuário (as padrão vêm dos dados importados). */
   customWeapons: Weapon[]
   /** IDs de armas padrão ocultadas. */
   hiddenWeapons: string[]
+  /** Camuflagens marcadas por arma: bit i = degrau i de LADDER (v2 guardava um nível linear). */
   progress: Record<string, number>
   notes: Record<string, string>
   pinned: string[]
@@ -47,7 +52,7 @@ export interface State {
 }
 
 export const initialState = (): State => ({
-  version: 2,
+  version: 3,
   customWeapons: [],
   hiddenWeapons: [],
   progress: {},
@@ -111,11 +116,15 @@ export function sanitize(input: unknown): State {
     hiddenWeapons = DEFAULT_WEAPONS.filter((w) => w.season === 0 && !kept.has(w.id)).map((w) => w.id)
   }
 
-  const clampLevel = (n: unknown) => Math.max(0, Math.min(MAX_LEVEL, Math.round(Number(n) || 0)))
+  // v1/v2: progresso era um nível linear n (as n primeiras marcadas) → vira a máscara com os n primeiros bits.
+  const linear = s.version !== 3
   const progress: Record<string, number> = {}
-  for (const [k, v] of Object.entries((s.progress as object) ?? {})) progress[k] = clampLevel(v)
+  for (const [k, v] of Object.entries((s.progress as object) ?? {})) {
+    const n = Math.max(0, Math.round(Number(v) || 0))
+    progress[k] = linear ? (1 << Math.min(n, 14)) - 1 : n & ALL_STEPS_MASK
+  }
   return {
-    version: 2,
+    version: 3,
     customWeapons,
     hiddenWeapons,
     progress,
@@ -144,29 +153,69 @@ export const allWeapons = (s: State): Weapon[] => [
   ...s.customWeapons,
 ]
 
-export const levelOf = (s: State, id: string) => s.progress[id] ?? 0
+export const maskOf = (s: State, id: string) => s.progress[id] ?? 0
+export const isDone = (s: State, id: string, step: number) => (maskOf(s, id) & (1 << step)) !== 0
+export const doneCount = (s: State, id: string) => {
+  let m = maskOf(s, id)
+  let n = 0
+  while (m) {
+    n += m & 1
+    m >>= 1
+  }
+  return n
+}
 export const prestigeOf = (s: State, id: string) => s.prestige[id] ?? 0
 
-/** Quantas armas (lançadas) já chegaram a um nível da escada. */
-export const countAtLeast = (s: State, level: number, cls?: WeaponClass) =>
-  allWeapons(s).filter((w) => (!cls || w.cls === cls) && isReleased(w) && levelOf(s, w.id) >= level).length
+/** Quantas armas (lançadas) já têm um degrau marcado. */
+export const countWithStep = (s: State, step: number, cls?: WeaponClass) =>
+  allWeapons(s).filter((w) => (!cls || w.cls === cls) && isReleased(w) && isDone(s, w.id, step)).length
 
-export const classGoldDone = (s: State, cls: WeaponClass) => countAtLeast(s, GOLD_LEVEL, cls) >= goldRequired(cls)
-export const platinumGateDone = (s: State) => countAtLeast(s, PLAT_LEVEL) >= LAUNCH_WEAPONS
-export const hbGateDone = (s: State) => countAtLeast(s, HB_LEVEL) >= LAUNCH_WEAPONS
+export const classGoldDone = (s: State, cls: WeaponClass) => countWithStep(s, GOLD_STEP, cls) >= goldRequired(cls)
+export const platinumGateDone = (s: State) => countWithStep(s, PLAT_STEP) >= LAUNCH_WEAPONS
+export const hbGateDone = (s: State) => countWithStep(s, HB_STEP) >= LAUNCH_WEAPONS
 /** Divergence é concedida ao completar Harmonic Break em 33 armas. */
 export const divergenceUnlocked = hbGateDone
 
-/** Motivo pelo qual um nível ainda não pode ser marcado (ou null). */
-export function gateReason(s: State, weapon: Weapon, level: number): string | null {
+const MILITARY_STEPS = [0, 1, 2, 3, 4, 5, 6, 7]
+const BEFORE_GOLD = (1 << GOLD_STEP) - 1
+
+/** Motivo pelo qual um degrau ainda não pode ser marcado (ou null). */
+export function gateReason(s: State, weapon: Weapon, step: number): string | null {
   if (!s.enforceGates) return null
   if (!isReleased(weapon)) return 'Arma ainda não lançada.'
-  if (level >= PLAT_LEVEL && !classGoldDone(s, weapon.cls)) {
-    return `Platinum exige Gold em ${goldRequired(weapon.cls)} armas da classe.`
+  const mask = maskOf(s, weapon.id)
+  const has = (i: number) => (mask & (1 << i)) !== 0
+  if (step >= 8 && step < GOLD_STEP) {
+    // Especial: o nível da arma pedido precisa estar comprovado por uma militar marcada.
+    const u = weapon.specials[step - 8]?.unlock
+    if (!u) return null
+    const need = militaryForUnlock(weapon, u)
+    if (need !== null) {
+      return has(need) ? null : `Marque a Militar ${need + 1} antes (${unlockText(u)}).`
+    }
+    if (weapon.military?.unit === u.type && !MILITARY_STEPS.every(has)) {
+      return `Marque todas as militares antes (${unlockText(u)}).`
+    }
+    return null
   }
-  if (level >= HB_LEVEL && !platinumGateDone(s)) {
-    return `Harmonic Break exige Platinum em ${LAUNCH_WEAPONS} armas.`
+  if (step === GOLD_STEP && (mask & BEFORE_GOLD) !== BEFORE_GOLD) {
+    return 'Gold exige todas as militares e especiais.'
   }
+  if (step === PLAT_STEP) {
+    if (!has(GOLD_STEP)) return 'Platinum exige o Gold desta arma.'
+    if (!classGoldDone(s, weapon.cls)) return `Platinum exige Gold em ${goldRequired(weapon.cls)} armas da classe.`
+  }
+  if (step === HB_STEP) {
+    if (!has(PLAT_STEP)) return 'Harmonic Break exige o Platinum desta arma.'
+    if (!platinumGateDone(s)) return `Harmonic Break exige Platinum em ${LAUNCH_WEAPONS} armas.`
+  }
+  return null
+}
+
+/** Último degrau marcado, na ordem da escada (para o resumo do card). */
+export function lastDoneName(s: State, weapon: Weapon): string | null {
+  const mask = maskOf(s, weapon.id)
+  for (let i = HB_STEP; i >= 0; i--) if (mask & (1 << i)) return stepName(weapon, LADDER[i])
   return null
 }
 
@@ -206,7 +255,7 @@ export const flashpointUnlocked = (s: State) => MASTERIES.every((m) => masterySt
 // ---------------------------------------------------------------------------
 
 export type Action =
-  | { type: 'setLevel'; id: string; level: number }
+  | { type: 'toggleStep'; id: string; step: number }
   | { type: 'setNote'; id: string; note: string }
   | { type: 'togglePin'; id: string }
   | { type: 'setMode'; mode: Mode }
@@ -231,15 +280,39 @@ function slug(name: string) {
 
 export function reducer(s: State, a: Action): State {
   switch (a.type) {
-    case 'setLevel': {
+    case 'toggleStep': {
+      // Militares seguem o nível da arma: marcar uma marca as anteriores; desmarcar desmarca as seguintes.
+      // As demais (especiais, Gold, Platinum, HB) são marcadas uma a uma, respeitando gateReason.
       const weapon = allWeapons(s).find((w) => w.id === a.id)
-      if (!weapon) return s
-      const level = Math.max(0, Math.min(MAX_LEVEL, a.level))
-      if (level > levelOf(s, a.id) && gateReason(s, weapon, level)) return s
-      if (level === levelOf(s, a.id)) return s
+      if (!weapon || a.step < 0 || a.step > HB_STEP) return s
+      const mask = maskOf(s, a.id)
+      const bit = 1 << a.step
+      const military = a.step < 8
+      let next: number
+      if (mask & bit) {
+        next = military ? mask & ~(((1 << 8) - 1) & ~(bit - 1)) : mask & ~bit
+      } else {
+        if (gateReason(s, weapon, a.step)) return s
+        next = military ? mask | (bit << 1) - 1 : mask | bit
+      }
+      let out: State = { ...s, progress: { ...s.progress, [a.id]: next } }
+      // Ao desmarcar, o que dependia disso nesta arma também sai (ex.: Smoke sem a Militar 3).
+      if (mask & bit) {
+        for (let changed = true; changed; ) {
+          changed = false
+          const cur = maskOf(out, a.id)
+          for (let i = 0; i <= HB_STEP; i++) {
+            if (cur & (1 << i) && gateReason(out, weapon, i)) {
+              out = { ...out, progress: { ...out.progress, [a.id]: cur & ~(1 << i) } }
+              changed = true
+              break
+            }
+          }
+        }
+      }
       const challengeCount = { ...s.challengeCount }
       delete challengeCount[a.id]
-      return { ...s, progress: { ...s.progress, [a.id]: level }, challengeCount }
+      return { ...out, challengeCount }
     }
     case 'setChallengeCount':
       return { ...s, challengeCount: { ...s.challengeCount, [a.id]: Math.max(0, Math.round(a.count) || 0) } }

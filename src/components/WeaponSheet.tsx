@@ -10,7 +10,7 @@ import {
   type LadderStep,
   type Weapon,
 } from '../data'
-import { allWeapons, gateReason, levelOf, prestigeOf, type Action, type State } from '../store'
+import { allWeapons, doneCount, gateReason, isDone, prestigeOf, type Action, type State } from '../store'
 import { ModeSwitch } from './ModeSwitch'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
@@ -77,15 +77,15 @@ export function WeaponSheet({
   }, [onClose])
 
   if (!weapon) return null
-  const level = levelOf(state, weapon.id)
+  const count = doneCount(state, weapon.id)
+  const nextStep = LADDER.findIndex((st) => !isDone(state, weapon.id, st.index))
   const pcount = prestigeOf(state, weapon.id)
   const season = seasonLabel(weapon)
   const pinned = state.pinned.includes(weapon.id)
   const shown = previewInfo(weapon, preview)
 
   const toggleStep = (step: LadderStep) => {
-    const done = level > step.index
-    dispatch({ type: 'setLevel', id: weapon.id, level: done && level === step.index + 1 ? step.index : step.index + 1 })
+    dispatch({ type: 'toggleStep', id: weapon.id, step: step.index })
     vibrate(state.haptics)
   }
   const togglePrestige = (i: number) => {
@@ -117,7 +117,7 @@ export function WeaponSheet({
               </p>
               <h2>{weapon.name}</h2>
               <p className="muted">
-                {level}/{LADDER.length} camuflagens
+                {count}/{LADDER.length} camuflagens
                 <span className="prestige-count">
                   {' '}
                   · prestígio {pcount}/{weapon.prestige.length}
@@ -167,15 +167,15 @@ export function WeaponSheet({
 
         <ol className="ladder">
           {LADDER.map((step) => {
-            const done = level > step.index
-            const blocked = !done ? gateReason(state, weapon, step.index + 1) : null
+            const done = isDone(state, weapon.id, step.index)
+            const blocked = !done ? gateReason(state, weapon, step.index) : null
             const info = stepInfo(weapon, step, state.mode)
             const name = stepName(weapon, step)
             const p: Preview = { kind: 'step', index: step.index }
             return (
               <li
                 key={step.index}
-                className={`ladder-step ${done ? 'done' : ''} ${step.index === level ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
+                className={`ladder-step ${done ? 'done' : ''} ${step.index === nextStep ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
               >
                 <button
                   className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
@@ -209,7 +209,7 @@ export function WeaponSheet({
           })}
         </ol>
         <p className="muted tip">
-          Toque no card para marcar a camuflagem (e as anteriores). Toque de novo na última para desmarcar.
+          Toque no card para marcar ou desmarcar. Marcar uma militar marca as anteriores.
         </p>
 
         {weapon.prestige.length > 0 && (

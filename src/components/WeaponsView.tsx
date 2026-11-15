@@ -2,16 +2,15 @@ import { useMemo, useState, type Dispatch } from 'react'
 import {
   CLASSES,
   LADDER,
-  GOLD_LEVEL,
-  HB_LEVEL,
+  GOLD_STEP,
+  HB_STEP,
   goldRequired,
   isReleased,
   seasonLabel,
-  stepName,
   type Weapon,
   type WeaponClass,
 } from '../data'
-import { allWeapons, countAtLeast, levelOf, classGoldDone, type Action, type State } from '../store'
+import { allWeapons, countWithStep, doneCount, isDone, lastDoneName, classGoldDone, type Action, type State } from '../store'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
 import { stepTexture } from '../data/camoImages'
@@ -74,7 +73,7 @@ export function WeaponsView({
             <header className="class-head">
               <h2>{c.label}</h2>
               <span className={`badge ${platOpen ? 'badge-plat' : ''}`}>
-                Gold {countAtLeast(state, GOLD_LEVEL, c.id)}/{goldRequired(c.id)}
+                Gold {countWithStep(state, GOLD_STEP, c.id)}/{goldRequired(c.id)}
               </span>
             </header>
             <ul className="weapon-list">
@@ -102,13 +101,13 @@ function WeaponRow({
   dispatch: Dispatch<Action>
   onOpen: (id: string) => void
 }) {
-  const level = levelOf(state, weapon.id)
+  const count = doneCount(state, weapon.id)
   const pinned = state.pinned.includes(weapon.id)
   const season = seasonLabel(weapon)
-  const current = level === 0 ? 'Nenhuma' : stepName(weapon, LADDER[level - 1])
+  const current = lastDoneName(state, weapon) ?? 'Nenhuma'
 
   return (
-    <li className={`weapon-card ${level >= HB_LEVEL ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
+    <li className={`weapon-card ${isDone(state, weapon.id, HB_STEP) ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb">
           <WeaponThumb weapon={weapon} size="card" />
@@ -116,12 +115,12 @@ function WeaponRow({
         <span className="name">{weapon.name}</span>
         {season && <span className="season-tag">{season}</span>}
         <span className="current">
-          {current} · {level}/{LADDER.length}
+          {current} · {count}/{LADDER.length}
         </span>
         <span className="mini-ladder" aria-hidden="true">
           {LADDER.map((s) => (
-            <span key={s.index} className={`seg tier-${s.tier} ${level > s.index ? 'done' : ''}`}>
-              <CamoTex url={stepTexture(weapon, s)} muted={level <= s.index} />
+            <span key={s.index} className={`seg tier-${s.tier} ${isDone(state, weapon.id, s.index) ? 'done' : ''}`}>
+              <CamoTex url={stepTexture(weapon, s)} muted={!isDone(state, weapon.id, s.index)} />
             </span>
           ))}
         </span>

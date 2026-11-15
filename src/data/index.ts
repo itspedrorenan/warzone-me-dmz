@@ -185,8 +185,9 @@ export function unlockText(u: Unlock | null) {
 }
 
 // ---------------------------------------------------------------------------
-// Escada de camuflagens por arma (linear): 8 militares → 3 especiais → Gold →
-// Platinum → Harmonic Break. O progresso de cada arma é um número 0..LADDER.length.
+// Camuflagens de cada arma: 8 militares → 3 especiais → Gold → Platinum →
+// Harmonic Break. Cada uma é marcada à parte (o progresso de cada arma é uma
+// máscara de bits); as regras de quem libera quem ficam em `gateReason` (store).
 // ---------------------------------------------------------------------------
 
 export type Tier = 'military' | 'special' | 'gold' | 'platinum' | 'harmonic'
@@ -204,10 +205,20 @@ export const LADDER: LadderStep[] = [
   { index: 13, tier: 'harmonic' },
 ]
 
-export const MAX_LEVEL = LADDER.length // 14
-export const GOLD_LEVEL = 12 // progresso >= 12 => Gold concluído
-export const PLAT_LEVEL = 13
-export const HB_LEVEL = 14
+export const STEP_COUNT = LADDER.length // 14
+export const GOLD_STEP = 11
+export const PLAT_STEP = 12
+export const HB_STEP = 13
+export const ALL_STEPS_MASK = (1 << STEP_COUNT) - 1
+
+/** Militar que comprova o nível pedido por uma especial: a primeira cuja meta alcança o valor.
+ *  `null` se a unidade não bate ou se nenhuma militar chega lá (aí valem todas as militares). */
+export function militaryForUnlock(weapon: Weapon, u: Unlock): number | null {
+  const m = weapon.military
+  if (!m || m.unit !== u.type) return null
+  const i = m.values.findIndex((v) => v >= u.value)
+  return i === -1 ? null : i
+}
 
 export function stepName(weapon: Weapon, step: LadderStep) {
   switch (step.tier) {
