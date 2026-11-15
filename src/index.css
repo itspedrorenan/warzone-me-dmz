@@ -5,10 +5,10 @@
 :root {
   /* Paleta provisória em preto e branco, com contraste alto.
      Todas as cores do app vêm destes tokens: troque aqui pelo design system. */
-  --bg: #000;
-  --bg-2: #000;
-  --panel: #000;
-  --panel-2: #1c1c1c;
+  --bg: #16191c; /* cor do fundo das imagens oficiais */
+  --bg-2: #16191c;
+  --panel: #16191c;
+  --panel-2: #262a2f;
   --line: #767676;
   --text: #fff;
   --muted: #d0d0d0;
@@ -16,7 +16,7 @@
   --accent-ink: #000;
   --danger: #fff;
   --warn: #fff;
-  --overlay: rgba(0, 0, 0, 0.85);
+  --overlay: rgba(10, 12, 14, 0.85);
   --mp: #fff;
   --dmz: #fff;
   --wz: #fff;
