@@ -116,7 +116,11 @@ export function LegacySheet({
               </div>
             ) : (
               <div className="legacy-hero">
-                <img src={legacyImg(weapon.icon, 'hero')!} alt={weapon.name} />
+                {weapon.icon ? (
+                  <img src={legacyImg(weapon.icon, 'hero')!} alt={weapon.name} />
+                ) : (
+                  <span className="legacy-noimg">{weapon.name}</span>
+                )}
               </div>
             )}
             <p className="preview-label">

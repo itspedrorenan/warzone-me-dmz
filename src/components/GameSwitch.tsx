@@ -3,10 +3,11 @@ import { Check, ChevronDown } from 'lucide-react'
 import { LEGACY_GAMES } from '../data/legacy'
 import type { Action } from '../store'
 
-/** Logos dos jogos em public/games/ (MW4 e MW3 nas cores originais, MW 2019 em branco). */
+/** Logos dos jogos em public/games/ (MW4, MW II e MW III nas cores originais, MW 2019 em branco). */
 const LOGOS: Record<string, string> = {
   mw4: './games/mw4.webp',
   mw19: './games/mw19.webp',
+  mw2: './games/mw2.webp',
   mw3: './games/mw3.webp',
 }
 

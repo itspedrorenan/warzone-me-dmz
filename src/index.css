@@ -576,3 +576,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* MW 2019: azul */
 .app[data-game='mw19'] { --primary: #1f6fe5; --primary-ink: #ffffff; --accent: #5aa2ff; --accent-ink: #ffffff; }
 .app[data-game='mw19'] .chip.active { color: var(--primary-ink); }
+/* MW II: verde do logo (#7EC92E); claro, então o texto sobre ele é escuro */
+.app[data-game='mw2'] { --primary: #7ec92e; --primary-ink: #0c0c0c; --accent: #7ec92e; --accent-ink: #0c0c0c; }
+.legacy-noimg { font-family: var(--font-title); font-weight: 700; font-size: 0.9rem; letter-spacing: 0.08em; color: var(--text-3); text-transform: uppercase; }
+.legacy-hero .legacy-noimg { font-size: 1.4rem; letter-spacing: 0.04em; }

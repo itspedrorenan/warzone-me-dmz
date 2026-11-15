@@ -123,7 +123,14 @@ function LegacyCard({
     <li className={`weapon-card legacy ${legacyDone(progress, weapon.id, top) ? 'complete' : ''}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb legacy-thumb">
-          <img src={legacyImg(weapon.icon, 'thumb')!} alt={weapon.name} loading="lazy" decoding="async" />
+          {weapon.icon ? (
+            <img src={legacyImg(weapon.icon, 'thumb')!} alt={weapon.name} loading="lazy" decoding="async" />
+          ) : (
+            // A fonte não tem imagem desta arma (ex.: MW II): mostra a classe.
+            <span className="legacy-noimg" aria-hidden="true">
+              {game.classes.find((c) => c.id === weapon.cls)?.short}
+            </span>
+          )}
         </span>
         <span className="name">{weapon.name}</span>
         <span className="current">
