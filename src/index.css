@@ -486,3 +486,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .ladder .ladder-step { border-color: var(--line); }
 .ladder .ladder-step.next { border-color: var(--line-strong); }
 .ladder .ladder-step.done { border-color: var(--primary); }
+/* Painel da arma ocupa a tela toda (logo abaixo da barra de status), sem a alça */
+.sheet { height: calc(100dvh - var(--safe-t)); max-height: calc(100dvh - var(--safe-t)); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.sheet-grip { display: none; }
+.sheet-top { padding-top: 12px; }
