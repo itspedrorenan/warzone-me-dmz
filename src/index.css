@@ -490,3 +490,10 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .sheet { height: calc(100dvh - var(--safe-t)); max-height: calc(100dvh - var(--safe-t)); border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
 .sheet-grip { display: none; }
 .sheet-top { padding-top: 12px; }
+/* Cabeçalho compacto: miniatura da arma à esquerda, textos à direita */
+.sheet-top.collapsed { display: grid; grid-template-columns: 128px minmax(0, 1fr); grid-template-areas: 'thumb head'; column-gap: 12px; align-items: center; }
+.sheet-top.collapsed .sheet-thumb { grid-area: thumb; margin-top: 0; }
+.sheet-top.collapsed .sheet-head { grid-area: head; }
+.sheet-top.collapsed .preview-label { display: none; }
+.sheet-top.collapsed .sheet-head h2 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sheet-top.collapsed .sheet-head > div { min-width: 0; }
