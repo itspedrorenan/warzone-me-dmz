@@ -571,7 +571,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .game-logo-text { font-family: var(--font-title); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; color: var(--text); line-height: 1; }
 
 /* Cor de destaque por jogo: MW4 amarelo (padrão), MW III vermelho do logo, MW 2019 azul. */
-.app[data-game='mw3'] { --primary: #d70000; --primary-ink: #ffffff; --accent: #ff3b30; --accent-ink: #ffffff; }
+.app[data-game='mw3'] { --primary: #c62a1d; --primary-ink: #ffffff; --accent: #ef4a3c; --accent-ink: #ffffff; }
 .app[data-game='mw3'] .chip.active { color: var(--primary-ink); }
 /* MW 2019: azul */
 .app[data-game='mw19'] { --primary: #1f6fe5; --primary-ink: #ffffff; --accent: #5aa2ff; --accent-ink: #ffffff; }
