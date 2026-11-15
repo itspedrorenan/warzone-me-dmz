@@ -161,7 +161,7 @@ export function WeaponSheet({
             }}
           >
             <Star size={16} aria-hidden="true" fill={pinned ? 'currentColor' : 'none'} />
-            {pinned ? 'No grind' : 'Pôr no grind'}
+            {pinned ? 'No grind' : 'Grindar'}
           </button>
         </div>
 
