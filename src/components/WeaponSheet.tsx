@@ -17,6 +17,7 @@ import { WeaponThumb } from './WeaponThumb'
 import { camoImage, stepTexture } from '../data/camoImages'
 import { renderImage, stepRenderKey, type RenderFrame } from '../data/renderImages'
 import { CamoTex } from './CamoTex'
+import { RenderImage } from './RenderImage'
 
 /** Camuflagem escolhida para ver na foto: um degrau da escada ou um prestígio. */
 type Preview = { kind: 'step'; index: number } | { kind: 'prestige'; id: string } | null
@@ -104,23 +105,17 @@ export function WeaponSheet({
 
           <div className="sheet-thumb">
             {shown?.src ? (
-              <div className="render" role="img" aria-label={`${weapon.name} com ${shown.name}`}>
-                <img
-                  src={shown.src.src}
-                  alt=""
-                  style={{ transform: `translateY(-${(shown.src.index * 100) / shown.src.count}%)` }}
-                />
-              </div>
+              <RenderImage frame={shown.src} label={`${weapon.name} com ${shown.name}`} />
             ) : (
               <WeaponThumb weapon={weapon} size="lg" />
             )}
             <p className="preview-label">
               {shown ? (
                 <>
-                  {shown.name}
+                  <span className="preview-name">{shown.name}</span>
                   {!shown.src && <span className="muted"> · sem foto com esta camuflagem</span>}
                   <button className="link-btn" onClick={() => setPreview(null)}>
-                    Ver sem camuflagem
+                    Voltar
                   </button>
                 </>
               ) : (

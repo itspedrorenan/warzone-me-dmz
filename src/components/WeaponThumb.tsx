@@ -1,8 +1,13 @@
 import { CLASSES, type Weapon } from '../data'
 import { weaponImage } from '../data/weaponImages'
+import { defaultRender } from '../data/renderImages'
+import { RenderImage } from './RenderImage'
 
-/** Miniatura da arma: imagem oficial recortada do fundo, com as cores originais. */
+/** Imagem padrão da arma: foto do CodCentral com a Militar 1 (fundo de estúdio).
+ *  Sem essa foto, usa a imagem oficial recortada; sem nenhuma, mostra a classe. */
 export function WeaponThumb({ weapon, size = 'sm' }: { weapon: Weapon; size?: 'sm' | 'lg' | 'card' }) {
+  const frame = defaultRender(weapon.id)
+  if (frame) return <RenderImage frame={frame} label={weapon.name} className={`thumb-${size}`} />
   const src = weaponImage(weapon.id)
   if (!src) {
     return (

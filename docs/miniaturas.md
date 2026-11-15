@@ -77,6 +77,10 @@ python scripts/weapon-thumbnails/blueprint.py prints/cronen-osprey.png public/we
 
 ## Fotos da arma com cada camuflagem
 
+- Imagem padrão de cada arma (cards da lista e topo do painel): a foto com a Militar 1, a camuflagem
+  mais discreta. O CodCentral não tem foto sem camuflagem. Sem essa foto, o app usa a imagem oficial
+  recortada (`public/weapons/`).
+
 - No painel da arma, tocar no quadrado de uma camuflagem mostra a arma com ela aplicada.
 - 630 fotos (35 armas × 14 da escada + 4 de prestígio) do CodCentral, com autorização. Ficam numa
   tira por arma em `public/renders/<arma>.webp` (uma faixa por camuflagem); a ordem das faixas está em

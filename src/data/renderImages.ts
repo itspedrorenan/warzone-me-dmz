@@ -38,3 +38,6 @@ export function renderImage(weaponId: string, key: string): RenderFrame | null {
   const index = key && keys ? keys.indexOf(key) : -1
   return index >= 0 ? { src: `./renders/${weaponId}.webp`, index, count: keys.length } : null
 }
+
+/** Foto padrão da arma: a da Militar 1 (camuflagem mais discreta). */
+export const defaultRender = (weaponId: string) => renderImage(weaponId, 'military-camo-1')

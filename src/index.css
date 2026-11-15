@@ -343,7 +343,6 @@ h1, h2, h3 { font-family: var(--font); letter-spacing: 0; margin: 0; }
 .wr-main { flex-direction: row; align-items: center; gap: 12px; }
 .wr-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
 .gc-thumb { background: none; border: 0; padding: 4px 0; width: 100%; }
-.sheet-thumb { margin: 8px 0 4px; }
 
 /* Texturas das camuflagens (imagens oficiais): só aparecem em camuflagem concluída
    e no quadrado "Agora". A imagem vem no style do próprio elemento (texStyle). */
@@ -402,13 +401,9 @@ input[type="checkbox"]:disabled { border-color: var(--line); }
 .credits { margin: 16px 0 0; font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
 
 /* Painel da arma: topo fixo com a foto, linhas com quadrado (prévia) e check (marcar) */
-.sheet-top { position: sticky; top: -8px; z-index: 2; background: var(--bg-2); margin: -8px -16px 0; padding: 8px 16px 8px; border-bottom: 1px solid var(--line); }
+.sheet-top { position: sticky; top: -8px; z-index: 2; background: var(--bg-2); margin: -8px -16px 0; padding: 8px 16px 12px; border-bottom: 1px solid var(--line); }
 .sheet-head { position: static !important; margin-top: 0 !important; padding: 0 !important; }
-.sheet-thumb { margin: 8px 0 0; }
-.sheet-thumb .render { width: 100%; aspect-ratio: 720 / 307; max-height: 160px; overflow: hidden; border-radius: var(--r); position: relative; margin: 0 auto; }
-.sheet-thumb .render img { display: block; width: 100%; height: auto; }
-.sheet-thumb .thumb-lg { height: 132px; }
-.preview-label { margin: 4px 0 0; min-height: 20px; font-size: 0.8rem; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.preview-label { margin: 8px 0 0; min-height: 20px; font-size: 0.8rem; display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; min-width: 0; }
 .link-btn { background: none; border: 0; padding: 0; color: var(--link); font-size: 0.8rem; text-decoration: underline; }
 .ladder-step { align-items: center; }
 .ladder-step.selected { border-color: var(--primary); background: var(--panel-2); }
@@ -423,3 +418,20 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
   letter-spacing: -0.01em;
 }
 .preview-hint { font-size: 0.7rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+/* Foto da arma (faixa da tira do CodCentral) */
+.render { position: relative; width: 100%; aspect-ratio: 720 / 307; overflow: hidden; border-radius: var(--r-sm); background: var(--panel-2); }
+.render img { display: block; width: 100%; height: auto; }
+.thumb-card.render { border-radius: var(--r-sm); }
+.wc-thumb { padding: 0 0 4px; }
+
+/* Topo do painel: título, foto e legenda com espaçamento regular */
+.sheet-head h2 { margin-top: 4px; line-height: 1.1; }
+.sheet-head p.muted { margin-top: 4px; font-size: 0.8rem; }
+.sheet-thumb { margin-top: 12px; }
+.sheet-thumb .render, .sheet-thumb .thumb-lg { width: 100%; border-radius: var(--r); }
+.sheet-thumb .thumb-lg:not(.render) { height: 132px; }
+.preview-name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.preview-label .link-btn { margin-left: auto; flex: none; }
+.sheet-actions { margin: 16px 0 12px; }
+.render.thumb-lg, .render.thumb-card, .render.thumb-sm { height: auto; }
