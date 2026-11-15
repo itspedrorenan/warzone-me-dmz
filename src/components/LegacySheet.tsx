@@ -1,10 +1,12 @@
 import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import { Check, Flame, Info, Lock, X } from 'lucide-react'
-import { classLabel } from '../data'
 import {
   legacyDone,
   legacyDoneCount,
+  legacyFinale,
+  legacyFixed,
   legacyGate,
+  legacyImg,
   legacyText,
   legacyToggle,
   legacyUnlockText,
@@ -59,15 +61,20 @@ export function LegacySheet({
   const pinKey = `${game.game}:${weapon.id}`
   const pinned = state.pinned.includes(pinKey)
   const noteKey = pinKey
-  const nextStep = game.ladder.findIndex((s) => !legacyDone(progress, weapon.id, s.index))
-  const inGroup = (g: Group) => game.ladder.filter((s) => g === 'all' || (g === 'base') === (s.tier === 'base'))
-  const doneIn = (g: Group) => inGroup(g).filter((s) => legacyDone(progress, weapon.id, s.index)).length
+  const steps = weapon.steps.map((s, index) => ({ ...s, index }))
+  const nextStep = steps.findIndex((s) => !legacyDone(progress, weapon.id, s.index))
+  const inGroup = (g: Group) => steps.filter((s) => g === 'all' || (g === 'base') === (s.tier === 'base'))
+  const finale = legacyFinale(game, progress)
+  const finaleCount = (g: Group) => (finale && g !== 'base' ? 1 : 0)
+  const doneIn = (g: Group) =>
+    inGroup(g).filter((s) => legacyDone(progress, weapon.id, s.index)).length + (finale?.done && g !== 'base' ? 1 : 0)
+  const className = game.classes.find((c) => c.id === weapon.cls)?.label ?? ''
   const groups: { id: Group; label: string }[] = [
     { id: 'all', label: 'Todas' },
     { id: 'base', label: 'Base' },
     { id: 'mastery', label: 'Maestria' },
   ]
-  const shown = preview === null ? null : game.ladder[preview]
+  const shown = preview === null ? null : steps[preview]
 
   const toggle = (i: number) => {
     const next = legacyToggle(game, progress, weapon, i, state.enforceGates)
@@ -89,11 +96,11 @@ export function LegacySheet({
           <header className="sheet-head">
             <div>
               <p className="eyebrow">
-                {classLabel(weapon.cls)} · {game.short}
+                {className} · {game.short}
               </p>
               <h2>{weapon.name}</h2>
               <p className="muted">
-                {count}/{game.ladder.length} camuflagens
+                {count}/{steps.length} camuflagens
               </p>
             </div>
             <button className="icon-btn" onClick={onClose} aria-label="Fechar">
@@ -104,11 +111,11 @@ export function LegacySheet({
           <div className="sheet-thumb">
             {shown ? (
               <div className="legacy-preview" aria-label={`Camuflagem ${shown.name}`}>
-                <img src={shown.image} alt="" />
+                {shown.image ? <img src={legacyImg(shown.image, 'hero')!} alt="" /> : <span className="muted">Sem imagem desta camuflagem</span>}
               </div>
             ) : (
               <div className="legacy-hero">
-                <img src={weapon.icon} alt={weapon.name} />
+                <img src={legacyImg(weapon.icon, 'hero')!} alt={weapon.name} />
               </div>
             )}
             <p className="preview-label">
@@ -151,7 +158,7 @@ export function LegacySheet({
             >
               {g.label}{' '}
               <span className="chip-count">
-                {doneIn(g.id)}/{inGroup(g.id).length}
+                {doneIn(g.id)}/{inGroup(g.id).length + finaleCount(g.id)}
               </span>
             </button>
           ))}
@@ -162,8 +169,9 @@ export function LegacySheet({
             const done = legacyDone(progress, weapon.id, step.index)
             const blocked = !done ? legacyGate(game, progress, weapon, step.index, state.enforceGates) : null
             const unlock = legacyUnlockText(game, step, weapon)
-            // Gold/Platinum/Damascus não têm desafio próprio: o texto da fonte só repete o pré-requisito.
-            const challenge = unlock && step.tier !== 'obsidian' ? null : weapon.challenges[step.index]
+            // MW 2019: Gold/Platinum/Damascus não têm desafio próprio (o texto só repete o pré-requisito).
+            const challenge = step.challenge && !legacyFixed(step.challenge) ? legacyText(step.challenge) : null
+            const missing = !step.challenge && step.tier !== 'platinum' && step.tier !== 'damascus'
             return (
               <li
                 key={step.index}
@@ -174,7 +182,8 @@ export function LegacySheet({
                   onClick={() => setPreview(step.index)}
                   aria-label={`Ver ${step.name}`}
                 >
-                  <CamoTex url={step.image} muted={!done} />
+                  <CamoTex url={legacyImg(step.image, 'swatch')} muted={!done} />
+                  {!step.image && <span className="swatch-initial">{step.name.charAt(0)}</span>}
                 </button>
                 <button
                   className="ladder-text"
@@ -184,7 +193,8 @@ export function LegacySheet({
                   aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${step.name}`}
                 >
                   <strong>{step.name}</strong>
-                  {challenge && <span className="challenge">{legacyText(challenge)}</span>}
+                  {challenge && <span className="challenge">{challenge}</span>}
+                  {missing && <span className="challenge">Desafio não informado pela fonte.</span>}
                   {unlock && <span className="hint">Abre com: {unlock}</span>}
                   {blocked && (
                     <span className="blocked-text">
@@ -196,6 +206,26 @@ export function LegacySheet({
               </li>
             )
           })}
+          {finale && group !== 'base' && (
+            <li className={`ladder-step divergence ${finale.done ? 'done' : 'blocked'}`}>
+              <span className="swatch has-tex">
+                <CamoTex url={legacyImg(finale.image, 'swatch')} muted={!finale.done} />
+              </span>
+              <span className="ladder-text">
+                <strong>{finale.name}</strong>
+                <span className="challenge">Sem desafio: vem para todas as armas juntas.</span>
+                <span className="hint">
+                  Abre com: Priceless em {finale.need} armas ({finale.have}/{finale.need})
+                </span>
+                {!finale.done && (
+                  <span className="blocked-text">
+                    <Lock size={12} aria-hidden="true" /> Termine o Priceless em {finale.need} armas.
+                  </span>
+                )}
+                {finale.done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
+              </span>
+            </li>
+          )}
         </ol>
         <p className="notice">
           <Info size={14} aria-hidden="true" />

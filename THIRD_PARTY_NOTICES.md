@@ -63,7 +63,7 @@ foram enviados pelo dono deste projeto: MW4 e MW III nas cores originais, MW 201
 
 ## CODMunity (codmunity.gg) — jogos antigos, uso local
 
-Os desafios de camuflagem do Modern Warfare (2019), com as imagens das armas e das
+Os desafios de camuflagem do Modern Warfare (2019) e do Modern Warfare III (Multiplayer), com as imagens das armas e das
 camuflagens (carregadas direto de assets.codmunity.gg), vêm do CODMunity. O dono deste projeto
 informou ter permissão do CODMunity **só para uso local** (15/11/2026). Por isso o script
 `scripts/import-codmunity.mjs` grava os dados em `src/data/local/`, que está no `.gitignore`:

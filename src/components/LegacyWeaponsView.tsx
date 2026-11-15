@@ -1,10 +1,10 @@
 import { useMemo, useState, type Dispatch } from 'react'
 import { Flame, Search } from 'lucide-react'
-import { CLASSES, type WeaponClass } from '../data'
 import {
   legacyCount,
   legacyDone,
   legacyDoneCount,
+  legacyImg,
   type LegacyGame,
   type LegacyProgress,
   type LegacyWeapon,
@@ -26,9 +26,10 @@ export function LegacyWeaponsView({
   onOpen: (id: string) => void
 }) {
   const [query, setQuery] = useState('')
-  const [cls, setCls] = useState<WeaponClass | 'all'>('all')
+  const [cls, setCls] = useState<string>('all')
   const progress = state.legacy[game.game] ?? {}
-  const gold = game.ladder.findIndex((s) => s.tier === 'gold')
+  // Primeira camuflagem de maestria do jogo (Gold no MW 2019, Gilded no MW III) para o resumo da classe.
+  const firstMastery = game.tiers[0]
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -52,14 +53,14 @@ export function LegacyWeaponsView({
         <button className={`chip ${cls === 'all' ? 'active' : ''}`} onClick={() => setCls('all')}>
           Todas
         </button>
-        {CLASSES.filter((c) => game.weapons.some((w) => w.cls === c.id)).map((c) => (
+        {game.classes.map((c) => (
           <button key={c.id} className={`chip ${cls === c.id ? 'active' : ''}`} onClick={() => setCls(c.id)}>
             {c.short}
           </button>
         ))}
       </div>
 
-      {CLASSES.map((c) => {
+      {game.classes.map((c) => {
         const list = filtered.filter((w) => w.cls === c.id)
         if (!list.length) return null
         const total = game.weapons.filter((w) => w.cls === c.id).length
@@ -68,7 +69,7 @@ export function LegacyWeaponsView({
             <header className="class-head">
               <h2>{c.label}</h2>
               <span className="badge">
-                Gold {legacyCount(game, progress, gold, c.id)}/{total}
+                {firstMastery.label} {legacyCount(game, progress, firstMastery.tier, c.id)}/{total}
               </span>
             </header>
             <ul className="weapon-list">
@@ -115,25 +116,25 @@ function LegacyCard({
   const pinKey = `${game.game}:${weapon.id}`
   const pinned = state.pinned.includes(pinKey)
   let last: string | null = null
-  for (const s of game.ladder) if (legacyDone(progress, weapon.id, s.index)) last = s.name
-  const top = game.ladder[game.ladder.length - 1]
+  weapon.steps.forEach((s, i) => legacyDone(progress, weapon.id, i) && (last = s.name))
+  const top = weapon.steps.length - 1
 
   return (
-    <li className={`weapon-card legacy ${legacyDone(progress, weapon.id, top.index) ? 'complete' : ''}`}>
+    <li className={`weapon-card legacy ${legacyDone(progress, weapon.id, top) ? 'complete' : ''}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb legacy-thumb">
-          <img src={weapon.icon} alt={weapon.name} loading="lazy" decoding="async" />
+          <img src={legacyImg(weapon.icon, 'thumb')!} alt={weapon.name} loading="lazy" decoding="async" />
         </span>
         <span className="name">{weapon.name}</span>
         <span className="current">
-          {last ?? 'Nenhuma'} · {count}/{game.ladder.length}
+          {last ?? 'Nenhuma'} · {count}/{weapon.steps.length}
         </span>
         <span className="mini-ladder" aria-hidden="true">
-          {game.ladder.map((s) => {
-            const done = legacyDone(progress, weapon.id, s.index)
+          {weapon.steps.map((s, i) => {
+            const done = legacyDone(progress, weapon.id, i)
             return (
-              <span key={s.index} className={`seg legacy-${s.tier} ${done ? 'done' : ''}`}>
-                <CamoTex url={s.image} muted={!done} />
+              <span key={i} className={`seg legacy-${s.tier} ${done ? 'done' : ''}`}>
+                <CamoTex url={legacyImg(s.image, 'swatch')} muted={!done} />
               </span>
             )
           })}
