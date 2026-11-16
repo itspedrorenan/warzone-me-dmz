@@ -1,3 +1,4 @@
+import { WcProgress } from './WcProgress'
 import { useMemo, useState, type Dispatch } from 'react'
 import { Flame, Search } from 'lucide-react'
 import {
@@ -11,7 +12,6 @@ import {
 } from '../data/legacy'
 import type { Action, State } from '../store'
 import { vibrate } from '../hooks'
-import { CamoTex } from './CamoTex'
 
 /** Lista de armas de um jogo antigo (mesmo visual da tela de Armas do MW4). */
 export function LegacyWeaponsView({
@@ -141,16 +141,7 @@ function LegacyCard({
         <span className="current">
           {last ?? 'Nenhuma'} · {count}/{weapon.steps.length}
         </span>
-        <span className="mini-ladder" aria-hidden="true">
-          {weapon.steps.map((s, i) => {
-            const done = legacyDone(progress, weapon.id, i)
-            return (
-              <span key={i} className={`seg legacy-${s.tier} ${done ? 'done' : ''}`}>
-                <CamoTex url={legacyImg(s.image ?? s.photo ?? null, 'swatch')} muted={!done} />
-              </span>
-            )
-          })}
-        </span>
+        <WcProgress done={count} total={weapon.steps.length} />
       </button>
       <button
         className={`pin ${pinned ? 'on' : ''}`}

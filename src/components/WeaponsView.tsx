@@ -1,3 +1,4 @@
+import { WcProgress } from './WcProgress'
 import { useMemo, useState, type Dispatch } from 'react'
 import {
   CLASSES,
@@ -10,11 +11,18 @@ import {
   type Weapon,
   type WeaponClass,
 } from '../data'
-import { allWeapons, countWithStep, doneCount, isDone, lastDoneName, classGoldDone, type Action, type State } from '../store'
+import {
+  allWeapons,
+  countWithStep,
+  doneCount,
+  isDone,
+  lastDoneName,
+  classGoldDone,
+  type Action,
+  type State,
+} from '../store'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
-import { stepTexture } from '../data/camoImages'
-import { CamoTex } from './CamoTex'
 import { Flame, Search } from 'lucide-react'
 
 export function WeaponsView({
@@ -107,7 +115,9 @@ function WeaponRow({
   const current = lastDoneName(state, weapon) ?? 'Nenhuma'
 
   return (
-    <li className={`weapon-card ${isDone(state, weapon.id, HB_STEP) ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
+    <li
+      className={`weapon-card ${isDone(state, weapon.id, HB_STEP) ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}
+    >
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb">
           <WeaponThumb weapon={weapon} size="card" />
@@ -117,13 +127,7 @@ function WeaponRow({
         <span className="current">
           {current} · {count}/{LADDER.length}
         </span>
-        <span className="mini-ladder" aria-hidden="true">
-          {LADDER.map((s) => (
-            <span key={s.index} className={`seg tier-${s.tier} ${isDone(state, weapon.id, s.index) ? 'done' : ''}`}>
-              <CamoTex url={stepTexture(weapon, s)} muted={!isDone(state, weapon.id, s.index)} />
-            </span>
-          ))}
-        </span>
+        <WcProgress done={count} total={LADDER.length} />
       </button>
       <button
         className={`pin ${pinned ? 'on' : ''}`}

@@ -818,3 +818,10 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
   border-radius: var(--r-sm); font-family: var(--font-ui); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.08em; text-shadow: none;
 }
 .home-start:active { color: var(--primary-ink); filter: brightness(0.92); }
+
+/* Card da arma: barra de progresso na cor do jogo + porcentagem (no lugar da mini-escada de camuflagens) */
+.wc-progress { display: flex; align-items: center; gap: 8px; }
+.wc-bar { flex: 1; height: 4px; background: var(--line); border-radius: var(--r-xs); overflow: hidden; }
+.wc-bar > span { display: block; height: 100%; background: var(--primary); border-radius: var(--r-xs); }
+.wc-pct { min-width: 4ch; text-align: right; font-family: var(--font-ui); font-size: 0.8rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--muted); }
+.wc-progress.full .wc-pct { color: var(--accent); }
