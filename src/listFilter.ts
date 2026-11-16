@@ -33,6 +33,17 @@ export function useListPrefs() {
   return [prefs, setPrefs] as const
 }
 
+export const SORTS: { id: SortMode; label: string }[] = [
+  { id: 'default', label: 'Ordem do jogo' },
+  { id: 'closest', label: 'Mais perto de terminar' },
+  { id: 'least', label: 'Menos feitas' },
+  { id: 'name', label: 'Nome (A–Z)' },
+]
+
+/** Título da lista única (sem grupos de classe) quando há ordem ou filtro escolhido. */
+export const listTitle = (p: ListPrefs) =>
+  p.sort !== 'default' ? SORTS.find((s) => s.id === p.sort)!.label : p.onlyPinned ? 'No grind' : 'Faltando terminar'
+
 export const prefsActive = (p: ListPrefs) => p.sort !== 'default' || p.hideComplete || p.onlyPinned
 
 /** O que a lista precisa saber de cada arma para filtrar e ordenar. */

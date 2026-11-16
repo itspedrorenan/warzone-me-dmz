@@ -1,6 +1,6 @@
 import { WcProgress } from './WcProgress'
 import { ListTools } from './ListTools'
-import { applyListPrefs, useListPrefs } from '../listFilter'
+import { applyListPrefs, listTitle, prefsActive, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
 import {
   CLASSES,
@@ -88,26 +88,42 @@ export function WeaponsView({
       </div>
       <ListTools prefs={prefs} setPrefs={setPrefs} />
 
-      {CLASSES.map((c) => {
-        const list = filtered.filter((w) => w.cls === c.id)
-        if (!list.length) return null
-        const platOpen = classGoldDone(state, c.id)
-        return (
-          <section key={c.id} className="class-group">
-            <header className="class-head">
-              <h2>{c.label}</h2>
-              <span className={`badge ${platOpen ? 'badge-plat' : ''}`}>
-                Gold {countWithStep(state, GOLD_STEP, c.id)}/{goldRequired(c.id)}
-              </span>
-            </header>
-            <ul className="weapon-list">
-              {list.map((w) => (
-                <WeaponRow key={w.id} weapon={w} state={state} dispatch={dispatch} onOpen={onOpen} />
-              ))}
-            </ul>
-          </section>
-        )
-      })}
+      {prefsActive(prefs) && filtered.length > 0 && (
+        // Com ordem ou filtro escolhido, a lista é única: sem grupos de classe.
+        <section className="class-group">
+          <header className="class-head">
+            <h2>{listTitle(prefs)}</h2>
+            <span className="badge">{filtered.length === 1 ? '1 arma' : `${filtered.length} armas`}</span>
+          </header>
+          <ul className="weapon-list">
+            {filtered.map((w) => (
+              <WeaponRow key={w.id} weapon={w} state={state} dispatch={dispatch} onOpen={onOpen} />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {!prefsActive(prefs) &&
+        CLASSES.map((c) => {
+          const list = filtered.filter((w) => w.cls === c.id)
+          if (!list.length) return null
+          const platOpen = classGoldDone(state, c.id)
+          return (
+            <section key={c.id} className="class-group">
+              <header className="class-head">
+                <h2>{c.label}</h2>
+                <span className={`badge ${platOpen ? 'badge-plat' : ''}`}>
+                  Gold {countWithStep(state, GOLD_STEP, c.id)}/{goldRequired(c.id)}
+                </span>
+              </header>
+              <ul className="weapon-list">
+                {list.map((w) => (
+                  <WeaponRow key={w.id} weapon={w} state={state} dispatch={dispatch} onOpen={onOpen} />
+                ))}
+              </ul>
+            </section>
+          )
+        })}
 
       {filtered.length === 0 && (
         <p className="empty">

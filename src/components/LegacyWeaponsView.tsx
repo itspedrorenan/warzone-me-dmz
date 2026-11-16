@@ -1,6 +1,6 @@
 import { WcProgress } from './WcProgress'
 import { ListTools } from './ListTools'
-import { applyListPrefs, useListPrefs } from '../listFilter'
+import { applyListPrefs, listTitle, prefsActive, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
 import { Flame, Search } from 'lucide-react'
 import {
@@ -81,34 +81,58 @@ export function LegacyWeaponsView({
       </div>
       <ListTools prefs={prefs} setPrefs={setPrefs} />
 
-      {game.classes.map((c) => {
-        const list = filtered.filter((w) => w.cls === c.id)
-        if (!list.length) return null
-        const total = game.weapons.filter((w) => w.cls === c.id).length
-        return (
-          <section key={c.id} className="class-group">
-            <header className="class-head">
-              <h2>{c.label}</h2>
-              <span className="badge">
-                {firstMastery.label} {legacyCount(game, progress, firstMastery.tier, c.id)}/{total}
-              </span>
-            </header>
-            <ul className="weapon-list">
-              {list.map((w) => (
-                <LegacyCard
-                  key={w.id}
-                  game={game}
-                  weapon={w}
-                  progress={progress}
-                  state={state}
-                  dispatch={dispatch}
-                  onOpen={onOpen}
-                />
-              ))}
-            </ul>
-          </section>
-        )
-      })}
+      {prefsActive(prefs) && filtered.length > 0 && (
+        // Com ordem ou filtro escolhido, a lista é única: sem grupos de classe.
+        <section className="class-group">
+          <header className="class-head">
+            <h2>{listTitle(prefs)}</h2>
+            <span className="badge">{filtered.length === 1 ? '1 arma' : `${filtered.length} armas`}</span>
+          </header>
+          <ul className="weapon-list">
+            {filtered.map((w) => (
+              <LegacyCard
+                key={w.id}
+                game={game}
+                weapon={w}
+                progress={progress}
+                state={state}
+                dispatch={dispatch}
+                onOpen={onOpen}
+              />
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {!prefsActive(prefs) &&
+        game.classes.map((c) => {
+          const list = filtered.filter((w) => w.cls === c.id)
+          if (!list.length) return null
+          const total = game.weapons.filter((w) => w.cls === c.id).length
+          return (
+            <section key={c.id} className="class-group">
+              <header className="class-head">
+                <h2>{c.label}</h2>
+                <span className="badge">
+                  {firstMastery.label} {legacyCount(game, progress, firstMastery.tier, c.id)}/{total}
+                </span>
+              </header>
+              <ul className="weapon-list">
+                {list.map((w) => (
+                  <LegacyCard
+                    key={w.id}
+                    game={game}
+                    weapon={w}
+                    progress={progress}
+                    state={state}
+                    dispatch={dispatch}
+                    onOpen={onOpen}
+                  />
+                ))}
+              </ul>
+            </section>
+          )
+        })}
 
       {filtered.length === 0 && (
         <p className="empty">

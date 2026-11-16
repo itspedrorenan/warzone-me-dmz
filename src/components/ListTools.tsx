@@ -1,13 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { ArrowDownUp, Check, Flame } from 'lucide-react'
-import type { ListPrefs, SortMode } from '../listFilter'
-
-const SORTS: { id: SortMode; label: string }[] = [
-  { id: 'default', label: 'Ordem do jogo' },
-  { id: 'closest', label: 'Mais perto de terminar' },
-  { id: 'least', label: 'Menos feitas' },
-  { id: 'name', label: 'Nome (A–Z)' },
-]
+import { SORTS, type ListPrefs, type SortMode } from '../listFilter'
 
 /** Linha de ordem e filtros da lista de armas (abaixo das classes). */
 export function ListTools({ prefs, setPrefs }: { prefs: ListPrefs; setPrefs: Dispatch<SetStateAction<ListPrefs>> }) {
