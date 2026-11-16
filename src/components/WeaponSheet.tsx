@@ -1,3 +1,5 @@
+import { SwipeStep } from './SwipeStep'
+import { keyboardOnly } from '../swipe'
 import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import {
   LADDER,
@@ -249,9 +251,12 @@ export function WeaponSheet({
                 const name = stepName(weapon, step)
                 const p: Preview = { kind: 'step', index: step.index }
                 return (
-                  <li
+                  <SwipeStep
                     key={step.index}
                     className={`ladder-step ${done ? 'done' : ''} ${step.index === nextStep ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
+                    done={done}
+                    blocked={!!blocked}
+                    onToggle={() => toggleStep(step)}
                   >
                     <button
                       className={`swatch tier-${step.tier} ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
@@ -262,7 +267,7 @@ export function WeaponSheet({
                     </button>
                     <button
                       className="ladder-text"
-                      onClick={() => toggleStep(step)}
+                      onClick={keyboardOnly(() => toggleStep(step))}
                       disabled={!!blocked}
                       aria-pressed={done}
                       aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${name}`}
@@ -280,7 +285,7 @@ export function WeaponSheet({
                       )}
                       {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                     </button>
-                  </li>
+                  </SwipeStep>
                 )
               })}
               {(group === 'all' || group === 'completionist') && (
@@ -305,7 +310,7 @@ export function WeaponSheet({
             <p className="notice">
               <Info size={14} aria-hidden="true" />
               <span>
-                Toque no card para marcar ou desmarcar.
+                Arraste o card para a direita para concluir ou desfazer.
                 {group === 'all' || group === 'military' ? ' Marcar uma militar marca as anteriores.' : ''}
               </span>
             </p>
@@ -327,7 +332,12 @@ export function WeaponSheet({
                 const done = pcount > i
                 const p: Preview = { kind: 'prestige', id: camo.id }
                 return (
-                  <li key={camo.id} className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''}`}>
+                  <SwipeStep
+                    key={camo.id}
+                    className={`ladder-step ${done ? 'done' : ''} ${i === pcount ? 'next' : ''}`}
+                    done={done}
+                    onToggle={() => togglePrestige(i)}
+                  >
                     <button
                       className={`swatch tier-prestige ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
                       onClick={() => showPreview(p)}
@@ -337,7 +347,7 @@ export function WeaponSheet({
                     </button>
                     <button
                       className="ladder-text"
-                      onClick={() => togglePrestige(i)}
+                      onClick={keyboardOnly(() => togglePrestige(i))}
                       aria-pressed={done}
                       aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${camo.name}`}
                     >
@@ -350,7 +360,7 @@ export function WeaponSheet({
                       <span className="challenge">{camo.requirements.map(prestigeReqText).join(' + ')}</span>
                       {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                     </button>
-                  </li>
+                  </SwipeStep>
                 )
               })}
             </ol>
@@ -384,7 +394,13 @@ export function WeaponSheet({
                       const blocked = !done ? modeMasteryGate(state, weapon, i) : null
                       const p: Preview = { kind: 'mastery', index: i }
                       return (
-                        <li key={m.id} className={`ladder-step ${done ? 'done' : ''} ${blocked ? 'blocked' : ''}`}>
+                        <SwipeStep
+                          key={m.id}
+                          className={`ladder-step ${done ? 'done' : ''} ${blocked ? 'blocked' : ''}`}
+                          done={done}
+                          blocked={!!blocked}
+                          onToggle={() => toggleMastery(i)}
+                        >
                           <button
                             className={`swatch tier-mastery ${done ? 'done' : ''} ${isSelected(p) ? 'previewing' : ''} has-tex`}
                             onClick={() => showPreview(p)}
@@ -394,7 +410,7 @@ export function WeaponSheet({
                           </button>
                           <button
                             className="ladder-text"
-                            onClick={() => toggleMastery(i)}
+                            onClick={keyboardOnly(() => toggleMastery(i))}
                             disabled={!!blocked}
                             aria-pressed={done}
                             aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${m.name}`}
@@ -412,7 +428,7 @@ export function WeaponSheet({
                             )}
                             {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                           </button>
-                        </li>
+                        </SwipeStep>
                       )
                     })}
                   </ol>

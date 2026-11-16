@@ -1,3 +1,5 @@
+import { SwipeStep } from './SwipeStep'
+import { keyboardOnly } from '../swipe'
 import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import { Check, Flame, Info, Lock, X } from 'lucide-react'
 import {
@@ -193,9 +195,12 @@ export function LegacySheet({
             const challenge = step.challenge && !legacyFixed(step.challenge) ? legacyText(step.challenge) : null
             const missing = !step.challenge && step.tier !== 'platinum' && step.tier !== 'damascus'
             return (
-              <li
+              <SwipeStep
                 key={step.index}
                 className={`ladder-step ${done ? 'done' : ''} ${step.index === nextStep ? 'next' : ''} ${blocked ? 'blocked' : ''}`}
+                done={done}
+                blocked={!!blocked}
+                onToggle={() => toggle(step.index)}
               >
                 <button
                   className={`swatch legacy-${step.tier} ${done ? 'done' : ''} ${preview === step.index ? 'previewing' : ''} has-tex`}
@@ -208,7 +213,7 @@ export function LegacySheet({
                 </button>
                 <button
                   className="ladder-text"
-                  onClick={() => toggle(step.index)}
+                  onClick={keyboardOnly(() => toggle(step.index))}
                   disabled={!!blocked}
                   aria-pressed={done}
                   aria-label={`${done ? 'Desmarcar' : 'Marcar'} ${step.name}`}
@@ -224,7 +229,7 @@ export function LegacySheet({
                   )}
                   {done && <Check className="step-check" size={20} strokeWidth={3} aria-hidden="true" />}
                 </button>
-              </li>
+              </SwipeStep>
             )
           })}
           {finale && group !== 'base' && (
@@ -250,7 +255,7 @@ export function LegacySheet({
         </ol>
         <p className="notice">
           <Info size={14} aria-hidden="true" />
-          <span>Toque no card para marcar ou desmarcar.</span>
+          <span>Arraste o card para a direita para concluir ou desfazer.</span>
         </p>
 
         <label className="notes">

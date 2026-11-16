@@ -845,3 +845,16 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .lt-toggle svg { opacity: 0.6; }
 .lt-toggle.on { border-color: var(--primary); color: var(--text); background: color-mix(in srgb, var(--primary) 12%, transparent); }
 .lt-toggle.on svg { opacity: 1; color: var(--accent); }
+
+/* Cards de camuflagem: arrastar para a direita conclui (ou desfaz) */
+.ladder { overflow-x: clip; }
+.ladder-step.swipe { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; transition: transform 0.22s ease, border-color 0.15s; }
+.ladder-step.swipe.dragging { transition: border-color 0.15s; }
+.swipe-label {
+  position: absolute; right: calc(100% + 12px); top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; gap: 6px;
+  white-space: nowrap; font-family: var(--font-ui); font-size: 0.9rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); opacity: 0; transition: opacity 0.15s, color 0.15s; pointer-events: none;
+}
+.swipe.dragging .swipe-label { opacity: 1; }
+.swipe.armed .swipe-label { color: var(--accent); }
+.ladder-step.swipe.armed { border-color: var(--primary); }
