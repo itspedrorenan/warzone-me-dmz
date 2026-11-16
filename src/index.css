@@ -793,6 +793,9 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .chip { border-radius: var(--r-xs); background: transparent; border: 1px solid var(--line-strong); color: var(--muted); font-weight: 700; font-size: 0.9rem; height: 34px; padding: 0 14px; }
 .chip.active { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
 .badge, .season-tag { border-radius: var(--r-xs); border-color: var(--line-strong); color: var(--muted); font-size: 0.75rem; font-weight: 700; padding: 2px 6px; }
+/* Selo da classe na cor do jogo; cheio quando a camuflagem de classe já abriu */
+.badge { border-color: var(--primary); color: var(--accent); }
+.badge.badge-plat { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
 
 /* Cards: superfície escura sobre o preto */
 .weapon-card, .ladder .ladder-step, .pg-tile, .pg-hero, .pg-weapon, .grind-card, .set-card, .set-list, .set-sources div, .notice {
