@@ -3,10 +3,15 @@
 // de renderImages.generated.json. Gerado por scripts/codcentral/build-sprites.py.
 import list from './renderImages.generated.json'
 import type { LadderStep, Weapon } from './index'
+import { extraPhoto } from './mw4Extras'
 
 const RENDERS = list as Record<string, string[]>
 
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
 
 /** Nome do arquivo da foto para um degrau da escada. */
 export function stepRenderKey(weapon: Weapon, step: LadderStep): string {
@@ -36,7 +41,10 @@ export interface RenderFrame {
 export function renderImage(weaponId: string, key: string): RenderFrame | null {
   const keys = RENDERS[weaponId]
   const index = key && keys ? keys.indexOf(key) : -1
-  return index >= 0 ? { src: `./renders/${weaponId}.webp`, index, count: keys.length } : null
+  if (index >= 0) return { src: `./renders/${weaponId}.webp`, index, count: keys.length }
+  // Sem foto do CodCentral: tenta a do Game8 (Divergence e maestrias de modo; uso local).
+  const photo = key ? extraPhoto(weaponId, key) : null
+  return photo ? { src: photo, index: 0, count: 1 } : null
 }
 
 /** Foto padrão da arma: a da Militar 1 (camuflagem mais discreta). */

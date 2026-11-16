@@ -49,6 +49,7 @@ type Preview =
   | { kind: 'step'; index: number }
   | { kind: 'prestige'; id: string }
   | { kind: 'mastery'; index: number }
+  | { kind: 'divergence' }
   | null
 
 function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFrame | null } | null {
@@ -60,6 +61,7 @@ function previewInfo(weapon: Weapon, p: Preview): { name: string; src: RenderFra
       src: renderImage(weapon.id, stepRenderKey(weapon, step)),
     }
   }
+  if (p.kind === 'divergence') return { name: 'Divergence', src: renderImage(weapon.id, 'divergence') }
   if (p.kind === 'mastery') {
     const m = MASTERIES[p.index]
     return m ? { name: m.name, src: renderImage(weapon.id, m.id) } : null
@@ -286,9 +288,13 @@ export function WeaponSheet({
               })}
               {(group === 'all' || group === 'completionist') && (
                 <li className={`ladder-step divergence ${divergenceDone ? 'done' : 'blocked'}`}>
-                  <span className="swatch tier-divergence has-tex">
+                  <button
+                    className={`swatch tier-divergence has-tex ${isSelected({ kind: 'divergence' }) ? 'previewing' : ''}`}
+                    onClick={() => showPreview({ kind: 'divergence' })}
+                    aria-label={`Ver ${weapon.name} com Divergence`}
+                  >
                     <CamoTex url={camoImage('divergence')} muted={!divergenceDone} />
-                  </span>
+                  </button>
                   <span className="ladder-text">
                     <strong>Divergence</strong>
                     <span className="challenge">Sem desafio: vem para todas as armas juntas.</span>

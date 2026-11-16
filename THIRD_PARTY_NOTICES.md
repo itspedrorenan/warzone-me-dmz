@@ -77,4 +77,9 @@ img.game8.co) vêm das páginas de desafios de camuflagem do Game8 (a do MW III 
 autorização para uso local (15/11/2026). Como os dados do CODMunity, os endereços dessas fotos ficam
 só em `src/data/local/` (no `.gitignore`) e entram apenas no site privado da Vercel.
 
+No MW4, as fotos das armas com Divergence e com as maestrias de modo de Multiplayer e DMZ (Mercurial Drift,
+Polyatomic Reforged, Orion Reforged, Chiral, Ripple Tide e Helio) também vêm do Game8 (páginas de cada
+camuflagem). O ícone das armas sem imagem própria no app (ex.: JAK 12) vem do CODMunity. Os dois ficam em
+`src/data/local/mw4-extras.json`, gerado por `scripts/import-mw4-extras.mjs` (16/11/2026), no `.gitignore`.
+
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.

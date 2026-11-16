@@ -3,6 +3,7 @@ import { Download, Smartphone, Trash2, Upload, Vibrate, LockKeyhole } from 'luci
 import { DATA_SOURCE } from '../data'
 import { GAMES } from '../data/games'
 import { LEGACY_GAMES } from '../data/legacy'
+import { hasMw4Extras } from '../data/mw4Extras'
 import { sanitize, type Action, type State } from '../store'
 
 function Toggle({
@@ -32,7 +33,14 @@ function Toggle({
         <span className="set-desc">{text}</span>
         {note && <span className="set-note">{note}</span>}
       </span>
-      <input id={id} className="switch" type="checkbox" role="switch" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <input
+        id={id}
+        className="switch"
+        type="checkbox"
+        role="switch"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+      />
     </label>
   )
 }
@@ -76,7 +84,10 @@ export function SettingsView({
       dispatch({ type: 'replace', state: sanitize(data) })
       setMessage({ kind: 'ok', text: `Backup de ${file.name} restaurado.` })
     } catch {
-      setMessage({ kind: 'error', text: 'Não consegui ler esse arquivo. Escolha um backup baixado por este app (.json).' })
+      setMessage({
+        kind: 'error',
+        text: 'Não consegui ler esse arquivo. Escolha um backup baixado por este app (.json).',
+      })
     }
   }
 
@@ -125,7 +136,9 @@ export function SettingsView({
 
       <section className="set-section">
         <h2 className="pg-title">Backup</h2>
-        <p className="set-help">Seu progresso fica só neste aparelho. Baixe um backup antes de trocar de celular ou limpar o navegador.</p>
+        <p className="set-help">
+          Seu progresso fica só neste aparelho. Baixe um backup antes de trocar de celular ou limpar o navegador.
+        </p>
         <div className="set-actions">
           <button className="btn primary" onClick={exportBackup}>
             <Download size={16} aria-hidden="true" /> Baixar backup
@@ -155,7 +168,9 @@ export function SettingsView({
 
       <section className="set-section">
         <h2 className="pg-title">Apagar progresso</h2>
-        <p className="set-help">Apaga camuflagens marcadas, contadores, armas no grind e anotações. Não dá para desfazer.</p>
+        <p className="set-help">
+          Apaga camuflagens marcadas, contadores, armas no grind e anotações. Não dá para desfazer.
+        </p>
         <ul className="set-list">
           {GAMES.map((g) => (
             <li key={g.id}>
@@ -177,7 +192,8 @@ export function SettingsView({
                 className={`btn danger ${confirming === 'all' ? 'confirm' : ''}`}
                 onClick={() => reset('all', () => dispatch({ type: 'reset' }), 'Todo o progresso foi apagado.')}
               >
-                <Trash2 size={16} aria-hidden="true" /> {confirming === 'all' ? 'Toque de novo para apagar' : 'Apagar tudo'}
+                <Trash2 size={16} aria-hidden="true" />{' '}
+                {confirming === 'all' ? 'Toque de novo para apagar' : 'Apagar tudo'}
               </button>
             </li>
           )}
@@ -196,6 +212,8 @@ export function SettingsView({
               </a>{' '}
               (licença MIT), atualizados em {dateBR(DATA_SOURCE.importedAt)}. Fotos com camuflagem: CodCentral, com
               autorização.
+              {hasMw4Extras &&
+                ' Fotos com Divergence e com as maestrias de modo: Game8, para uso local com autorização.'}
             </dd>
           </div>
           {LEGACY_GAMES.map((g) => (
@@ -212,7 +230,9 @@ export function SettingsView({
             </div>
           ))}
         </dl>
-        <p className="set-help">Imagens das armas e camuflagens © Activision. Este app não tem afiliação com a Activision.</p>
+        <p className="set-help">
+          Imagens das armas e camuflagens © Activision. Este app não tem afiliação com a Activision.
+        </p>
       </section>
     </div>
   )

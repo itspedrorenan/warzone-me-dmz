@@ -64,7 +64,10 @@ export interface LegacyGame {
   weapons: LegacyWeapon[]
 }
 
-const files = import.meta.glob<LegacyGame>('./local/*.json', { eager: true, import: 'default' })
+const files = import.meta.glob<LegacyGame>(['./local/*.json', '!./local/mw4-extras.json'], {
+  eager: true,
+  import: 'default',
+})
 
 /** Ordem no seletor: do mais antigo ao mais novo. */
 const ORDER = ['mw19', 'mw2', 'mw3']
