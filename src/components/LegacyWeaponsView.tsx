@@ -1,4 +1,6 @@
 import { WcProgress } from './WcProgress'
+import { ListTools } from './ListTools'
+import { applyListPrefs, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
 import { Flame, Search } from 'lucide-react'
 import {
@@ -31,10 +33,28 @@ export function LegacyWeaponsView({
   // Primeira camuflagem de maestria do jogo (Gold no MW 2019, Gilded no MW III) para o resumo da classe.
   const firstMastery = game.tiers[0]
 
+  const [prefs, setPrefs] = useListPrefs()
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return game.weapons.filter((w) => (cls === 'all' || w.cls === cls) && (!q || w.name.toLowerCase().includes(q)))
-  }, [game, query, cls])
+    const list = game.weapons.filter(
+      (w) => (cls === 'all' || w.cls === cls) && (!q || w.name.toLowerCase().includes(q)),
+    )
+    return applyListPrefs(
+      list,
+      (w) => {
+        const done = legacyDoneCount(state.legacy[game.game] ?? {}, w.id)
+        return {
+          name: w.name,
+          done,
+          total: w.steps.length,
+          complete: done >= w.steps.length,
+          pinned: state.pinned.includes(`${game.game}:${w.id}`),
+        }
+      },
+      prefs,
+    )
+  }, [game, query, cls, prefs, state.legacy, state.pinned])
 
   return (
     <div className="weapons-view">
@@ -59,6 +79,7 @@ export function LegacyWeaponsView({
           </button>
         ))}
       </div>
+      <ListTools prefs={prefs} setPrefs={setPrefs} />
 
       {game.classes.map((c) => {
         const list = filtered.filter((w) => w.cls === c.id)
@@ -89,7 +110,11 @@ export function LegacyWeaponsView({
         )
       })}
 
-      {filtered.length === 0 && <p className="empty">Nenhuma arma encontrada.</p>}
+      {filtered.length === 0 && (
+        <p className="empty">
+          {prefs.onlyPinned || prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}
+        </p>
+      )}
       <p className="credits">
         Dados: <a href={game.source.url}>{game.source.name}</a> (uso local, com autorização).
       </p>

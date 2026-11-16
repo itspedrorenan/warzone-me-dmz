@@ -1,4 +1,6 @@
 import { WcProgress } from './WcProgress'
+import { ListTools } from './ListTools'
+import { applyListPrefs, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
 import {
   CLASSES,
@@ -39,14 +41,27 @@ export function WeaponsView({
 
   const weapons = useMemo(() => allWeapons(state), [state])
 
+  const [prefs, setPrefs] = useListPrefs()
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return weapons.filter((w) => {
+    const list = weapons.filter((w) => {
       if (cls !== 'all' && w.cls !== cls) return false
       if (q && !w.name.toLowerCase().includes(q)) return false
       return true
     })
-  }, [weapons, query, cls])
+    return applyListPrefs(
+      list,
+      (w) => ({
+        name: w.name,
+        done: doneCount(state, w.id),
+        total: LADDER.length,
+        complete: isDone(state, w.id, HB_STEP),
+        pinned: state.pinned.includes(w.id),
+      }),
+      prefs,
+    )
+  }, [weapons, query, cls, prefs, state])
 
   return (
     <div className="weapons-view">
@@ -71,6 +86,7 @@ export function WeaponsView({
           </button>
         ))}
       </div>
+      <ListTools prefs={prefs} setPrefs={setPrefs} />
 
       {CLASSES.map((c) => {
         const list = filtered.filter((w) => w.cls === c.id)
@@ -93,7 +109,11 @@ export function WeaponsView({
         )
       })}
 
-      {filtered.length === 0 && <p className="empty">Nenhuma arma encontrada.</p>}
+      {filtered.length === 0 && (
+        <p className="empty">
+          {prefs.onlyPinned || prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}
+        </p>
+      )}
     </div>
   )
 }
