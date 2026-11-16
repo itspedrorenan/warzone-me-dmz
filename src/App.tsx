@@ -13,6 +13,7 @@ import { GAMES } from './data/games'
 import { HomeView } from './components/HomeView'
 import { ProgressView } from './components/ProgressView'
 import { GrindView } from './components/GrindView'
+import { SettingsView } from './components/SettingsView'
 import { grindItemsLegacy, grindItemsMW4 } from './grind'
 import { summaryLegacy, summaryMW4 } from './progress'
 
@@ -22,7 +23,7 @@ const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: b
   { id: 'grind', label: 'Grind', Icon: Flame, ready: true },
   { id: 'weapons', label: 'Armas', Icon: Crosshair, ready: true },
   { id: 'progress', label: 'Progresso', Icon: ChartNoAxesColumn, ready: true },
-  { id: 'settings', label: 'Ajustes', Icon: Settings, ready: false },
+  { id: 'settings', label: 'Ajustes', Icon: Settings, ready: true },
 ]
 
 export default function App() {
@@ -88,6 +89,8 @@ export default function App() {
             onOpen={setOpenId}
             onBrowse={() => setTab('weapons')}
           />
+        ) : tab === 'settings' ? (
+          <SettingsView state={state} dispatch={dispatch} wakeSupported={wake.supported} />
         ) : tab === 'progress' ? (
           <ProgressView
             summary={legacy ? summaryLegacy(legacy, state) : summaryMW4(state)}

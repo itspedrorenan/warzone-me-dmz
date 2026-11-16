@@ -322,6 +322,7 @@ export type Action =
   | { type: 'setPrestige'; id: string; count: number }
   | { type: 'toggleModeMastery'; id: string; index: number }
   | { type: 'setGame'; game: string }
+  | { type: 'resetGame'; game: string }
   | { type: 'setLegacyProgress'; game: string; progress: Record<string, number> }
   | { type: 'addWeapon'; name: string; cls: WeaponClass }
   | { type: 'updateCustomWeapon'; id: string; patch: Partial<Pick<Weapon, 'name' | 'cls'>> }
@@ -399,6 +400,34 @@ export function reducer(s: State, a: Action): State {
     }
     case 'setGame':
       return { ...s, game: a.game }
+    case 'resetGame': {
+      // Apaga o progresso de um jogo só (camuflagens, contadores, grind e anotações); o resto fica.
+      const legacyKey = (k: string) => k.startsWith(`${a.game}:`)
+      const mw4Key = (k: string) => !k.includes(':')
+      const own = a.game === 'mw4' ? mw4Key : legacyKey
+      const keep = <T,>(r: Record<string, T>) => Object.fromEntries(Object.entries(r).filter(([k]) => !own(k)))
+      if (a.game === 'mw4') {
+        return {
+          ...s,
+          progress: {},
+          prestige: {},
+          modeMastery: {},
+          mastery: {},
+          challengeCount: keep(s.challengeCount),
+          pinned: s.pinned.filter((k) => !own(k)),
+          notes: keep(s.notes),
+        }
+      }
+      const legacy = { ...s.legacy }
+      delete legacy[a.game]
+      return {
+        ...s,
+        legacy,
+        challengeCount: keep(s.challengeCount),
+        pinned: s.pinned.filter((k) => !own(k)),
+        notes: keep(s.notes),
+      }
+    }
     case 'setLegacyProgress':
       return { ...s, legacy: { ...s.legacy, [a.game]: a.progress } }
     case 'setNote':
