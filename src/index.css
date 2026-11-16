@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&family=Geist+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap');
 
 /* App só para celular: uma coluna estreita. Em telas maiores fica centralizada como um celular. */
 
@@ -721,3 +721,95 @@ input[type='checkbox'].switch:checked::after { transform: translateX(20px); back
 .set-sources dd { margin: 0; font-size: 0.75rem; color: var(--muted); line-height: 1.5; }
 .set-sources a { color: var(--link); }
 input[type='checkbox'].switch { box-shadow: none; display: block; place-content: initial; }
+
+
+/* ===========================================================================
+   TEMA "SITE OFICIAL MW4" (callofduty.com/modernwarfare4)
+   Preto puro, barra superior cinza, tipografia condensada em caixa alta nos
+   títulos, menus e botões, botão primário amarelo de largura total, botão
+   secundário com contorno amarelo, tags de canto reto e linhas amarelas com brilho.
+   A fonte do site é proprietária: usamos Barlow Condensed / Barlow (livres).
+   =========================================================================== */
+:root {
+  --font: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-title: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-ui: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --chrome: #1f1f1f;
+  --bg: #000000;
+  --bg-2: #0b0b0b;
+  --panel: #1a1a1a;
+  --panel-2: #262626;
+  --line: #333333;
+  --line-strong: #555555;
+  --muted: #b3b3b3;
+  --text-3: #8a8a8a;
+  --glow: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary) 85%, transparent) 50%, transparent 100%);
+}
+body { font-family: var(--font); letter-spacing: 0.005em; }
+
+/* Barra superior: cinza, como a do site */
+.topbar { background: var(--chrome); border-bottom: 0; box-shadow: 0 1px 0 #000; }
+.bottom-nav { background: var(--chrome); border-top: 0; }
+.nav-btn { font-family: var(--font-ui); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Títulos: condensada pesada */
+h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-value, .pg-title, .class-head h2,
+.sheet-head h2, .ladder-text strong, .pg-hero-number, .pg-tile-value, .pg-tile-label, .gc-camo, .cb-count,
+.set-title, .pg-weapon-name, .home-start, .grind-empty-title, .set-sources dt {
+  font-family: var(--font-title);
+}
+.sheet-head h2 { font-weight: 800; letter-spacing: 0.005em; }
+.weapon-card .name { font-size: 1.05rem; font-weight: 700; }
+.ladder-text strong { font-size: 1.15rem; font-weight: 700; }
+.gc-name { font-weight: 800; }
+.gc-camo { font-weight: 800; font-size: 1.45rem; }
+
+/* Rótulos, menus, abas e seções: caixa alta condensada com leve espaçamento */
+.pg-title, .class-head h2, .section-title, .eyebrow, .pg-eyebrow, .gc-label, .sub-title, .mastery-mode-title,
+.chip, .badge, .btn, .season-tag, .notes > span, .preview-label .link-btn {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.pg-title, .class-head h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; }
+
+/* Linha amarela com brilho abaixo dos títulos de seção (como as divisórias do site) */
+.class-head, .pg-section > .pg-title, .set-section > .pg-title { position: relative; padding-bottom: 12px; }
+.class-head::after, .pg-section > .pg-title::after, .set-section > .pg-title::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--glow);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--primary) 45%, transparent);
+}
+.class-head h2 { color: var(--text); }
+
+/* Botões: primário amarelo cheio; secundário com contorno amarelo e texto branco */
+.btn { min-height: 44px; border-radius: var(--r-sm); font-weight: 700; font-size: 0.95rem; }
+.btn:not(.primary):not(.danger) { background: transparent; border: 1px solid var(--primary); color: var(--text); }
+.btn.primary { box-shadow: none; }
+.gc-complete, .set-actions .btn { width: 100%; }
+
+/* Chips/abas e tags: cantos retos, contorno cinza; ativo cheio */
+.chip { border-radius: var(--r-xs); background: transparent; border: 1px solid var(--line-strong); color: var(--muted); font-weight: 700; font-size: 0.9rem; height: 34px; padding: 0 14px; }
+.chip.active { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.badge, .season-tag { border-radius: var(--r-xs); border-color: var(--line-strong); color: var(--muted); font-size: 0.75rem; font-weight: 700; padding: 2px 6px; }
+
+/* Cards: superfície escura sobre o preto */
+.weapon-card, .ladder .ladder-step, .pg-tile, .pg-hero, .pg-weapon, .grind-card, .set-card, .set-list, .set-sources div, .notice {
+  background: var(--panel);
+}
+.ladder .ladder-step.done { background: color-mix(in srgb, var(--primary) 7%, var(--panel)); }
+
+/* Seletor de jogo e troca de modo sobre a barra cinza */
+.game-current, .mode-switch, .awake { background: #2a2a2a; border-color: #3a3a3a; }
+
+/* Campo de busca */
+.search { background: var(--panel); border-color: var(--line-strong); font-family: var(--font); }
+
+/* Números grandes com algarismos de largura fixa */
+.pg-hero-number, .pg-tile-value, .cb-count { font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* Tela inicial: CTA amarelo de largura total, como "GET MODERN WARFARE 4" */
+.home-start {
+  align-self: stretch; width: 100%; min-height: 52px; padding: 0 16px; background: var(--primary); color: var(--primary-ink);
+  border-radius: var(--r-sm); font-family: var(--font-ui); font-size: 1.1rem; font-weight: 800; letter-spacing: 0.08em; text-shadow: none;
+}
+.home-start:active { color: var(--primary-ink); filter: brightness(0.92); }
