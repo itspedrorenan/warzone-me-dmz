@@ -644,3 +644,44 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* Foto da arma com a camuflagem (Game8) no painel dos jogos antigos */
 .legacy-photo { width: 100%; aspect-ratio: 2.35 / 1; border-radius: var(--r-sm); overflow: hidden; background: #0e0e0e; }
 .legacy-photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------------------------------------------------------------------------
+   Grind: cards grandes para usar durante a partida
+   --------------------------------------------------------------------------- */
+.grind-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.grind-card { gap: 16px; padding: 16px; }
+.grind-card.ready { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.grind-card.finished { border-color: var(--line-strong); }
+.gc-head { align-items: center; gap: 8px; }
+.gc-title { flex-direction: row; align-items: center; gap: 12px; color: var(--muted); }
+.gc-thumb { flex: none; width: 88px; padding: 0; overflow: hidden; border-radius: var(--r-sm); }
+.gc-thumb .render, .gc-thumb .thumb { width: 88px; }
+.grind-thumb-img { display: grid; place-items: center; width: 88px; height: 40px; background: var(--bg); border-radius: var(--r-sm); overflow: hidden; }
+.grind-thumb-img img { max-width: 95%; max-height: 36px; object-fit: contain; }
+.grind-thumb-img.empty { font-family: var(--font-title); font-weight: 700; font-size: 0.8rem; color: var(--text-3); }
+.gc-title-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.gc-name { font-family: var(--font-title); font-weight: 700; font-size: 1.15rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gc-meta { font-size: 0.72rem; color: var(--muted); }
+.gc-unpin { flex: none; display: grid; place-items: center; width: 40px; height: 40px; background: none; border: 0; color: var(--text-3); }
+.gc-now { gap: 12px; }
+.gc-swatch { position: relative; flex: none; width: 48px; height: 48px; border-radius: var(--r-sm); overflow: hidden; background: var(--panel-2); }
+.gc-now-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.gc-label { color: var(--accent); }
+.gc-camo { font-family: var(--font-title); font-weight: 700; font-size: 1.3rem; line-height: 1.15; }
+.gc-challenge { font-family: var(--font); font-weight: 500; font-size: 1.05rem; color: var(--text); }
+.gc-blocked { display: flex; align-items: baseline; gap: 6px; margin: 0; font-size: 0.8rem; color: var(--primary); }
+.gc-finished { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 500; }
+.counter-big { grid-template-columns: 80px 1fr 112px; gap: 12px; }
+.counter-big button { display: grid; place-items: center; height: 80px; }
+.counter-big .cb-plus { font-size: inherit; }
+.cb-value { display: flex; flex-direction: column; align-items: center; gap: 4px; font-variant-numeric: tabular-nums; }
+.cb-count { font-family: var(--font-title); font-weight: 800; font-size: 2.8rem; }
+.cb-target { font-size: 0.8rem; font-weight: 500; }
+.cb-bar span { background: var(--primary); }
+.cb-quick button { height: 44px; font-family: var(--font); font-size: 0.95rem; }
+.gc-complete { width: 100%; min-height: 52px; font-size: 0.95rem; }
+.grind-empty { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 40px 20px; text-align: center; border: 1px dashed var(--line); border-radius: var(--r); color: var(--muted); }
+.grind-empty svg { color: var(--primary); }
+.grind-empty-title { margin: 0; font-family: var(--font-title); font-weight: 700; font-size: 1.1rem; color: var(--text); }
+.grind-empty-text { margin: 0 0 8px; max-width: 34ch; font-size: 0.8rem; line-height: 1.5; }
+.gc-meta { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

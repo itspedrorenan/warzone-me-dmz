@@ -12,12 +12,14 @@ import { legacyGame } from './data/legacy'
 import { GAMES } from './data/games'
 import { HomeView } from './components/HomeView'
 import { ProgressView } from './components/ProgressView'
+import { GrindView } from './components/GrindView'
+import { grindItemsLegacy, grindItemsMW4 } from './grind'
 import { summaryLegacy, summaryMW4 } from './progress'
 
 export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
 
 const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: boolean }[] = [
-  { id: 'grind', label: 'Grind', Icon: Flame, ready: false },
+  { id: 'grind', label: 'Grind', Icon: Flame, ready: true },
   { id: 'weapons', label: 'Armas', Icon: Crosshair, ready: true },
   { id: 'progress', label: 'Progresso', Icon: ChartNoAxesColumn, ready: true },
   { id: 'settings', label: 'Ajustes', Icon: Settings, ready: false },
@@ -78,6 +80,14 @@ export default function App() {
           ) : (
             <WeaponsView state={state} dispatch={dispatch} onOpen={setOpenId} />
           )
+        ) : tab === 'grind' ? (
+          <GrindView
+            items={legacy ? grindItemsLegacy(legacy, state, dispatch) : grindItemsMW4(state, dispatch)}
+            state={state}
+            dispatch={dispatch}
+            onOpen={setOpenId}
+            onBrowse={() => setTab('weapons')}
+          />
         ) : tab === 'progress' ? (
           <ProgressView
             summary={legacy ? summaryLegacy(legacy, state) : summaryMW4(state)}
