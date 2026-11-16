@@ -745,6 +745,8 @@ input[type='checkbox'].switch { box-shadow: none; display: block; place-content:
   --text-3: #8a8a8a;
   --glow: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary) 85%, transparent) 50%, transparent 100%);
 }
+/* O brilho é recalculado no .app, onde cada jogo define sua --primary (no :root ficaria sempre amarelo). */
+.app { --glow: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--primary) 85%, transparent) 50%, transparent 100%); }
 body { font-family: var(--font); letter-spacing: 0.005em; }
 
 /* Barra superior: cinza, como a do site */
