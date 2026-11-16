@@ -103,7 +103,7 @@ export function LegacySheet({
               </p>
               <h2>{weapon.name}</h2>
               <p className="muted">
-                {count}/{steps.length} camuflagens
+                {count + (finale?.done ? 1 : 0)}/{steps.length + (finale ? 1 : 0)} camuflagens
               </p>
             </div>
             <button className="icon-btn" onClick={onClose} aria-label="Fechar">

@@ -6,8 +6,8 @@ import { Flame, Search } from 'lucide-react'
 import {
   legacyCount,
   legacyDone,
-  legacyDoneCount,
   legacyImg,
+  legacyTotals,
   type LegacyGame,
   type LegacyProgress,
   type LegacyWeapon,
@@ -43,12 +43,11 @@ export function LegacyWeaponsView({
     return applyListPrefs(
       list,
       (w) => {
-        const done = legacyDoneCount(state.legacy[game.game] ?? {}, w.id)
+        const t = legacyTotals(game, state.legacy[game.game] ?? {}, w)
         return {
           name: w.name,
-          done,
-          total: w.steps.length,
-          complete: done >= w.steps.length,
+          ...t,
+          complete: t.done >= t.total,
           pinned: state.pinned.includes(`${game.game}:${w.id}`),
         }
       },
@@ -161,15 +160,14 @@ function LegacyCard({
   dispatch: Dispatch<Action>
   onOpen: (id: string) => void
 }) {
-  const count = legacyDoneCount(progress, weapon.id)
+  const { done: count, total } = legacyTotals(game, progress, weapon)
   const pinKey = `${game.game}:${weapon.id}`
   const pinned = state.pinned.includes(pinKey)
   let last: string | null = null
   weapon.steps.forEach((s, i) => legacyDone(progress, weapon.id, i) && (last = s.name))
-  const top = weapon.steps.length - 1
 
   return (
-    <li className={`weapon-card legacy ${legacyDone(progress, weapon.id, top) ? 'complete' : ''}`}>
+    <li className={`weapon-card legacy ${count >= total ? 'complete' : ''}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb legacy-thumb">
           {weapon.icon || weapon.photo ? (
@@ -188,9 +186,9 @@ function LegacyCard({
         </span>
         <span className="name">{weapon.name}</span>
         <span className="current">
-          {last ?? 'Nenhuma'} · {count}/{weapon.steps.length}
+          {last ?? 'Nenhuma'} · {count}/{total}
         </span>
-        <WcProgress done={count} total={weapon.steps.length} />
+        <WcProgress done={count} total={total} />
       </button>
       <button
         className={`pin ${pinned ? 'on' : ''}`}

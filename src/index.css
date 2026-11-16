@@ -858,3 +858,15 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .swipe.dragging .swipe-label { opacity: 1; }
 .swipe.armed .swipe-label { color: var(--accent); }
 .ladder-step.swipe.armed { border-color: var(--primary); }
+
+/* Lista de armas em uma coluna: foto à esquerda, textos e progresso à direita */
+.weapon-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.wc-main { display: grid; grid-template-columns: 128px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-content: center; align-items: center; padding: 10px 12px; min-height: 88px; }
+.wc-main > .wc-thumb { grid-row: 1 / span 4; grid-column: 1; align-self: center; padding: 0; }
+.wc-main > :not(.wc-thumb) { grid-column: 2; }
+.wc-main .thumb-card { height: 56px; }
+.legacy-thumb { height: 64px; }
+.legacy-thumb img { max-height: 52px; }
+.weapon-card .name { padding-right: 32px; }
+.weapon-card .season-tag { margin-top: 0; }
+.weapon-card .pin { top: 4px; right: 4px; }

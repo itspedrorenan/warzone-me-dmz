@@ -176,11 +176,7 @@ export function WeaponSheet({
               </p>
               <h2>{weapon.name}</h2>
               <p className="muted">
-                {count}/{LADDER.length} camuflagens
-                <span className="prestige-count">
-                  {' '}
-                  · prestígio {pcount}/{weapon.prestige.length}
-                </span>
+                {groups[0].done}/{groups[0].total} camuflagens
               </p>
             </div>
             <button className="icon-btn" onClick={onClose} aria-label="Fechar">

@@ -405,7 +405,7 @@ export function reducer(s: State, a: Action): State {
       const legacyKey = (k: string) => k.startsWith(`${a.game}:`)
       const mw4Key = (k: string) => !k.includes(':')
       const own = a.game === 'mw4' ? mw4Key : legacyKey
-      const keep = <T,>(r: Record<string, T>) => Object.fromEntries(Object.entries(r).filter(([k]) => !own(k)))
+      const keep = <T>(r: Record<string, T>) => Object.fromEntries(Object.entries(r).filter(([k]) => !own(k)))
       if (a.game === 'mw4') {
         return {
           ...s,
@@ -513,4 +513,14 @@ export function useTracker() {
     }
   }, [state])
   return [state, dispatch] as const
+}
+
+/** Todas as camuflagens da arma no MW4: escada (14) + Divergence + prestígio + maestrias de modo. */
+export function weaponTotals(s: State, weapon: Weapon) {
+  let mastery = 0
+  for (let i = 0; i < MASTERIES.length; i++) if (modeMasteryDone(s, weapon.id, i)) mastery++
+  return {
+    done: doneCount(s, weapon.id) + (hbGateDone(s) ? 1 : 0) + prestigeOf(s, weapon.id) + mastery,
+    total: LADDER.length + 1 + weapon.prestige.length + MASTERIES.length,
+  }
 }

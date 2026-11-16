@@ -4,9 +4,7 @@ import { applyListPrefs, listTitle, prefsActive, useListPrefs } from '../listFil
 import { useMemo, useState, type Dispatch } from 'react'
 import {
   CLASSES,
-  LADDER,
   GOLD_STEP,
-  HB_STEP,
   goldRequired,
   isReleased,
   seasonLabel,
@@ -16,9 +14,8 @@ import {
 import {
   allWeapons,
   countWithStep,
-  doneCount,
-  isDone,
   lastDoneName,
+  weaponTotals,
   classGoldDone,
   type Action,
   type State,
@@ -54,9 +51,8 @@ export function WeaponsView({
       list,
       (w) => ({
         name: w.name,
-        done: doneCount(state, w.id),
-        total: LADDER.length,
-        complete: isDone(state, w.id, HB_STEP),
+        ...weaponTotals(state, w),
+        complete: (({ done, total }) => done >= total)(weaponTotals(state, w)),
         pinned: state.pinned.includes(w.id),
       }),
       prefs,
@@ -145,15 +141,13 @@ function WeaponRow({
   dispatch: Dispatch<Action>
   onOpen: (id: string) => void
 }) {
-  const count = doneCount(state, weapon.id)
+  const { done: count, total } = weaponTotals(state, weapon)
   const pinned = state.pinned.includes(weapon.id)
   const season = seasonLabel(weapon)
   const current = lastDoneName(state, weapon) ?? 'Nenhuma'
 
   return (
-    <li
-      className={`weapon-card ${isDone(state, weapon.id, HB_STEP) ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}
-    >
+    <li className={`weapon-card ${count >= total ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb">
           <WeaponThumb weapon={weapon} size="card" />
@@ -161,9 +155,9 @@ function WeaponRow({
         <span className="name">{weapon.name}</span>
         {season && <span className="season-tag">{season}</span>}
         <span className="current">
-          {current} · {count}/{LADDER.length}
+          {current} · {count}/{total}
         </span>
-        <WcProgress done={count} total={LADDER.length} />
+        <WcProgress done={count} total={total} />
       </button>
       <button
         className={`pin ${pinned ? 'on' : ''}`}

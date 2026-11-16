@@ -229,3 +229,9 @@ export function legacyToggle(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon, 
   }
   return out
 }
+
+/** Todas as camuflagens da arma num jogo antigo: as dela + a final automática (Orion, Interstellar), se houver. */
+export function legacyTotals(g: LegacyGame, p: LegacyProgress, w: LegacyWeapon) {
+  const fin = legacyFinale(g, p)
+  return { done: legacyDoneCount(p, w.id) + (fin?.done ? 1 : 0), total: w.steps.length + (fin ? 1 : 0) }
+}
