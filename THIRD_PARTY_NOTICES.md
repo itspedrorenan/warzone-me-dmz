@@ -82,4 +82,10 @@ Polyatomic Reforged, Orion Reforged, Chiral, Ripple Tide e Helio) também vêm d
 camuflagem). O ícone das armas sem imagem própria no app (ex.: JAK 12) vem do CODMunity. Os dois ficam em
 `src/data/local/mw4-extras.json`, gerado por `scripts/import-mw4-extras.mjs` (16/11/2026), no `.gitignore`.
 
+## Magnific — recortes (fundo removido)
+
+As fotos das armas (CodCentral, Game8 e CODMunity) tiveram o fundo removido no Magnific, na conta do dono
+deste projeto (17/11/2026). Os recortes ficam num Blob privado da Vercel e são baixados só no build do site
+privado (`scripts/import-cutouts.mjs` → `public/cutouts/`, no `.gitignore`); não vão para o GitHub.
+
 Call of Duty, Modern Warfare, Warzone e DMZ são marcas da Activision Publishing, Inc. Este projeto não tem afiliação com a Activision.
