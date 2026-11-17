@@ -1,3 +1,5 @@
+import { APP_VERSION } from '../version'
+
 /** Tela inicial: a arte de fundo, que escurece até a cor do app, e "Grindar" na base.
  *  Tocar em "Grindar" abre o app no último jogo usado (o jogo troca pelo seletor do topo). */
 export function HomeView({ onStart }: { onStart: () => void }) {
@@ -11,6 +13,7 @@ export function HomeView({ onStart }: { onStart: () => void }) {
         <button className="home-start" onClick={onStart}>
           Grindar
         </button>
+        <p className="home-version">Versão {APP_VERSION}</p>
       </div>
     </div>
   )

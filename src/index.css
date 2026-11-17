@@ -870,3 +870,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .weapon-card .name { padding-right: 32px; }
 .weapon-card .season-tag { margin-top: 0; }
 .weapon-card .pin { top: 4px; right: 4px; }
+
+/* Versão do app abaixo do "Grindar" */
+.home-body:has(.home-version) { gap: 12px; }
+.home-version { margin: 0; text-align: center; font-family: var(--font-ui); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
