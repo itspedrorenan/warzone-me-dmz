@@ -11,7 +11,8 @@
     "import:divergence": "node scripts/import-divergence.mjs",
     "import:codmunity": "node scripts/import-codmunity.mjs",
     "import:mw4-extras": "node scripts/import-mw4-extras.mjs",
-    "build:vercel": "node scripts/import-codmunity.mjs mw19 mw2 mw3 || echo 'jogos antigos indisponíveis (ou parte deles): seguindo assim'; node scripts/import-mw4-extras.mjs || echo 'extras do MW4 indisponíveis: seguindo sem'; npm run build"
+    "import:cutouts": "node scripts/import-cutouts.mjs",
+    "build:vercel": "node scripts/import-codmunity.mjs mw19 mw2 mw3 || echo 'jogos antigos indisponíveis (ou parte deles): seguindo assim'; node scripts/import-mw4-extras.mjs || echo 'extras do MW4 indisponíveis: seguindo sem'; node scripts/import-cutouts.mjs || echo 'recortes indisponíveis: seguindo sem'; npm run build"
   },
   "dependencies": {
     "lucide-react": "^1.73.0",

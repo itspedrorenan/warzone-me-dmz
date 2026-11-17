@@ -1,0 +1,57 @@
+<!-- Moldura de celular (390x844, estilo iPhone) para pré-visualizar apps mobile. Ver README.md ao lado. -->
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview no celular</title>
+<meta name="theme-color" content="#0b0b0b">
+<style>
+:root { --bg: #0b0b0b; --bezel: #1b1b1d; --edge: #3a3a3e; }
+html, body { margin: 0; height: 100%; background: var(--bg); }
+body { display: grid; place-items: center; overflow: hidden; }
+/* Celular: 390x844 (iPhone), escalado para caber na altura da janela */
+.stage { width: 418px; height: 872px; transform-origin: center; }
+.phone {
+  position: relative; width: 418px; height: 872px; box-sizing: border-box; padding: 14px;
+  border-radius: 64px; background: var(--bezel);
+  box-shadow: 0 0 0 2px var(--edge), 0 0 0 7px #0f0f10, 0 30px 80px rgb(0 0 0 / 0.6);
+}
+.phone::before { /* botões laterais */
+  content: ''; position: absolute; right: -9px; top: 190px; width: 4px; height: 96px; border-radius: 2px; background: var(--edge);
+}
+.phone::after {
+  content: ''; position: absolute; left: -9px; top: 160px; width: 4px; height: 60px; border-radius: 2px; background: var(--edge);
+  box-shadow: 0 84px 0 var(--edge);
+}
+.screen { position: relative; width: 390px; height: 844px; border-radius: 50px; overflow: hidden; background: #000; }
+.screen iframe { display: block; width: 100%; height: 100%; border: 0; }
+.island { position: absolute; top: 11px; left: 50%; transform: translateX(-50%); width: 122px; height: 35px; border-radius: 20px; background: #000; z-index: 2; pointer-events: none; }
+.homebar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; border-radius: 3px; background: rgb(255 255 255 / 0.55); z-index: 2; pointer-events: none; }
+/* Em tela de celular de verdade: o app em tela cheia, sem moldura */
+@media (max-width: 500px) {
+  body { display: block; overflow: auto; }
+  .stage, .phone, .screen { width: 100%; height: 100dvh; transform: none !important; padding: 0; border-radius: 0; box-shadow: none; }
+  .phone::before, .phone::after, .island, .homebar { display: none; }
+}
+</style>
+<div class="stage" id="stage">
+  <div class="phone">
+    <div class="screen">
+      <div class="island" aria-hidden="true"></div>
+      <iframe id="app" title="App no celular"></iframe>
+      <div class="homebar" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+<script>
+// O app vai no iframe: ?src=<arquivo>, padrão app.html. "frame=1" avisa o app que está na moldura.
+const src = new URLSearchParams(location.search).get('src') || './app.html'
+document.getElementById('app').src = src + (src.includes('?') ? '&' : '?') + 'frame=1'
+const stage = document.getElementById('stage')
+function fit() {
+  if (innerWidth <= 500) { stage.style.transform = ''; return }
+  const s = Math.min(1, (innerHeight - 32) / 872, (innerWidth - 32) / 418)
+  stage.style.transform = `scale(${s})`
+}
+addEventListener('resize', fit); fit()
+</script>

@@ -4,6 +4,7 @@
 import list from './renderImages.generated.json'
 import type { LadderStep, Weapon } from './index'
 import { extraPhoto } from './mw4Extras'
+import { cutout } from './cutouts'
 
 const RENDERS = list as Record<string, string[]>
 
@@ -39,6 +40,9 @@ export interface RenderFrame {
 }
 
 export function renderImage(weaponId: string, key: string): RenderFrame | null {
+  // Recorte sem fundo (Magnific) da foto do CodCentral, quando existe.
+  const cut = key ? cutout(`mw4-cc:${weaponId}:${key}`) : null
+  if (cut) return { src: cut, index: 0, count: 1 }
   const keys = RENDERS[weaponId]
   const index = key && keys ? keys.indexOf(key) : -1
   if (index >= 0) return { src: `./renders/${weaponId}.webp`, index, count: keys.length }

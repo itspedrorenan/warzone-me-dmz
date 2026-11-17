@@ -7,3 +7,6 @@ __pycache__/
 
 # Dados de jogos antigos (CODMunity): permissão só para uso local. Não versionar.
 src/data/local/
+
+# Recortes do Magnific (uso local; baixados do Blob privado no build)
+public/cutouts/

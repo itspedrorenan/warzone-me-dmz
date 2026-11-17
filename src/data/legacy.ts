@@ -5,6 +5,7 @@
 // GitHub nunca recebe esses dados; a Vercel (privada) os baixa no build.
 
 export { legacyText, legacyFixed } from './legacyText'
+import { cutout } from './cutouts'
 
 /** Base = camuflagens próprias da arma; o resto são as de maestria do jogo. */
 export type LegacyTier =
@@ -64,7 +65,7 @@ export interface LegacyGame {
   weapons: LegacyWeapon[]
 }
 
-const files = import.meta.glob<LegacyGame>(['./local/*.json', '!./local/mw4-extras.json'], {
+const files = import.meta.glob<LegacyGame>(['./local/*.json', '!./local/mw4-extras.json', '!./local/cutouts.json'], {
   eager: true,
   import: 'default',
 })
@@ -82,6 +83,9 @@ export const legacyGame = (id: string) => LEGACY_GAMES.find((g) => g.game === id
 /** Versão reduzida de uma imagem do CODMunity (o servidor deles redimensiona: ~10 KB em vez de ~400 KB). */
 export function legacyImg(url: string | null, size: 'thumb' | 'hero' | 'swatch'): string | null {
   if (!url) return null
+  // Recorte sem fundo (Magnific), quando existe; o quadrado da camuflagem continua com a foto.
+  const cut = size === 'swatch' ? null : cutout(url)
+  if (cut) return cut
   const dims = { thumb: '400x160', hero: '800x320', swatch: '120x48' }[size]
   // Game8: "/show" é a foto inteira; "/thumb" é a versão menor (~13 KB).
   if (url.includes('img.game8.co')) return size === 'hero' ? url : url.replace(/\/show$/, '/thumb')
