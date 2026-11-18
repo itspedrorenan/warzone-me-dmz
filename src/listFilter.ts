@@ -6,15 +6,15 @@ export type SortMode = 'default' | 'closest' | 'least' | 'name'
 export interface ListPrefs {
   sort: SortMode
   hideComplete: boolean
-  onlyPinned: boolean
 }
 
 const KEY = 'camo-tracker:list'
-const DEFAULTS: ListPrefs = { sort: 'default', hideComplete: false, onlyPinned: false }
+const DEFAULTS: ListPrefs = { sort: 'default', hideComplete: false }
 
 const load = (): ListPrefs => {
   try {
-    return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) ?? '{}') }
+    const saved = JSON.parse(localStorage.getItem(KEY) ?? '{}')
+    return { sort: saved.sort ?? DEFAULTS.sort, hideComplete: !!saved.hideComplete }
   } catch {
     return DEFAULTS
   }
@@ -42,9 +42,9 @@ export const SORTS: { id: SortMode; label: string }[] = [
 
 /** Título da lista única (sem grupos de classe) quando há ordem ou filtro escolhido. */
 export const listTitle = (p: ListPrefs) =>
-  p.sort !== 'default' ? SORTS.find((s) => s.id === p.sort)!.label : p.onlyPinned ? 'No grind' : 'Faltando terminar'
+  p.sort !== 'default' ? SORTS.find((s) => s.id === p.sort)!.label : 'Faltando terminar'
 
-export const prefsActive = (p: ListPrefs) => p.sort !== 'default' || p.hideComplete || p.onlyPinned
+export const prefsActive = (p: ListPrefs) => p.sort !== 'default' || p.hideComplete
 
 /** O que a lista precisa saber de cada arma para filtrar e ordenar. */
 export interface ListInfo {
@@ -58,7 +58,7 @@ export interface ListInfo {
 /** Aplica "esconder completas", "só no grind" e a ordem escolhida. Mantém a ordem original nos empates. */
 export function applyListPrefs<T>(items: T[], info: (item: T) => ListInfo, p: ListPrefs): T[] {
   const rows = items.map((item, i) => ({ item, i, ...info(item) }))
-  const kept = rows.filter((r) => !(p.hideComplete && r.complete) && !(p.onlyPinned && !r.pinned))
+  const kept = rows.filter((r) => !(p.hideComplete && r.complete))
   const pct = (r: ListInfo) => (r.total ? r.done / r.total : 0)
   if (p.sort === 'closest') {
     // Mais perto de terminar primeiro; as já completas vão para o fim.

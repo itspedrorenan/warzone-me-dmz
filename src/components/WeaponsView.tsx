@@ -2,24 +2,8 @@ import { WcProgress } from './WcProgress'
 import { ListTools } from './ListTools'
 import { applyListPrefs, listTitle, prefsActive, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
-import {
-  CLASSES,
-  GOLD_STEP,
-  goldRequired,
-  isReleased,
-  seasonLabel,
-  type Weapon,
-  type WeaponClass,
-} from '../data'
-import {
-  allWeapons,
-  countWithStep,
-  lastDoneName,
-  weaponTotals,
-  classGoldDone,
-  type Action,
-  type State,
-} from '../store'
+import { CLASSES, GOLD_STEP, goldRequired, isReleased, seasonLabel, type Weapon, type WeaponClass } from '../data'
+import { allWeapons, countWithStep, lastDoneName, weaponTotals, classGoldDone, type Action, type State } from '../store'
 import { vibrate } from '../hooks'
 import { WeaponThumb } from './WeaponThumb'
 import { Flame, Search } from 'lucide-react'
@@ -122,9 +106,7 @@ export function WeaponsView({
         })}
 
       {filtered.length === 0 && (
-        <p className="empty">
-          {prefs.onlyPinned || prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}
-        </p>
+        <p className="empty">{prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}</p>
       )}
     </div>
   )

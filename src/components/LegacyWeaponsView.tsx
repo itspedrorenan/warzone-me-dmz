@@ -134,9 +134,7 @@ export function LegacyWeaponsView({
         })}
 
       {filtered.length === 0 && (
-        <p className="empty">
-          {prefs.onlyPinned || prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}
-        </p>
+        <p className="empty">{prefs.hideComplete ? 'Nenhuma arma com esses filtros.' : 'Nenhuma arma encontrada.'}</p>
       )}
       <p className="credits">
         Dados: <a href={game.source.url}>{game.source.name}</a> (uso local, com autorização).
