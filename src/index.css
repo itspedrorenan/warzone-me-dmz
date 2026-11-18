@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700;800&family=Share+Tech+Mono&display=swap');
 
 /* App só para celular: uma coluna estreita. Em telas maiores fica centralizada como um celular. */
 
@@ -877,3 +877,119 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 
 /* Recortes sem fundo: sem caixa atrás da arma */
 .render, .legacy-thumb, .legacy-photo { background: transparent; }
+
+
+/* ===========================================================================
+   TEMA "INTERFACE DO JOGO" — só no MW4 (data-game='mw4')
+   Baseado nos menus do MW4: ciano-turquesa como destaque, rótulos em fonte técnica
+   monoespaçada, títulos altos e condensados, painéis de vidro cinza com borda fina sobre
+   a arte do jogo desfocada, item selecionado em ciano com textura de linhas.
+   =========================================================================== */
+.app[data-game='mw4'] {
+  --primary: #35d7c8;
+  --primary-ink: #03201d;
+  --accent: #4fe6d8;
+  --accent-ink: #03201d;
+  --chrome: rgb(20 23 26 / 0.72);
+  --bg: #16191c;
+  --bg-2: rgb(22 25 28 / 0.94);
+  --panel: rgb(60 65 70 / 0.42);
+  --panel-2: rgb(84 90 96 / 0.5);
+  --line: rgb(255 255 255 / 0.09);
+  --line-strong: rgb(255 255 255 / 0.2);
+  --muted: #b7bfc4;
+  --text-3: #879096;
+  --font-ui: 'Share Tech Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --scan: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 3px);
+  --teal-fill: var(--scan), linear-gradient(120deg, #3fe0d1 0%, #22b3a8 60%, #178d86 100%);
+  background: var(--bg);
+  isolation: isolate;
+}
+/* Arte do jogo desfocada atrás de tudo, como nos menus */
+.app[data-game='mw4']::before {
+  content: ''; position: fixed; inset: -40px; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgb(12 15 18 / 0.7), rgb(12 15 18 / 0.88)), url('/home/bg.webp') center 20% / cover no-repeat;
+  filter: blur(22px) saturate(0.6);
+}
+
+/* Rótulos, menus, botões e números: fonte técnica */
+.app[data-game='mw4'] :is(.nav-btn, .chip, .badge, .btn, .season-tag, .eyebrow, .pg-eyebrow, .gc-label, .sub-title,
+  .section-title, .current, .wc-pct, .lt-sort select, .lt-toggle, .search, .preview-label, .challenge, .hint, .set-desc,
+  .gc-meta, .cb-target, .notice, .muted, .blocked-text, .home-version) {
+  font-family: var(--font-ui);
+  letter-spacing: 0.04em;
+}
+.app[data-game='mw4'] :is(.chip, .badge, .btn, .season-tag, .lt-toggle, .lt-sort select, .nav-btn) { font-weight: 400; }
+
+/* Barra do topo e de baixo: vidro escuro */
+.app[data-game='mw4'] .topbar { background: var(--chrome); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); box-shadow: none; }
+.app[data-game='mw4'] .bottom-nav { background: var(--chrome); backdrop-filter: blur(14px); border-top: 1px solid var(--line); }
+.app[data-game='mw4'] .nav-btn { position: relative; font-size: 0.78rem; text-transform: uppercase; color: var(--text-3); }
+.app[data-game='mw4'] .nav-btn.active { color: var(--accent); text-shadow: 0 0 12px rgb(79 230 216 / 0.55); }
+.app[data-game='mw4'] .nav-btn.active::before {
+  content: ''; position: absolute; top: 0; left: 18%; right: 18%; height: 2px; background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+.app[data-game='mw4'] .nav-btn.active svg { filter: drop-shadow(0 0 6px rgb(79 230 216 / 0.6)); }
+.app[data-game='mw4'] :is(.game-current, .mode-switch, .awake) { background: rgb(255 255 255 / 0.06); border-color: var(--line-strong); border-radius: 999px; }
+.app[data-game='mw4'] .mode-btn { border-radius: 999px; }
+.app[data-game='mw4'] .mode-btn.active { background: rgb(255 255 255 / 0.92) !important; }
+.app[data-game='mw4'] .mode-btn.active img { filter: brightness(0); }
+
+/* Títulos de seção: altos e condensados, com a linha que brilha */
+.app[data-game='mw4'] :is(.class-head h2, .pg-title) { font-family: var(--font-title); font-weight: 600; font-size: 1.35rem; letter-spacing: 0.03em; color: #e9eef0; }
+
+/* Busca e ordem: campos de vidro */
+.app[data-game='mw4'] :is(.search, .lt-sort select) { background-color: rgb(255 255 255 / 0.05); border-color: var(--line-strong); border-radius: 2px; }
+
+/* Abas e filtros: contorno fino; ativo em ciano com linhas */
+.app[data-game='mw4'] .chip { background: rgb(255 255 255 / 0.04); border-color: var(--line-strong); color: var(--muted); border-radius: 2px; }
+.app[data-game='mw4'] .chip.active { background: var(--teal-fill); border-color: transparent; color: var(--primary-ink); box-shadow: 0 0 14px rgb(53 215 200 / 0.35); }
+.app[data-game='mw4'] .badge { background: transparent; border-color: rgb(79 230 216 / 0.6); color: var(--accent); }
+.app[data-game='mw4'] .badge.badge-plat { background: var(--teal-fill); color: var(--primary-ink); }
+.app[data-game='mw4'] .lt-toggle { border-radius: 999px; border-color: var(--line-strong); background: rgb(255 255 255 / 0.04); }
+.app[data-game='mw4'] .lt-toggle.on { border-color: var(--accent); background: rgb(53 215 200 / 0.14); color: #fff; }
+
+/* Botões: pílulas. Primário em ciano com linhas; secundário com contorno claro */
+.app[data-game='mw4'] .btn { border-radius: 999px; text-transform: uppercase; }
+.app[data-game='mw4'] .btn:not(.primary):not(.danger) { background: rgb(255 255 255 / 0.05); border: 1px solid var(--line-strong); color: #e9eef0; }
+.app[data-game='mw4'] .btn.primary { background: var(--teal-fill); border-color: transparent; color: var(--primary-ink); }
+
+/* Cards (armas, camuflagens, grind, progresso, ajustes): vidro cinza, canto quase reto */
+.app[data-game='mw4'] :is(.weapon-card, .ladder .ladder-step, .grind-card, .pg-tile, .pg-hero, .pg-weapon, .set-card, .set-list, .set-sources div, .notice) {
+  background: rgb(60 65 70 / 0.42); border: 1px solid var(--line); border-radius: 2px; backdrop-filter: blur(6px);
+}
+.app[data-game='mw4'] .weapon-card .name { font-family: var(--font-ui); font-weight: 400; font-size: 1.05rem; letter-spacing: 0.05em; text-transform: uppercase; color: #f0f4f5; }
+.app[data-game='mw4'] .weapon-card .current { color: var(--accent); opacity: 0.85; }
+.app[data-game='mw4'] .weapon-card.complete { border-color: var(--accent); box-shadow: inset 0 0 0 1px rgb(79 230 216 / 0.25); }
+.app[data-game='mw4'] .wc-main:active { background: rgb(53 215 200 / 0.12); }
+.app[data-game='mw4'] .wc-bar { background: rgb(255 255 255 / 0.12); height: 3px; }
+.app[data-game='mw4'] .wc-bar > span { background: #e9eef0; }
+.app[data-game='mw4'] .wc-progress.full .wc-bar > span { background: var(--accent); }
+
+/* Camuflagem concluída: ciano com linhas à esquerda */
+.app[data-game='mw4'] .ladder .ladder-step.done { background: linear-gradient(90deg, rgb(53 215 200 / 0.22), rgb(53 215 200 / 0.06) 70%), rgb(60 65 70 / 0.42); border-color: rgb(79 230 216 / 0.55); }
+.app[data-game='mw4'] .ladder .ladder-step.next { border-color: var(--line-strong); }
+
+/* Painel da arma: vidro escuro */
+.app[data-game='mw4'] .sheet, .app[data-game='mw4'] .sheet-top { background: var(--bg-2); backdrop-filter: blur(18px); }
+.app[data-game='mw4'] .sheet-head h2 { font-family: var(--font-title); font-weight: 600; font-size: 2rem; letter-spacing: 0.02em; text-transform: uppercase; }
+
+/* Tela inicial: "Grindar" em ciano com linhas, como o botão do jogo */
+.app[data-game='mw4'] .home-start { background: var(--teal-fill); color: var(--primary-ink); border-radius: 2px; font-family: var(--font-ui); font-weight: 400; letter-spacing: 0.14em; box-shadow: 0 0 22px rgb(53 215 200 / 0.35); }
+
+/* Títulos de seção como as abas do menu de Desafios: faixa ciano que esmaece para a direita */
+.app[data-game='mw4'] :is(.class-head, .pg-section > .pg-title, .set-section > .pg-title) { padding-bottom: 0; }
+.app[data-game='mw4'] :is(.class-head, .pg-section > .pg-title, .set-section > .pg-title)::after { display: none; }
+.app[data-game='mw4'] .class-head h2,
+.app[data-game='mw4'] :is(.pg-section, .set-section) > .pg-title {
+  flex: 1; padding: 4px 12px 2px; border-left: 4px solid var(--accent);
+  background: linear-gradient(90deg, rgb(53 215 200 / 0.55), rgb(53 215 200 / 0.12) 55%, transparent 85%);
+  text-transform: uppercase; line-height: 1.2;
+}
+/* Desafio em itálico claro (como "Obtenha 10 baixas…"); dica e números na fonte técnica */
+.app[data-game='mw4'] .ladder-text .challenge { font-family: var(--font); font-style: italic; color: #cfd6d9; letter-spacing: 0; }
+.app[data-game='mw4'] .ladder .ladder-step.done .ladder-text strong { color: #fff; }
+.app[data-game='mw4'] .step-check { color: var(--accent); filter: drop-shadow(0 0 6px rgb(79 230 216 / 0.5)); }
+.app[data-game='mw4'] .wc-pct { color: #f0f4f5; }
+.app[data-game='mw4'] .eyebrow { color: var(--accent); }
