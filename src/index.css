@@ -999,3 +999,82 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .app .brand { flex: none; }
 .app[data-game='mw4'] .topbar { gap: 6px; padding-left: 12px; padding-right: 12px; }
 .app[data-game='mw4'] .mode-btn { min-width: 44px; padding: 0 6px; }
+
+/* ---------------------------------------------------------------------------
+   Barra lateral de ícones à esquerda (como no jogo), no lugar da barra de baixo.
+   Os nomes das abas ficam só para leitores de tela; "tela sempre ligada" vai para a base.
+   --------------------------------------------------------------------------- */
+.app { --rail-w: 60px; }
+.app .bottom-nav {
+  top: 0; bottom: 0; left: max(0px, calc(50% - 240px)); transform: none;
+  width: var(--rail-w); max-width: none; height: auto;
+  display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  padding: calc(var(--safe-t) + 16px) 0 calc(var(--safe-b) + 16px);
+  border-top: 0; border-right: 1px solid var(--line); border-radius: 0 28px 28px 0;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.03)), var(--chrome);
+}
+.app .bottom-nav .nav-btn:first-child { margin-top: auto; }
+.app .nav-btn { flex: none; height: 56px; padding: 0; }
+.app .nav-btn > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.app .nav-btn.active { background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 34%, transparent), transparent 90%); }
+.app .nav-btn.active::before { top: 10px; bottom: 10px; left: 0; right: auto; width: 3px; height: auto; }
+.app .nav-awake { margin: auto auto 0; width: 40px; height: 40px; border-radius: 999px; }
+.app .topbar { padding-left: calc(var(--rail-w) + 12px); }
+.app .content { padding-left: calc(var(--rail-w) + 14px); padding-right: 14px; padding-bottom: calc(var(--safe-b) + 24px); }
+.app .wc-main { grid-template-columns: 104px minmax(0, 1fr); column-gap: 12px; padding: 10px; }
+.app .wc-main .thumb-card { height: 48px; }
+
+/* ---------------------------------------------------------------------------
+   Círculo pontilhado com a porcentagem (como o "4%" dos Desafios); o arco mostra o feito
+   --------------------------------------------------------------------------- */
+.pct-ring {
+  --p: 0; position: relative; flex: none; display: inline-grid; place-items: center;
+  width: 42px; height: 42px; border-radius: 50%;
+}
+.pct-ring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px dotted rgb(255 255 255 / 0.45); }
+.pct-ring::after {
+  content: ''; position: absolute; inset: -1px; border-radius: 50%;
+  background: conic-gradient(var(--accent) calc(var(--p) * 1%), transparent 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+}
+.pct-ring-value { position: relative; font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0; color: #f0f4f5; }
+.pct-ring.full .pct-ring-value { color: var(--accent); }
+.pct-ring.lg { width: 132px; height: 132px; }
+.pct-ring.lg::before { border-width: 3px; }
+.pct-ring.lg::after { -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4.5px)); mask: radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4.5px)); }
+.pct-ring.lg .pct-ring-value { font-family: var(--font-title); font-size: 3rem; font-weight: 800; }
+.pct-ring.lg .pct-ring-value span { font-size: 1.2rem; color: var(--muted); margin-left: 2px; }
+.wc-progress { gap: 10px; }
+.pg-hero-number { display: flex; justify-content: center; padding: 6px 0; }
+
+/* ---------------------------------------------------------------------------
+   Dicas de tecla nas pílulas: o ícone do botão vira uma "tecla" clara (como o "1" do jogo)
+   --------------------------------------------------------------------------- */
+.app :is(.btn, .lt-toggle) > svg:first-child {
+  box-sizing: content-box; width: 13px; height: 13px; padding: 3px; flex: none;
+  background: #e9eef0; color: #14171a; border-radius: 3px; opacity: 1; filter: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Cor do jogo só nos destaques (como no menu de Prestígio): o resto fica neutro.
+   Fica colorido: aba/filtro selecionado, item ativo, concluído, "Grindar", progresso.
+   --------------------------------------------------------------------------- */
+.app .weapon-card .current, .app .eyebrow, .app .pg-eyebrow { color: var(--muted); opacity: 1; }
+.app .badge:not(.badge-plat) { border-color: var(--line-strong); color: var(--muted); }
+.app .class-head h2,
+.app :is(.pg-section, .set-section) > .pg-title {
+  border-left-color: var(--accent);
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05) 55%, transparent 85%);
+}
+.app .weapon-card.complete { border-color: var(--accent); }
+/* Ajustes da barra lateral: topo do MW4 também começa depois dela; títulos e cadeados em telas estreitas */
+.app[data-game='mw4'] .topbar { padding-left: calc(var(--rail-w) + 10px); }
+.app .class-head h2, .app :is(.pg-section, .set-section) > .pg-title { font-size: 1.15rem; }
+.app .pg-tile-head { padding-right: 18px; position: relative; }
+.app .pg-finale-icon { position: absolute; right: 0; top: 2px; }
+.app .pg-tile { padding: 12px; }
+.app .pg-tile { position: relative; }
+.app .pg-tile-label { font-size: 0.82rem; }
+.app .pg-tile-head { position: static; padding-right: 12px; }
+.app .pg-finale-icon { position: absolute; right: 8px; top: 8px; }

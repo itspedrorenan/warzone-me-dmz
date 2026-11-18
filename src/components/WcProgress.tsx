@@ -1,4 +1,7 @@
-/** Barra de progresso do card da arma, com a porcentagem no fim. O "x/y" já está no texto acima. */
+import { PctRing } from './PctRing'
+
+/** Barra de progresso do card da arma, com a porcentagem num círculo pontilhado no fim.
+ *  O "x/y" já está no texto acima. */
 export function WcProgress({ done, total }: { done: number; total: number }) {
   const pct = total ? Math.round((done / total) * 100) : 0
   return (
@@ -6,7 +9,7 @@ export function WcProgress({ done, total }: { done: number; total: number }) {
       <span className="wc-bar">
         <span style={{ width: `${pct}%` }} />
       </span>
-      <span className="wc-pct">{pct}%</span>
+      <PctRing pct={pct} />
     </span>
   )
 }

@@ -1,3 +1,4 @@
+import { PctRing } from './PctRing'
 import { Check, ChevronRight, Flame, Lock } from 'lucide-react'
 import type { Summary, WeaponRow } from '../progress'
 
@@ -27,9 +28,7 @@ function WeaponLine({ row, onOpen }: { row: WeaponRow; onOpen: (id: string) => v
         <span className="pg-weapon-main">
           <span className="pg-weapon-name">{row.name}</span>
           <span className="pg-weapon-meta">
-            {row.missing > 0
-              ? `faltam ${row.missing} para o ${row.next}`
-              : `${row.next} conquistado`}
+            {row.missing > 0 ? `faltam ${row.missing} para o ${row.next}` : `${row.next} conquistado`}
           </span>
           <Meter have={row.done} of={row.total} label={`${row.name}: ${row.done} de ${row.total}`} />
         </span>
@@ -43,7 +42,15 @@ function WeaponLine({ row, onOpen }: { row: WeaponRow; onOpen: (id: string) => v
 }
 
 /** Tela de Progresso: os números principais do jogo escolhido. */
-export function ProgressView({ summary: s, gameLabel, onOpen }: { summary: Summary; gameLabel: string; onOpen: (id: string) => void }) {
+export function ProgressView({
+  summary: s,
+  gameLabel,
+  onOpen,
+}: {
+  summary: Summary
+  gameLabel: string
+  onOpen: (id: string) => void
+}) {
   const total = pct(s.done, s.total)
   return (
     <div className="progress-view">
@@ -51,8 +58,10 @@ export function ProgressView({ summary: s, gameLabel, onOpen }: { summary: Summa
       <section className="pg-hero" aria-label="Progresso geral">
         <p className="pg-eyebrow">{gameLabel}</p>
         <p className="pg-hero-number">
-          {total}
-          <span>%</span>
+          <PctRing pct={total} size="lg">
+            {total}
+            <span>%</span>
+          </PctRing>
         </p>
         <p className="pg-hero-sub">
           {s.done.toLocaleString('pt-BR')} de {s.total.toLocaleString('pt-BR')} camuflagens · {s.weapons} armas
@@ -92,7 +101,11 @@ export function ProgressView({ summary: s, gameLabel, onOpen }: { summary: Summa
                 {s.finale.have}
                 <span>/{s.finale.need}</span>
               </span>
-              <Meter have={s.finale.have} of={s.finale.need} label={`${s.finale.label}: ${s.finale.have} de ${s.finale.need}`} />
+              <Meter
+                have={s.finale.have}
+                of={s.finale.need}
+                label={`${s.finale.label}: ${s.finale.have} de ${s.finale.need}`}
+              />
               <span className="pg-tile-note">{s.finale.requirement}</span>
             </li>
           )}

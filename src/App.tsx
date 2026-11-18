@@ -60,17 +60,6 @@ export default function App() {
           <h1>Camo Tracker</h1>
           <GameSwitch game={legacy ? legacy.game : 'mw4'} dispatch={dispatch} onHome={() => setHome(true)} />
         </div>
-        {wake.supported && (
-          <button
-            className={`awake ${wake.active ? 'on' : ''}`}
-            onClick={() => dispatch({ type: 'setKeepAwake', value: !state.keepAwake })}
-            aria-pressed={state.keepAwake}
-            title={state.keepAwake ? 'Tela sempre ligada: ativado' : 'Tela sempre ligada: desativado'}
-          >
-            <Sun size={20} aria-hidden="true" />
-            <span className="sr-only">Tela sempre ligada</span>
-          </button>
-        )}
         {!legacy && <ModeSwitch mode={state.mode} dispatch={dispatch} />}
       </header>
 
@@ -117,6 +106,17 @@ export default function App() {
             <span>{t.label}</span>
           </button>
         ))}
+        {wake.supported && (
+          <button
+            className={`awake nav-awake ${wake.active ? 'on' : ''}`}
+            onClick={() => dispatch({ type: 'setKeepAwake', value: !state.keepAwake })}
+            aria-pressed={state.keepAwake}
+            title={state.keepAwake ? 'Tela sempre ligada: ativado' : 'Tela sempre ligada: desativado'}
+          >
+            <Sun size={20} aria-hidden="true" />
+            <span className="sr-only">Tela sempre ligada</span>
+          </button>
+        )}
       </nav>
 
       {openId &&
