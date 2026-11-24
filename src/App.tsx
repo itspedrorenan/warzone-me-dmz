@@ -1,6 +1,8 @@
 import { useState, type ComponentType } from 'react'
 import { ChartNoAxesColumn, Crosshair, Flame, Settings, Sun, type LucideProps } from 'lucide-react'
 import { useTracker } from './store'
+import { useCloudSync } from './sync'
+import { ImportPrompt } from './components/ImportPrompt'
 import { useWakeLock } from './hooks'
 import { ModeSwitch } from './components/ModeSwitch'
 import { WeaponsView } from './components/WeaponsView'
@@ -28,6 +30,7 @@ const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: b
 
 export default function App() {
   const [state, dispatch] = useTracker()
+  const sync = useCloudSync(state, dispatch)
   const [tab, setTab] = useState<Tab>('weapons')
   // Tela inicial com os logos dos jogos ao abrir o app (só faz sentido com mais de um jogo).
   const [home, setHome] = useState(GAMES.length > 1)
@@ -48,6 +51,7 @@ export default function App() {
             setHome(false)
           }}
         />
+        {sync.askImport && <ImportPrompt username={sync.username} onAnswer={sync.answerImport} />}
       </div>
     )
   }
@@ -79,7 +83,7 @@ export default function App() {
             onBrowse={() => setTab('weapons')}
           />
         ) : tab === 'settings' ? (
-          <SettingsView state={state} dispatch={dispatch} wakeSupported={wake.supported} />
+          <SettingsView state={state} dispatch={dispatch} wakeSupported={wake.supported} sync={sync} />
         ) : tab === 'progress' ? (
           <ProgressView
             summary={legacy ? summaryLegacy(legacy, state) : summaryMW4(state)}
@@ -125,6 +129,7 @@ export default function App() {
         ) : (
           <WeaponSheet id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />
         ))}
+      {sync.askImport && <ImportPrompt username={sync.username} onAnswer={sync.answerImport} />}
     </div>
   )
 }

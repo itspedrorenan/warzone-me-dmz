@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Entrar · Camo Tracker</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@600;800&family=Share+Tech+Mono&display=swap">
+<!--
+  Página de login: fica fora do app (o porteiro da Vercel libera só esta página sem login) e não
+  carrega nada do app, então os dados e as fotos não saem para quem ainda não entrou.
+  Fala direto com o login do Supabase e guarda a sessão no mesmo formato da biblioteca do app,
+  que a continua de onde parou. Se já houver sessão no aparelho, renova sozinha e volta ao app.
+-->
+<style>
+  :root { --accent: #ffd101; --ink: #141000; --text: #f0f4f5; --muted: #b7bfc4; --line: rgb(255 255 255 / 0.2); --danger: #ff6b5e; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: #0b0d0f; color: var(--text); font-family: 'Barlow', system-ui, sans-serif; }
+  body::before {
+    content: ''; position: fixed; inset: -40px; z-index: -1;
+    background: linear-gradient(180deg, rgb(12 15 18 / 0.55), rgb(12 15 18 / 0.92)), url('./home/bg.webp') center 20% / cover no-repeat;
+    filter: blur(14px) saturate(0.6);
+  }
+  main { min-height: 100dvh; display: flex; flex-direction: column; justify-content: flex-end; gap: 24px; max-width: 420px; margin: 0 auto;
+    padding: calc(24px + env(safe-area-inset-top)) 20px calc(32px + env(safe-area-inset-bottom)); }
+  .eyebrow { margin: 0; font-family: 'Share Tech Mono', monospace; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-size: 0.8rem; }
+  h1 { margin: 4px 0 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 3rem; line-height: 1; text-transform: uppercase; letter-spacing: 0.01em; }
+  form { display: flex; flex-direction: column; gap: 14px; padding: 18px; background: rgb(40 44 48 / 0.62); border: 1px solid rgb(255 255 255 / 0.1); border-radius: 2px; backdrop-filter: blur(10px); }
+  .head { margin: -18px -18px 4px; padding: 6px 14px 4px; border-left: 4px solid var(--accent);
+    background: linear-gradient(90deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.05) 55%, transparent 85%);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 1.15rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  label { display: flex; flex-direction: column; gap: 6px; font-family: 'Share Tech Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  input { height: 48px; padding: 0 14px; background: rgb(255 255 255 / 0.06); border: 1px solid var(--line); border-radius: 2px; color: var(--text);
+    font: 400 1.05rem 'Share Tech Mono', monospace; letter-spacing: 0.04em; outline: none; }
+  input:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  button { height: 52px; margin-top: 4px; border: 0; border-radius: 2px; cursor: pointer; color: var(--ink);
+    background: repeating-linear-gradient(0deg, rgb(255 255 255 / 0.08) 0 1px, transparent 1px 3px), linear-gradient(120deg, #ffe35a, #ffd101 60%, #c49e00);
+    font: 400 1.05rem 'Share Tech Mono', monospace; letter-spacing: 0.16em; text-transform: uppercase; box-shadow: 0 0 22px rgb(255 209 1 / 0.3); }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .msg { min-height: 1.3em; margin: 0; font-size: 0.9rem; color: var(--muted); }
+  .msg.error { color: var(--danger); }
+  .note { margin: 0; font-size: 0.8rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <p class="eyebrow">Camo Tracker · Convite</p>
+    <h1>Entrar</h1>
+  </div>
+  <form id="form" novalidate>
+    <div class="head">Sua conta</div>
+    <label>Usuário <input id="user" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+    <label>Senha <input id="pass" name="password" type="password" autocomplete="current-password" required></label>
+    <button id="go" type="submit">Entrar</button>
+    <p id="msg" class="msg" role="status"></p>
+  </form>
+  <p class="note">Acesso só para convidados. Peça seu usuário e senha a quem te convidou.</p>
+</main>
+<script type="module">
+  const SUPABASE_URL = 'https://hfvhgzesunuswprclqam.supabase.co'
+  const SUPABASE_KEY = 'sb_publishable_4JTrjFrTIXSJKokSA8fcTA_3-miXtWl'
+  const USER_DOMAIN = 'camotracker.app'
+  const STORAGE_KEY = 'sb-hfvhgzesunuswprclqam-auth-token' // o mesmo que a biblioteca do Supabase usa no app
+  const COOKIE = 'ct-session'
+
+  const $ = (id) => document.getElementById(id)
+  const say = (text, error = false) => { $('msg').textContent = text; $('msg').className = error ? 'msg error' : 'msg' }
+  const nextUrl = () => {
+    const n = new URLSearchParams(location.search).get('next')
+    return n && n.startsWith('/') && !n.startsWith('//') ? n : '/'
+  }
+
+  async function token(grant, body) {
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=${grant}`, {
+      method: 'POST', headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    })
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) throw Object.assign(new Error(data.error_description || data.msg || 'erro'), { status: res.status, code: data.error_code || data.error })
+    return data
+  }
+
+  function enter(session) {
+    session.expires_at ??= Math.floor(Date.now() / 1000) + (session.expires_in || 3600)
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(session)) } catch {}
+    document.cookie = `${COOKIE}=${encodeURIComponent(session.access_token)}; Path=/; Max-Age=${60 * 60 * 24 * 30}; SameSite=Lax; Secure`
+    location.replace(nextUrl())
+  }
+
+  // Já entrou antes neste aparelho: renova a sessão e volta direto para o app.
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null')
+    if (saved?.refresh_token) {
+      say('Entrando…')
+      token('refresh_token', { refresh_token: saved.refresh_token }).then(enter).catch((e) => {
+        if (e.status === 400 || e.status === 401) { localStorage.removeItem(STORAGE_KEY); say('Sua sessão expirou. Entre de novo.') }
+        else say('Sem conexão. Tente de novo quando estiver online.', true)
+      })
+    }
+  } catch {}
+
+  $('form').addEventListener('submit', async (ev) => {
+    ev.preventDefault()
+    const user = $('user').value.trim().toLowerCase()
+    const pass = $('pass').value
+    if (!user || !pass) return say('Preencha usuário e senha.', true)
+    $('go').disabled = true
+    say('Entrando…')
+    try {
+      enter(await token('password', { email: user.includes('@') ? user : `${user}@${USER_DOMAIN}`, password: pass }))
+    } catch (e) {
+      $('go').disabled = false
+      if (e.status === 400) say('Usuário ou senha incorretos.', true)
+      else if (e.status === 429) say('Muitas tentativas. Espere um pouco e tente de novo.', true)
+      else say('Não consegui conectar. Confira a internet e tente de novo.', true)
+    }
+  })
+</script>
+</body>
+</html>

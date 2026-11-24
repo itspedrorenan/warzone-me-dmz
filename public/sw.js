@@ -4,8 +4,10 @@
 // Demais arquivos (logos, fotos, texturas, fontes): devolve o que está no cache e atualiza em
 // segundo plano — assim um logo trocado com o mesmo nome aparece na abertura seguinte.
 // Trocar o nome do cache apaga o cache antigo dos aparelhos.
-const CACHE = 'camo-tracker-v2'
-const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './favicon.svg']
+// Com o login por convite, o app só é entregue a quem entrou: o que vier redirecionado para o login
+// (sessão vencida) não entra no cache, senão o app abriria na tela de login mesmo offline.
+const CACHE = 'camo-tracker-v3'
+const CORE = ['./manifest.webmanifest', './icon-192.png', './favicon.svg']
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(CORE)).then(() => self.skipWaiting()))
@@ -28,12 +30,16 @@ self.addEventListener('fetch', (e) => {
   const isFont = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com'
   if (!sameOrigin && !isFont) return
 
+  const isLogin = (u) => new URL(u).pathname.endsWith('/login.html')
   if (req.mode === 'navigate') {
+    if (isLogin(req.url)) return // a página de login sempre vem da rede
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone()
-          caches.open(CACHE).then((c) => c.put('./index.html', copy))
+          if (res.ok && !res.redirected && !isLogin(res.url)) {
+            const copy = res.clone()
+            caches.open(CACHE).then((c) => c.put('./index.html', copy))
+          }
           return res
         })
         .catch(() => caches.match('./index.html'))
@@ -42,7 +48,7 @@ self.addEventListener('fetch', (e) => {
   }
 
   const save = (res) => {
-    if (res.ok || res.type === 'opaque') {
+    if ((res.ok && !res.redirected) || res.type === 'opaque') {
       const copy = res.clone()
       caches.open(CACHE).then((c) => c.put(req, copy))
     }

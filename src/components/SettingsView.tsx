@@ -1,10 +1,11 @@
 import { useRef, useState, type Dispatch, type ReactNode } from 'react'
-import { Download, Smartphone, Trash2, Upload, Vibrate, LockKeyhole } from 'lucide-react'
+import { Cloud, CloudOff, Download, LogOut, Smartphone, Trash2, Upload, Vibrate, LockKeyhole } from 'lucide-react'
 import { DATA_SOURCE } from '../data'
 import { GAMES } from '../data/games'
 import { LEGACY_GAMES } from '../data/legacy'
 import { hasMw4Extras } from '../data/mw4Extras'
 import { sanitize, type Action, type State } from '../store'
+import type { CloudSync, SyncStatus } from '../sync'
 
 function Toggle({
   id,
@@ -45,6 +46,15 @@ function Toggle({
   )
 }
 
+const SYNC_TEXT: Record<SyncStatus, string> = {
+  local: 'Progresso só neste aparelho.',
+  loading: 'Carregando seu progresso…',
+  saving: 'Salvando na sua conta…',
+  saved: 'Progresso salvo na sua conta.',
+  offline: 'Sem internet: salvo no aparelho, envia quando conectar.',
+  error: 'Não consegui salvar agora. Tento de novo na próxima mudança.',
+}
+
 const dateBR = (iso: string) => {
   const d = new Date(iso)
   return Number.isNaN(d.getTime()) ? '—' : d.toLocaleDateString('pt-BR')
@@ -55,10 +65,12 @@ export function SettingsView({
   state,
   dispatch,
   wakeSupported,
+  sync,
 }: {
   state: State
   dispatch: Dispatch<Action>
   wakeSupported: boolean
+  sync: CloudSync
 }) {
   const fileRef = useRef<HTMLInputElement>(null)
   const [message, setMessage] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
@@ -103,6 +115,27 @@ export function SettingsView({
 
   return (
     <div className="settings-view">
+      {sync.username && (
+        <section className="set-section">
+          <h2 className="pg-title">Conta</h2>
+          <div className="set-card">
+            <div className="set-row">
+              <span className="set-icon" aria-hidden="true">
+                {sync.status === 'offline' || sync.status === 'error' ? <CloudOff size={18} /> : <Cloud size={18} />}
+              </span>
+              <span className="set-text">
+                <span className="set-title">{sync.username}</span>
+                <span className="set-desc">{SYNC_TEXT[sync.status]}</span>
+              </span>
+            </div>
+          </div>
+          <div className="set-actions">
+            <button className="btn" onClick={() => sync.signOut()}>
+              <LogOut size={16} aria-hidden="true" /> Sair
+            </button>
+          </div>
+        </section>
+      )}
       <section className="set-section">
         <h2 className="pg-title">Durante o jogo</h2>
         <div className="set-card">
