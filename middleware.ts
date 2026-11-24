@@ -1,6 +1,7 @@
 // Porteiro da Vercel: só entrega o app (e os dados) a quem fez login.
 // Confere o cookie com o token do Supabase (assinatura pela chave pública do projeto e validade).
 // Sem login válido: páginas vão para /login.html; os demais arquivos respondem 401.
+// Só vale com AUTH_ENABLED=1 nas variáveis do projeto na Vercel.
 import { next } from '@vercel/functions/middleware'
 import { createRemoteJWKSet, jwtVerify } from 'jose'
 import { SUPABASE_URL, SESSION_COOKIE } from './src/authConfig'
@@ -32,6 +33,9 @@ function readCookie(req: Request, name: string) {
 }
 
 export default async function middleware(req: Request) {
+  // Liga/desliga pela variável AUTH_ENABLED do projeto na Vercel ("1" = exige login).
+  // Desligado, o app funciona como antes (sem login, progresso só no aparelho).
+  if (process.env.AUTH_ENABLED !== '1') return next()
   const url = new URL(req.url)
   if (PUBLIC.has(url.pathname)) return next()
 
