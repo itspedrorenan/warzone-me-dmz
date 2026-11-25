@@ -4,7 +4,10 @@
 // Só vale com AUTH_ENABLED=1 nas variáveis do projeto na Vercel.
 import { next } from '@vercel/functions/middleware'
 import { createRemoteJWKSet, jwtVerify } from 'jose'
-import { SUPABASE_URL, SESSION_COOKIE } from './src/authConfig'
+
+// Iguais a src/authConfig.ts. Ficam aqui porque a Vercel roda este arquivo sozinho, sem juntar os do projeto.
+const SUPABASE_URL = 'https://hfvhgzesunuswprclqam.supabase.co'
+const SESSION_COOKIE = 'ct-session'
 
 export const config = { matcher: '/:path*' }
 
