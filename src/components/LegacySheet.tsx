@@ -1,4 +1,5 @@
 import { SwipeStep } from './SwipeStep'
+import { lastDoneLegacyPhoto } from '../data/weaponPhoto'
 import { keyboardOnly } from '../swipe'
 import { useEffect, useState, type Dispatch, type UIEvent } from 'react'
 import { Check, Flame, Info, Lock, X } from 'lucide-react'
@@ -129,8 +130,8 @@ export function LegacySheet({
               )
             ) : (
               <div className="legacy-hero">
-                {weapon.icon || weapon.photo ? (
-                  <img src={legacyImg(weapon.icon || weapon.photo!, 'hero')!} alt={weapon.name} />
+                {lastDoneLegacyPhoto(progress, weapon) ? (
+                  <img src={legacyImg(lastDoneLegacyPhoto(progress, weapon), 'hero')!} alt={weapon.name} />
                 ) : (
                   <span className="legacy-noimg">{weapon.name}</span>
                 )}

@@ -190,7 +190,7 @@ export function WeaponSheet({
             {shown?.src ? (
               <RenderImage frame={shown.src} label={`${weapon.name} com ${shown.name}`} />
             ) : (
-              <WeaponThumb weapon={weapon} size="lg" />
+              <WeaponThumb weapon={weapon} size="lg" state={state} />
             )}
             <p className="preview-label">
               {shown ? (

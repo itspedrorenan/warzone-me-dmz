@@ -1,4 +1,5 @@
 import { WcProgress } from './WcProgress'
+import { lastDoneLegacyPhoto } from '../data/weaponPhoto'
 import { ListTools } from './ListTools'
 import { applyListPrefs, listTitle, prefsActive, useListPrefs } from '../listFilter'
 import { useMemo, useState, type Dispatch } from 'react'
@@ -168,9 +169,9 @@ function LegacyCard({
     <li className={`weapon-card legacy ${count >= total ? 'complete' : ''}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb legacy-thumb">
-          {weapon.icon || weapon.photo ? (
+          {lastDoneLegacyPhoto(progress, weapon) ? (
             <img
-              src={legacyImg(weapon.icon || weapon.photo!, 'thumb')!}
+              src={legacyImg(lastDoneLegacyPhoto(progress, weapon), 'thumb')!}
               alt={weapon.name}
               loading="lazy"
               decoding="async"

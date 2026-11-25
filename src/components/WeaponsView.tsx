@@ -132,7 +132,7 @@ function WeaponRow({
     <li className={`weapon-card ${count >= total ? 'complete' : ''} ${isReleased(weapon) ? '' : 'unreleased'}`}>
       <button className="wc-main" onClick={() => onOpen(weapon.id)}>
         <span className="wc-thumb">
-          <WeaponThumb weapon={weapon} size="card" />
+          <WeaponThumb weapon={weapon} size="card" state={state} />
         </span>
         <span className="name">{weapon.name}</span>
         {season && <span className="season-tag">{season}</span>}

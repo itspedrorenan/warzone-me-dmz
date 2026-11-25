@@ -1098,3 +1098,11 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .import-card { width: 100%; max-width: 380px; display: flex; flex-direction: column; gap: 12px; padding: 18px; background: var(--bg-2, #16191c); border: 1px solid var(--line); border-radius: 2px; backdrop-filter: blur(14px); }
 .import-card p { margin: 0 0 4px; color: var(--muted); line-height: 1.45; }
 .import-card .btn { width: 100%; }
+
+/* Brilho branco suave atrás da arma (card, painel e jogos antigos), para a camuflagem aparecer melhor */
+.app :is(.render, .legacy-thumb, .legacy-photo, .legacy-hero) {
+  background: radial-gradient(ellipse 58% 52% at 50% 54%, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.06) 55%, transparent 75%);
+}
+/* Painel da arma ao rolar: a foto encolhe mais (fica centralizada, menor) */
+.app .sheet-top.collapsed .sheet-thumb { width: 58%; margin: 6px auto 0; }
+.app .sheet-top.collapsed .sheet-thumb .preview-label { width: 172%; margin-left: -36%; }
