@@ -1101,7 +1101,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 
 /* Brilho branco suave atrás da arma (card, painel e jogos antigos), para a camuflagem aparecer melhor */
 .app :is(.render, .legacy-thumb, .legacy-photo, .legacy-hero) {
-  background: radial-gradient(ellipse 58% 52% at 50% 54%, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.06) 55%, transparent 75%);
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.26), rgb(255 255 255 / 0.1) 55%, transparent 100%);
 }
 /* Painel da arma ao rolar: a foto encolhe mais (fica centralizada, menor) */
 .app .sheet-top.collapsed .sheet-thumb { width: 58%; margin: 6px auto 0; }
