@@ -41,7 +41,17 @@ export function GameSwitch({
     }
   }, [open])
 
-  if (GAMES.length < 2) return null
+  // Um jogo só (MW4): o logo leva de volta à tela inicial.
+  if (GAMES.length < 2) {
+    return (
+      <div className="game-switch">
+        <button className="game-current" onClick={onHome} aria-label="Voltar ao início">
+          <GameLogo game={GAMES[0]} />
+          <House size={14} aria-hidden="true" />
+        </button>
+      </div>
+    )
+  }
   const current = GAMES.find((g) => g.id === game) ?? GAMES[GAMES.length - 1]
 
   return (

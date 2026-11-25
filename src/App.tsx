@@ -11,7 +11,6 @@ import { GameSwitch } from './components/GameSwitch'
 import { LegacyWeaponsView } from './components/LegacyWeaponsView'
 import { LegacySheet } from './components/LegacySheet'
 import { legacyGame } from './data/legacy'
-import { GAMES } from './data/games'
 import { HomeView } from './components/HomeView'
 import { ProgressView } from './components/ProgressView'
 import { GrindView } from './components/GrindView'
@@ -32,8 +31,8 @@ export default function App() {
   const [state, dispatch] = useTracker()
   const sync = useCloudSync(state, dispatch)
   const [tab, setTab] = useState<Tab>('weapons')
-  // Tela inicial com os logos dos jogos ao abrir o app (só faz sentido com mais de um jogo).
-  const [home, setHome] = useState(GAMES.length > 1)
+  // Tela inicial ("Grindar" e a versão) ao abrir o app.
+  const [home, setHome] = useState(true)
   // Painel aberto, junto com o jogo a que pertence (trocar de jogo fecha o painel).
   const [open, setOpen] = useState<{ game: string; id: string } | null>(null)
   const openId = open && open.game === state.game ? open.id : null

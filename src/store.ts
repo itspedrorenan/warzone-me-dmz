@@ -1,4 +1,5 @@
 import { useEffect, useReducer } from 'react'
+import { LEGACY_GAMES } from './data/legacy'
 import {
   ALL_STEPS_MASK,
   DEFAULT_WEAPONS,
@@ -153,7 +154,8 @@ export function sanitize(input: unknown): State {
         Math.max(0, Math.min(4, Math.round(Number(v) || 0))),
       ]),
     ),
-    game: typeof s.game === 'string' ? s.game : 'mw4',
+    // Jogo que não existe mais neste app (ex.: MW 2019, MW II, MW III) volta para o MW4; o progresso dele fica guardado.
+    game: typeof s.game === 'string' && LEGACY_GAMES.some((g) => g.game === s.game) ? s.game : 'mw4',
     legacy: Object.fromEntries(
       Object.entries((s.legacy as object) ?? {}).map(([g, weapons]) => [
         g,
