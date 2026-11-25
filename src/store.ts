@@ -56,6 +56,8 @@ export interface State {
   game: string
   /** Progresso dos jogos antigos: jogo → arma → máscara de degraus. */
   legacy: Record<string, Record<string, number>>
+  /** Conquistas do app: id → quando foi desbloqueada (ms). Uma vez desbloqueada, fica. */
+  achievements: Record<string, number>
 }
 
 export const initialState = (): State => ({
@@ -75,6 +77,7 @@ export const initialState = (): State => ({
   modeMastery: {},
   game: 'mw4',
   legacy: {},
+  achievements: {},
 })
 
 function load(): State {
@@ -167,6 +170,11 @@ export function sanitize(input: unknown): State {
         k,
         (Number(v) || 0) & ((1 << MASTERIES.length) - 1),
       ]),
+    ),
+    achievements: Object.fromEntries(
+      Object.entries((s.achievements as object) ?? {})
+        .filter(([, v]) => Number.isFinite(Number(v)) && Number(v) > 0)
+        .map(([k, v]) => [k, Number(v)]),
     ),
   }
 }
@@ -331,6 +339,7 @@ export type Action =
   | { type: 'removeCustomWeapon'; id: string }
   | { type: 'toggleHidden'; id: string }
   | { type: 'replace'; state: State }
+  | { type: 'unlockAchievements'; ids: string[]; at: number }
   | { type: 'reset' }
 
 function slug(name: string) {
@@ -411,6 +420,7 @@ export function reducer(s: State, a: Action): State {
       if (a.game === 'mw4') {
         return {
           ...s,
+          achievements: {},
           progress: {},
           prestige: {},
           modeMastery: {},
@@ -500,6 +510,8 @@ export function reducer(s: State, a: Action): State {
       }
     case 'replace':
       return a.state
+    case 'unlockAchievements':
+      return { ...s, achievements: { ...s.achievements, ...Object.fromEntries(a.ids.map((id) => [id, a.at])) } }
     case 'reset':
       return initialState()
   }

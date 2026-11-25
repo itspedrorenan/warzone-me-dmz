@@ -1,8 +1,12 @@
-import { useState, type ComponentType } from 'react'
-import { ChartNoAxesColumn, Crosshair, Flame, Settings, Sun, type LucideProps } from 'lucide-react'
+import { useEffect, useState, type ComponentType } from 'react'
+import { ChartNoAxesColumn, Crosshair, Flame, Settings, Sun, Trophy, type LucideProps } from 'lucide-react'
 import { useTracker } from './store'
 import { useCloudSync } from './sync'
 import { ImportPrompt } from './components/ImportPrompt'
+import { AchievementsView } from './components/AchievementsView'
+import { AchievementToast } from './components/AchievementToast'
+import { ACHIEVEMENTS, newlyUnlocked, type Achievement } from './achievements'
+import { vibrate } from './hooks'
 import { useWakeLock } from './hooks'
 import { ModeSwitch } from './components/ModeSwitch'
 import { WeaponsView } from './components/WeaponsView'
@@ -18,18 +22,39 @@ import { SettingsView } from './components/SettingsView'
 import { grindItemsLegacy, grindItemsMW4 } from './grind'
 import { summaryLegacy, summaryMW4 } from './progress'
 
-export type Tab = 'grind' | 'weapons' | 'progress' | 'settings'
+export type Tab = 'grind' | 'weapons' | 'progress' | 'achievements' | 'settings'
 
 const TABS: { id: Tab; label: string; Icon: ComponentType<LucideProps>; ready: boolean }[] = [
   { id: 'grind', label: 'Grind', Icon: Flame, ready: true },
   { id: 'weapons', label: 'Armas', Icon: Crosshair, ready: true },
   { id: 'progress', label: 'Progresso', Icon: ChartNoAxesColumn, ready: true },
+  { id: 'achievements', label: 'Conquistas', Icon: Trophy, ready: true },
   { id: 'settings', label: 'Ajustes', Icon: Settings, ready: true },
 ]
 
 export default function App() {
   const [state, dispatch] = useTracker()
   const sync = useCloudSync(state, dispatch)
+  // Conquistas: guarda a data das recém-batidas (espera o progresso da nuvem chegar) e mostra o aviso
+  // das desbloqueadas desde que o app abriu.
+  const syncReady = sync.status !== 'loading' && !sync.askImport
+  useEffect(() => {
+    if (!syncReady) return
+    const fresh = newlyUnlocked(state)
+    if (!fresh.length) return
+    dispatch({ type: 'unlockAchievements', ids: fresh.map((a) => a.id), at: Date.now() })
+    vibrate(state.haptics)
+  }, [state, syncReady, dispatch])
+  const [openedAt] = useState(() => Date.now())
+  const [seenUntil, setSeenUntil] = useState(0)
+  const latestAt = Math.max(0, ...Object.values(state.achievements))
+  const toast: Achievement[] =
+    latestAt > openedAt && latestAt > seenUntil ? ACHIEVEMENTS.filter((a) => state.achievements[a.id] === latestAt) : []
+  useEffect(() => {
+    if (latestAt <= openedAt) return
+    const t = setTimeout(() => setSeenUntil(latestAt), 4500)
+    return () => clearTimeout(t)
+  }, [latestAt, openedAt])
   const [tab, setTab] = useState<Tab>('weapons')
   // Tela inicial ("Grindar" e a versão) ao abrir o app.
   const [home, setHome] = useState(true)
@@ -81,6 +106,8 @@ export default function App() {
             onOpen={setOpenId}
             onBrowse={() => setTab('weapons')}
           />
+        ) : tab === 'achievements' ? (
+          <AchievementsView state={state} />
         ) : tab === 'settings' ? (
           <SettingsView state={state} dispatch={dispatch} wakeSupported={wake.supported} sync={sync} />
         ) : tab === 'progress' ? (
@@ -128,6 +155,13 @@ export default function App() {
         ) : (
           <WeaponSheet id={openId} state={state} dispatch={dispatch} onClose={() => setOpenId(null)} />
         ))}
+      <AchievementToast
+        items={toast}
+        onOpen={() => {
+          setSeenUntil(latestAt)
+          setTab('achievements')
+        }}
+      />
       {sync.askImport && <ImportPrompt username={sync.username} onAnswer={sync.answerImport} />}
     </div>
   )

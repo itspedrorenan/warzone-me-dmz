@@ -1112,3 +1112,60 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* Painel da arma ao rolar: a foto encolhe mais (fica centralizada, menor) */
 .app .sheet-top.collapsed .sheet-thumb { width: 58%; margin: 6px auto 0; }
 .app .sheet-top.collapsed .sheet-thumb .preview-label { width: 172%; margin-left: -36%; }
+
+/* ---------------------------------------------------------------------------
+   Conquistas: cards por nível (bronze, prata, ouro, platina) e aviso de desbloqueio
+   --------------------------------------------------------------------------- */
+.tier-bronze { --tier: #d08b52; }
+.tier-silver { --tier: #c9d2d8; }
+.tier-gold { --tier: #ffd24a; }
+.tier-platinum { --tier: #8fe3ff; }
+.achievements-view { display: flex; flex-direction: column; gap: 20px; }
+.ach-hero { align-items: center; text-align: center; }
+.ach-points { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--font-ui); letter-spacing: 0.06em; }
+.ach-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ach-card {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px;
+  background: rgb(60 65 70 / 0.42); border: 1px solid var(--line); border-radius: 2px;
+}
+.ach-card.on {
+  border-color: color-mix(in srgb, var(--tier) 55%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tier) 16%, transparent), transparent 70%), rgb(60 65 70 / 0.42);
+}
+.ach-icon {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  border: 2px dotted rgb(255 255 255 / 0.25); color: var(--text-3);
+}
+.ach-card.on .ach-icon, .ach-toast .ach-icon {
+  border: 2px solid var(--tier); color: var(--tier);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tier) 30%, transparent), transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--tier) 35%, transparent);
+}
+.ach-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ach-name { font-family: var(--font-title); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; color: #f0f4f5; }
+.ach-card:not(.on) .ach-name { color: var(--muted); }
+.ach-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.35; }
+.ach-date { font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--tier); }
+.ach-progress { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+.ach-bar { flex: 1; height: 3px; background: rgb(255 255 255 / 0.12); border-radius: 1px; overflow: hidden; }
+.ach-bar > span { display: block; height: 100%; background: #e9eef0; }
+.ach-count { font-family: var(--font-ui); font-size: 0.72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ach-tier {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 2px;
+  font-family: var(--font-ui); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);
+}
+.ach-tier small { font-size: 0.62rem; letter-spacing: 0.04em; }
+.ach-card.on .ach-tier { color: var(--tier); }
+
+.ach-toast {
+  position: fixed; z-index: 50; top: calc(var(--safe-t) + 12px); left: 50%; transform: translateX(-50%);
+  width: min(360px, calc(100% - 24px)); display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: rgb(22 25 28 / 0.94); border: 1px solid color-mix(in srgb, var(--tier) 60%, transparent); border-radius: 2px;
+  backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgb(0 0 0 / 0.5), 0 0 22px color-mix(in srgb, var(--tier) 25%, transparent);
+  color: var(--text); text-align: left; animation: ach-in 0.35s ease-out;
+}
+.ach-toast-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ach-toast-label { font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--tier); }
+.ach-toast-name { font-family: var(--font-title); font-weight: 700; font-size: 1.1rem; }
+@keyframes ach-in { from { opacity: 0; transform: translate(-50%, -16px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (prefers-reduced-motion: reduce) { .ach-toast { animation: none; } }
