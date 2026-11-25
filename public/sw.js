@@ -6,7 +6,7 @@
 // Trocar o nome do cache apaga o cache antigo dos aparelhos.
 // Com o login por convite, o app só é entregue a quem entrou: o que vier redirecionado para o login
 // (sessão vencida) não entra no cache, senão o app abriria na tela de login mesmo offline.
-const CACHE = 'camo-tracker-v4'
+const CACHE = 'camo-tracker-v5'
 const CORE = ['./manifest.webmanifest', './icon-192.png', './favicon.svg']
 
 self.addEventListener('install', (e) => {
