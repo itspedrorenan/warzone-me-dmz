@@ -1169,3 +1169,10 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .ach-toast-name { font-family: var(--font-title); font-weight: 700; font-size: 1.1rem; }
 @keyframes ach-in { from { opacity: 0; transform: translate(-50%, -16px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @media (prefers-reduced-motion: reduce) { .ach-toast { animation: none; } }
+
+/* Tela inicial: botão e passo a passo para instalar no celular */
+.home-body .install-btn { align-self: stretch; }
+.install-card { gap: 14px; }
+.install-steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; color: #e3e8ea; line-height: 1.45; }
+.install-steps li::marker { font-family: var(--font-ui); color: var(--accent); }
+.install-steps svg { display: inline-block; vertical-align: -3px; color: var(--accent); }

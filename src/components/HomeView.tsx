@@ -1,3 +1,4 @@
+import { InstallGuide } from './InstallGuide'
 import { APP_VERSION } from '../version'
 
 /** Tela inicial: a arte de fundo, que escurece até a cor do app, e "Grindar" na base.
@@ -13,6 +14,7 @@ export function HomeView({ onStart }: { onStart: () => void }) {
         <button className="home-start" onClick={onStart}>
           Grindar
         </button>
+        <InstallGuide />
         <p className="home-version">Versão {APP_VERSION}</p>
       </div>
     </div>
