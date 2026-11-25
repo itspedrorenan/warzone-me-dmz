@@ -55,7 +55,7 @@
   </div>
   <form id="form" novalidate>
     <div class="head">Sua conta</div>
-    <label>Usuário <input id="user" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+    <label>Usuário ou e-mail <input id="user" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
     <label>Senha <input id="pass" name="password" type="password" autocomplete="current-password" required></label>
     <button id="go" type="submit">Entrar</button>
     <p id="msg" class="msg" role="status"></p>
@@ -108,14 +108,14 @@
     ev.preventDefault()
     const user = $('user').value.trim().toLowerCase()
     const pass = $('pass').value
-    if (!user || !pass) return say('Preencha usuário e senha.', true)
+    if (!user || !pass) return say('Preencha usuário (ou e-mail) e senha.', true)
     $('go').disabled = true
     say('Entrando…')
     try {
       enter(await token('password', { email: user.includes('@') ? user : `${user}@${USER_DOMAIN}`, password: pass }))
     } catch (e) {
       $('go').disabled = false
-      if (e.status === 400) say('Usuário ou senha incorretos.', true)
+      if (e.status === 400) say('Usuário/e-mail ou senha incorretos.', true)
       else if (e.status === 429) say('Muitas tentativas. Espere um pouco e tente de novo.', true)
       else say('Não consegui conectar. Confira a internet e tente de novo.', true)
     }
