@@ -239,6 +239,16 @@ export function WeaponSheet({
           ))}
         </div>
 
+        {state.mode !== 'mp' && (
+          // Os desafios mudam com o modo escolhido no topo; no DMZ são contra inimigos da IA (números maiores).
+          <p className="notice mode-notice">
+            <Info size={14} aria-hidden="true" />
+            {state.mode === 'dmz'
+              ? 'Desafios do DMZ: contra inimigos controlados pelo jogo, por isso os números são maiores. Troque para MW4 no seletor para ver os do Multiplayer.'
+              : 'Desafios do Warzone. Troque para MW4 no seletor para ver os do Multiplayer.'}
+          </p>
+        )}
+
         {group !== 'prestige' && group !== 'mastery' && (
           <>
             <ol className="ladder">

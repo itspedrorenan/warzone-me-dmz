@@ -1183,3 +1183,6 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .app .set-sources dt { margin-bottom: 8px; }
 .app .set-sources dd { line-height: 1.65; }
 .app .set-section > .set-help:last-child { margin-top: 4px; }
+
+/* Aviso do modo (DMZ / Warzone) no painel da arma */
+.app .mode-notice { margin: 4px 0 14px; border-left: 3px solid var(--accent); }
