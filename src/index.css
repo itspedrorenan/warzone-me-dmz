@@ -1170,7 +1170,7 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .install-steps svg { display: inline-block; vertical-align: -3px; color: var(--accent); }
 
 /* Ajustes com mais respiro: seções mais separadas, título → texto → botões mais espaçados, cards mais altos */
-.app .settings-view { gap: 44px; padding-bottom: 12px; }
+.app .settings-view { gap: 68px; padding-bottom: 12px; }
 .app .set-section { gap: 18px; }
 .app .set-help { line-height: 1.6; margin-top: 2px; }
 .app .set-row { padding: 20px 18px; gap: 16px; }
