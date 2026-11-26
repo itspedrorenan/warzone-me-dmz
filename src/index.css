@@ -1172,14 +1172,14 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 /* Ajustes com mais respiro: seções mais separadas, título → texto → botões mais espaçados, cards mais altos */
 .app .settings-view { gap: 44px; padding-bottom: 12px; }
 .app .set-section { gap: 18px; }
-.app .set-help { font-size: 0.85rem; line-height: 1.6; margin-top: 2px; }
+.app .set-help { line-height: 1.6; margin-top: 2px; }
 .app .set-row { padding: 20px 18px; gap: 16px; }
 .app .set-text { gap: 6px; }
-.app .set-desc { font-size: 0.8rem; line-height: 1.6; }
+.app .set-desc { line-height: 1.6; }
 .app .set-actions { gap: 14px; margin-top: 4px; }
 .app .set-list li { padding: 18px; }
 .app .set-sources { gap: 14px; }
 .app .set-sources div { padding: 18px; }
 .app .set-sources dt { margin-bottom: 8px; }
-.app .set-sources dd { font-size: 0.82rem; line-height: 1.65; }
+.app .set-sources dd { line-height: 1.65; }
 .app .set-section > .set-help:last-child { margin-top: 4px; }
