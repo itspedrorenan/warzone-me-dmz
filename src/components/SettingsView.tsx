@@ -170,7 +170,9 @@ export function SettingsView({
       <section className="set-section">
         <h2 className="pg-title">Backup</h2>
         <p className="set-help">
-          Seu progresso fica só neste aparelho. Baixe um backup antes de trocar de celular ou limpar o navegador.
+          {sync.username
+            ? 'Seu progresso fica salvo na sua conta. O backup é uma cópia extra em arquivo, se quiser guardar.'
+            : 'Seu progresso fica só neste aparelho. Baixe um backup antes de trocar de celular ou limpar o navegador.'}
         </p>
         <div className="set-actions">
           <button className="btn primary" onClick={exportBackup}>

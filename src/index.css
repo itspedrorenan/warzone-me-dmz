@@ -1049,14 +1049,6 @@ h1, h2, h3, .gc-name, .empty-title, .section-title, .weapon-card .name, .stat-va
 .pg-hero-number { display: flex; justify-content: center; padding: 6px 0; }
 
 /* ---------------------------------------------------------------------------
-   Dicas de tecla nas pílulas: o ícone do botão vira uma "tecla" clara (como o "1" do jogo)
-   --------------------------------------------------------------------------- */
-.app :is(.btn, .lt-toggle) > svg:first-child {
-  box-sizing: content-box; width: 13px; height: 13px; padding: 3px; flex: none;
-  background: #e9eef0; color: #14171a; border-radius: 3px; opacity: 1; filter: none;
-}
-
-/* ---------------------------------------------------------------------------
    Cor do jogo só nos destaques (como no menu de Prestígio): o resto fica neutro.
    Fica colorido: aba/filtro selecionado, item ativo, concluído, "Grindar", progresso.
    --------------------------------------------------------------------------- */
